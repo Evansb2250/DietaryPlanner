@@ -29,14 +29,17 @@ import org.json.JSONObject
 import java.io.IOException
 import java.security.MessageDigest
 import java.security.SecureRandom
+import javax.inject.Inject
+import javax.inject.Singleton
 
 
 const val TAG = "GoogleOauthClient"
 
-class GoogleOauthClient(
+@Singleton
+class GoogleOauthClient @Inject constructor(
     private val context: Context,
     private val tokenManager: TokenManager,
-    private val coroutineScope: CoroutineScope,
+    private val coroutineScope: CoroutineScope
 ) {
 
     private var authState: AuthState = AuthState()
@@ -144,7 +147,7 @@ class GoogleOauthClient(
     ){
         Log.d("GOOGLE AUTH", " Saving token $authToken")
         coroutineScope.launch {
-            tokenManager.saveToken(authToken)
+          tokenManager.saveToken(authToken)
         }
     }
 

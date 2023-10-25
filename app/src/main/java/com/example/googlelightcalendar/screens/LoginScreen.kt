@@ -33,44 +33,18 @@ fun LoginScreen(
     getCalender: () -> Unit = {},
     signOut: () -> Unit = {},
 ) {
-
-    LoginBottomSheet()
-//    Column(
-//        modifier = Modifier.fillMaxSize(),
-//        verticalArrangement = Arrangement.Center,
-//        horizontalAlignment = Alignment.CenterHorizontally,
-//    ) {
-//        if (state.state) {
-//
-//            Text(
-//                text = state.googleStringState
-//            )
-//
-//            Button(onClick = getCalender ) {
-//                Text(text = "Get Calendar")
-//            }
-//            Button(
-//                onClick = signOut,
-//            ) {
-//                Text(text = "Sign Out")
-//            }
-//        } else {
-//            Button(
-//                onClick = initiateLogin,
-//            ) {
-//                Text("Login")
-//            }
-//        }
-//    }
+    LoginContent(
+        initiateGoogleSignIn = initiateLogin
+    )
 }
 
-
-@Preview(showBackground = true)
 @Composable
-fun LoginConent() {
-    Column {
-
-    }
+fun LoginContent(
+    initiateGoogleSignIn:() -> Unit,
+) {
+    LoginBottomSheet(
+        initiateGoogleSignIn = initiateGoogleSignIn
+    )
 }
 
 
@@ -80,7 +54,7 @@ val sidePadding = 16.dp
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginBottomSheet(
-
+    initiateGoogleSignIn: () -> Unit = {},
 ) {
     val bottomSheetScaffoldState = rememberBottomSheetScaffoldState()
 
@@ -183,7 +157,7 @@ fun LoginBottomSheet(
                 )
                 OutlinedButton(
                     shape = RoundedCornerShape(10.dp),
-                    onClick = { /*TODO*/ },
+                    onClick = initiateGoogleSignIn,
                 ) {
                     Text(text = "Google")
                 }

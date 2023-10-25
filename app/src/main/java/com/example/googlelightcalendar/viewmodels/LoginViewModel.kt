@@ -1,17 +1,15 @@
 package com.example.googlelightcalendar.viewmodels
 
-import android.content.Context
 import android.content.Intent
 import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.example.googlelightcalendar.GoogleOauthClient
 import com.example.googlelightcalendar.TokenManager
-import com.example.googlelightcalendar.repo.CalendarRepo
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 interface AppAuthClient {
     fun registerAuthLauncher(
@@ -29,26 +27,21 @@ data class LoginScreenState(
     val state: Boolean = false,
     val googleStringState: String = "",
 )
-class LoginViewModel(
-    private val context: Context,
+
+@HiltViewModel
+class LoginViewModel @Inject constructor(
+    private val googleOauthClient: Lazy<GoogleOauthClient>,
     tokenManager: TokenManager,
-    private val calendarRepo: CalendarRepo = CalendarRepo(tokenManager)
 ) : ViewModel(), AppAuthClient {
 
     val state = MutableStateFlow<LoginScreenState>(LoginScreenState())
 
-    private val googleOauthClient: GoogleOauthClient = GoogleOauthClient(
-        context = context,
-        tokenManager = tokenManager,
-        coroutineScope = viewModelScope
-    )
-
     fun signInWithGoogle() {
-        googleOauthClient.attemptAuthorization()
+        googleOauthClient.value.attemptAuthorization()
     }
 
     fun signOutWithGoogle() {
-        googleOauthClient.signOutWithoutRedirect(
+        googleOauthClient.value.signOutWithoutRedirect(
             signInState = {
                 state.update {
                     it.copy(
@@ -59,25 +52,12 @@ class LoginViewModel(
         )
     }
 
-    fun getCalendarInfo() {
-        if(state.value.state){
-            viewModelScope.launch {
-                val result = calendarRepo.getCalendar()
-                state.update {
-                    it.copy(
-                        googleStringState = result
-                    )
-                }
-            }
-        }
-    }
-
     override fun registerAuthLauncher(launcher: ActivityResultLauncher<Intent>) {
-        googleOauthClient.registerAuthLauncher(launcher)
+        googleOauthClient.value.registerAuthLauncher(launcher)
     }
 
     override fun handleAuthorizationResponse(intent: Intent) {
-        googleOauthClient.handleAuthorizationResponse(
+        googleOauthClient.value.handleAuthorizationResponse(
             intent = intent,
             signInState = { newState ->
                 state.update {
@@ -85,7 +65,7 @@ class LoginViewModel(
                         state = newState
                     )
                 }
-            //    Log.e(TAG, " handle Auth ${state.value}")
+                Log.e(TAG, " handle Auth ${state.value}")
             }
         )
     }

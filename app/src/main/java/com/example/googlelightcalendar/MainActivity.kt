@@ -6,32 +6,27 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.compose.runtime.collectAsState
-import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.datastore.preferences.preferencesDataStore
-import androidx.lifecycle.lifecycleScope
-import com.example.googlelightcalendar.repo.CalendarRepo
 import com.example.googlelightcalendar.screens.LoginScreen
 import com.example.googlelightcalendar.viewmodels.LoginViewModel
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 
 const val REQ_ONE_TAP = 100
 const val USER_PREFERENCES_NAME = "USER_PREFERENCES_NAME"
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    lateinit var loginViewModel: LoginViewModel
-    private val Context.dataStore by preferencesDataStore(
-        name = USER_PREFERENCES_NAME
-    )
+    @get:Inject
+    val loginViewModel: LoginViewModel by viewModels<LoginViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val tokenManager = TokenManager(this)
 
-        loginViewModel = LoginViewModel(this, tokenManager)
         loginViewModel.registerAuthLauncher(
             launcher = registerForActivityResult(
                 ActivityResultContracts.StartActivityForResult()
@@ -46,15 +41,15 @@ class MainActivity : ComponentActivity() {
 
             }
         )
-
         setContent {
+
             LoginScreen(
                 state = loginViewModel.state.collectAsState().value,
                 signOut = {
-                    loginViewModel.signOutWithGoogle()
+                  loginViewModel.signOutWithGoogle()
                 },
                 getCalender = {
-                    loginViewModel.getCalendarInfo()
+              //      loginViewModel.getCalendarInfo()
                 },
                 initiateLogin = {
                     loginViewModel.signInWithGoogle()
@@ -62,4 +57,5 @@ class MainActivity : ComponentActivity() {
             )
         }
     }
+
 }
