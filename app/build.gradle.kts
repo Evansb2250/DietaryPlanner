@@ -52,6 +52,7 @@ android {
 }
 
 dependencies {
+    testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
     val lifecycle_version = "2.6.2"
     //Google Calendar imports
 
@@ -98,6 +99,10 @@ dependencies {
 
     //Scalar Factory
     implementation("com.squareup.retrofit2:converter-scalars:2.9.0")
+
+    //MaterialDesign3
+    implementation("androidx.compose.material3:material3:1.1.2")
+    implementation("androidx.compose.material3:material3-window-size-class:1.1.2")
 
     //Splash Screen
     implementation("androidx.core:core-splashscreen:1.0.1")
