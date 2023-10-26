@@ -23,10 +23,19 @@ interface AppAuthClient {
 
 const val TAG = "LoginViewModel"
 
-data class LoginScreenState(
-    val state: Boolean = false,
-    val googleStringState: String = "",
-)
+sealed class LoginScreenStates {
+    data class LoginScreenState(
+        val userName: String = "",
+        val password: String = "",
+        val isLoggedIn: Boolean = false,
+        val isLoading: Boolean = false,
+        val isError: Boolean = false,
+        val error: Error? = null,
+    ) : LoginScreenStates()
+
+    data class Error(val message: String) : LoginScreenStates()
+}
+
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
@@ -34,22 +43,17 @@ class LoginViewModel @Inject constructor(
     tokenManager: TokenManager,
 ) : ViewModel(), AppAuthClient {
 
-    val state = MutableStateFlow<LoginScreenState>(LoginScreenState())
+    val state = MutableStateFlow(LoginScreenStates.LoginScreenState())
 
     fun signInWithGoogle() {
         googleOauthClient.value.attemptAuthorization()
     }
 
-    fun signOutWithGoogle() {
-        googleOauthClient.value.signOutWithoutRedirect(
-            signInState = {
-                state.update {
-                    it.copy(
-                        state = false
-                    )
-                }
-            }
-        )
+    fun signInManually(
+        userName: String,
+        password: String,
+    ){
+
     }
 
     override fun registerAuthLauncher(launcher: ActivityResultLauncher<Intent>) {
@@ -59,13 +63,16 @@ class LoginViewModel @Inject constructor(
     override fun handleAuthorizationResponse(intent: Intent) {
         googleOauthClient.value.handleAuthorizationResponse(
             intent = intent,
-            signInState = { newState ->
+            signInState = { isSignedIn ->
                 state.update {
                     it.copy(
-                        state = newState
+                        isLoggedIn = isSignedIn,
+                        isError = !isSignedIn,
+                        error = if (!isSignedIn) LoginScreenStates.Error(
+                            message = "Couldn't Sign In",
+                        ) else null
                     )
                 }
-                Log.e(TAG, " handle Auth ${state.value}")
             }
         )
     }

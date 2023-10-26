@@ -7,12 +7,12 @@ plugins {
 
 android {
     namespace = "com.example.googlelightcalendar"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.example.googlelightcalendar"
         minSdk = 26
-        targetSdk = 33
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
@@ -54,7 +54,7 @@ android {
 }
 
 dependencies {
-    testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
+
     val lifecycle_version = "2.6.2"
 
     //Google Calendar imports
@@ -128,8 +128,14 @@ dependencies {
     // optional - Test helpers
     testImplementation("androidx.room:room-testing:$room_version")
 
+    // Compose Navigation
+    val nav_version = "2.7.4"
+    implementation("androidx.navigation:navigation-compose:$nav_version")
+
     //TestImplementations
     testImplementation("junit:junit:4.13.2")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
+
 
     //AndroidTestImplementations
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
