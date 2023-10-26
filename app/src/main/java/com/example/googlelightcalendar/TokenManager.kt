@@ -19,8 +19,6 @@ class TokenManager @Inject constructor (
     private val context: Context,
     private val dataStore: DataStore<Preferences>
 ){
- //   private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(GoogleToken)
-
     val googleToken: Flow<String> =  dataStore.data.map { preferences ->
         preferences[GOOGLE_TOKEN] ?: ""
     }
