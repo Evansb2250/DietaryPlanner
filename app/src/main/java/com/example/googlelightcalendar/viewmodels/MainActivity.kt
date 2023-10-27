@@ -41,34 +41,7 @@ fun root() {
         composable(
             route = "LoginScreen"
         ) {
-            val loginViewModel = hiltViewModel<LoginViewModel>()
-
-            val googleSignInLauncher = rememberLauncherForActivityResult(
-                contract = ActivityResultContracts.StartActivityForResult(),
-                onResult = { result ->
-                    val googleSignInIntent = result.data as Intent
-
-                    if (googleSignInIntent != null) {
-                        loginViewModel.handleAuthorizationResponse(googleSignInIntent)
-                    }
-                }
-            )
-
-            loginViewModel.registerAuthLauncher(
-                googleSignInLauncher
-            )
-            LoginScreen(
-                state = loginViewModel.state.collectAsState().value,
-                signOut = {
-
-                },
-                getCalender = {
-                    //      loginViewModel.getCalendarInfo()
-                },
-                initiateLogin = {
-                    loginViewModel.signInWithGoogle()
-                }
-            )
+            LoginScreen()
         }
 
     }

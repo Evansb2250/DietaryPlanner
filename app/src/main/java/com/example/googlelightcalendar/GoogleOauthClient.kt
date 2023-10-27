@@ -7,6 +7,7 @@ import android.util.Base64
 import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
 import com.auth0.android.jwt.JWT
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -37,7 +38,7 @@ const val TAG = "GoogleOauthClient"
 
 @Singleton
 class GoogleOauthClient @Inject constructor(
-    private val context: Context,
+    @ApplicationContext private val context: Context,
     private val tokenManager: TokenManager,
     private val coroutineScope: CoroutineScope
 ) {
@@ -105,7 +106,10 @@ class GoogleOauthClient @Inject constructor(
 
     fun handleAuthorizationResponse(
         intent: Intent,
-        signInState: (Boolean) -> Unit = {}
+        signInState: (
+            Boolean,
+            String,
+        ) -> Unit = {_, _ -> }
     ) {
         val authorizationResponse: AuthorizationResponse? = AuthorizationResponse.fromIntent(intent)
         val error = AuthorizationException.fromIntent(intent)
@@ -130,24 +134,24 @@ class GoogleOauthClient @Inject constructor(
                         jwt = JWT(response.idToken!!)
                         Log.e(TAG, "Token received ${response.accessToken}")
 
-                        saveToken(response.accessToken?:"")
+                        saveToken(response.accessToken ?: "")
 
-                        signInState(true)
+                        signInState(true, "SignedInt")
                     }
                 }
                 persistState()
             }
         } else {
-            signInState(false)
+            signInState(false, "Failed Sign In")
         }
     }
 
     private fun saveToken(
         authToken: String,
-    ){
+    ) {
         Log.d("GOOGLE AUTH", " Saving token $authToken")
         coroutineScope.launch {
-          tokenManager.saveToken(authToken)
+            tokenManager.saveToken(authToken)
         }
     }
 

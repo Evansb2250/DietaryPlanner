@@ -2,6 +2,7 @@ package com.example.googlelightcalendar.di
 
 import com.example.googlelightcalendar.GoogleOauthClient
 import com.example.googlelightcalendar.TokenManager
+import com.example.googlelightcalendar.repo.UserRepository
 import com.example.googlelightcalendar.viewmodels.LoginViewModel
 import dagger.Module
 import dagger.Provides
@@ -14,12 +15,10 @@ object ViewModelModule {
 
     @Provides
     fun providesLoginViewModel(
-        googleOauthClient: Lazy<GoogleOauthClient>,
-        tokenManager: TokenManager
+        userRepository: UserRepository,
     ): LoginViewModel {
         return LoginViewModel(
-            googleOauthClient,
-            tokenManager,
+            userRepository
         )
     }
 }

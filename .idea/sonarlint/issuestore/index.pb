@@ -22,8 +22,6 @@ r
 Bapp/src/main/java/com/example/googlelightcalendar/ui/theme/Type.kt,7\a\7a950bad10904a8bba23be8aa4f856a05e1b356f
 S
 #app/src/main/java/GoogleCalendar.kt,a\d\ad170e1be880cb607b99d080a21ca753de720abf
-P
- app/src/main/AndroidManifest.xml,8\c\8c55c3ccc257e5907959013f99656e4c8ec3903e
 C
 settings.gradle.kts,7\4\749edfcc96398253e5b3416184e95c46621da850
 F

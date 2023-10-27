@@ -1,5 +1,8 @@
 package com.example.googlelightcalendar.screens
 
+import android.content.Intent
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -18,30 +21,50 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.googlelightcalendar.viewmodels.LoginScreenStates
+import com.example.googlelightcalendar.viewmodels.LoginViewModel
 
 @Composable
-fun LoginScreen(
-    state: LoginScreenStates.LoginScreenState,
-    initiateLogin: () -> Unit = {},
-    getCalender: () -> Unit = {},
-    signOut: () -> Unit = {},
-) {
+fun LoginScreen() {
+    val loginViewModel = hiltViewModel<LoginViewModel>()
+
+    val googleSignInLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult(),
+        onResult = { result ->
+            val googleSignInIntent = result.data as Intent
+
+            if (googleSignInIntent != null) {
+                loginViewModel.handleAuthorizationResponse(googleSignInIntent)
+            }
+        }
+    )
+
+    loginViewModel.registerAuthLauncher(
+        googleSignInLauncher
+    )
+
     LoginContent(
-        initiateGoogleSignIn = initiateLogin
+        loginState = loginViewModel.state.collectAsState().value,
+        signInManually = loginViewModel::signInManually,
+        initiateGoogleSignIn = loginViewModel::signInWithGoogle,
     )
 }
 
 @Composable
 fun LoginContent(
-    initiateGoogleSignIn:() -> Unit,
+    loginState: LoginScreenStates.LoginScreenState,
+    signInManually: (userName: String, password: String) -> Unit = { _, _ -> },
+    initiateGoogleSignIn: () -> Unit,
 ) {
     LoginBottomSheet(
+        loginState = loginState,
+        signInManually = signInManually,
         initiateGoogleSignIn = initiateGoogleSignIn
     )
 }
@@ -49,10 +72,11 @@ fun LoginContent(
 
 val sidePadding = 16.dp
 
-@Preview(showBackground = true)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginBottomSheet(
+    loginState: LoginScreenStates.LoginScreenState,
+    signInManually: (userName: String, password: String) -> Unit = { _, _ -> },
     initiateGoogleSignIn: () -> Unit = {},
 ) {
     val bottomSheetScaffoldState = rememberBottomSheetScaffoldState()
@@ -60,7 +84,7 @@ fun LoginBottomSheet(
     ModalBottomSheet(
         modifier = Modifier.wrapContentWidth(),
         sheetState = bottomSheetScaffoldState.bottomSheetState,
-        onDismissRequest = { /*TODO*/ },
+        onDismissRequest = { },
         shape = RoundedCornerShape(20.dp)
     ) {
         Column(
@@ -83,8 +107,10 @@ fun LoginBottomSheet(
             )
 
             OutlinedTextField(
-                value = "dsadsa",
-                onValueChange = {},
+                value = loginState.userName.value,
+                onValueChange = { userNameUpdate ->
+                    loginState.userName.value = userNameUpdate
+                },
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(20.dp)
             )
@@ -94,8 +120,10 @@ fun LoginBottomSheet(
             )
 
             OutlinedTextField(
-                value = "dsadsa",
-                onValueChange = {},
+                value = loginState.password.value,
+                onValueChange = { passwordUpdate ->
+                    loginState.password.value = passwordUpdate
+                },
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(20.dp)
             )
@@ -106,7 +134,16 @@ fun LoginBottomSheet(
             Button(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(10.dp),
-                onClick = { /*TODO*/ },
+                onClick = {
+                    if (loginState.containsValidCredentials()) {
+                        signInManually(
+                            loginState.userName.value,
+                            loginState.password.value,
+                        )
+                    } else {
+
+                    }
+                },
             ) {
                 Text(
                     text = "Log in"

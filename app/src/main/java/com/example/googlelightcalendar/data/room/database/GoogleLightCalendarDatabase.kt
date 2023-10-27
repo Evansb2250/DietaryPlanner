@@ -12,9 +12,7 @@ import com.example.googlelightcalendar.model.UserEntity
     version = 1
 )
 abstract class GoogleLightCalenderDatabase: RoomDatabase() {
-
     abstract fun userDao(): UserDao
-
 
     companion object{
         private lateinit var instance: GoogleLightCalenderDatabase
