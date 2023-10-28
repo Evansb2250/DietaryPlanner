@@ -1,13 +1,22 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id ("kotlin-android")
     id("com.google.devtools.ksp")
+    id ("de.mannodermaus.android-junit5") version "1.9.3.0"
     id("com.google.dagger.hilt.android")
 }
 
 android {
     namespace = "com.example.googlelightcalendar"
     compileSdk = 34
+
+    testOptions{
+        unitTests.all {
+                it.ignoreFailures = false
+                it.enabled = true
+        }
+    }
 
     defaultConfig {
         applicationId = "com.example.googlelightcalendar"
@@ -51,6 +60,7 @@ android {
             excludes += "META-INF/*"
         }
     }
+
 }
 
 dependencies {
@@ -135,12 +145,19 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:$nav_version")
 
     //TestImplementations
+    // (Required) Writing and executing Unit Tests on the JUnit Platform
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.3")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.3")
+
+    // (Optional) If you need "Parameterized Tests"
+    testImplementation("org.junit.jupiter:junit-jupiter-params:5.9.3")
+
+    // (Optional) If you also have JUnit 4-based tests
     testImplementation("junit:junit:4.13.2")
-    testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
+    testRuntimeOnly("org.junit.vintage:junit-vintage-engine:5.9.3")
 
     //Adding Assertion Library
     testImplementation("com.willowtreeapps.assertk:assertk:0.26.1")
-
 
     //AndroidTestImplementations
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

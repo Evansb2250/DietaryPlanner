@@ -81,6 +81,7 @@ fun LoginContent(
     LoginBottomSheet(
         loginState = loginState,
         signInManually = signInManually,
+        retryLogin = retryLogin,
         initiateGoogleSignIn = initiateGoogleSignIn,
         navigateToHomeScreen = navigateToHomeScreen,
         navigateToRegisterScreen = navigateToRegisterScreen,
@@ -92,6 +93,7 @@ fun LoginContent(
 fun LoginBottomSheet(
     loginState: LoginScreenStates.LoginScreenState,
     signInManually: (userName: String, password: String) -> Unit = { _, _ -> },
+    retryLogin: () -> Unit = {},
     initiateGoogleSignIn: () -> Unit = {},
     navigateToHomeScreen: () -> Unit = {},
     navigateToRegisterScreen: () -> Unit = {}
@@ -129,7 +131,8 @@ fun LoginBottomSheet(
             if(loginState.isLoginError){
                 ErrorAlertDialog(
                     title = "Login Failed",
-                    error = loginState.error?.message ?:"Unable to login"
+                    error = loginState.error?.message ?:"Unable to login",
+                    onDismiss = retryLogin
                 )
 
             }

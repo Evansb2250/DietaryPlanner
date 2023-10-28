@@ -22,29 +22,30 @@ sealed class LoginScreenStates {
         private val initialUserName: String = "",
         private val initialPassword: String = "",
         val loggedInSuccessfully: Boolean = false,
-        val isLoginError: Boolean = false,
         val isLoading: Boolean = false,
         val error: LoginError? = null,
     ) : LoginScreenStates() {
         var userName = mutableStateOf(initialUserName)
         var password = mutableStateOf(initialPassword)
-
-        fun isVerifiedPasswordFormat(): Boolean {
-            return verifyPassword() && password.value.isNotEmpty()
-        }
+        val isLoginError: Boolean = containsLoginError()
 
         fun containsValidCredentials(): Boolean {
-            return isVerifiedPasswordFormat() && verifyUserNameFormat()
+            return isValidPassword() && isValidEmail()
         }
 
-        fun verifyPassword(): Boolean {
-            val regex = Regex("(.)\\\\1*")
-            return password.value.length > 6 || password.value.matches(regex)
+        fun isValidPassword(): Boolean {
+            //checks to see if it contains the same letters
+            val passwordRegex = Regex("(.)\\1+")
+            return password.value.length > 6 && !passwordRegex.matches(password.value)
         }
 
-        fun verifyUserNameFormat(): Boolean {
-            val regex = Regex("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\\$")
-            return userName.value.matches(regex)
+        fun isValidEmail(): Boolean {
+            val regex = Regex("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}\$")
+            return regex.matches(userName.value)
+        }
+
+        private fun containsLoginError(): Boolean {
+            return error != null
         }
     }
 
@@ -77,7 +78,6 @@ class LoginViewModel @Inject constructor(
             when (response) {
                 is AsyncResponse.Failed -> {
                     state.value = LoginScreenStates.LoginScreenState(
-                        initialPassword = userName,
                         loggedInSuccessfully = false,
                         error = LoginScreenStates.LoginError(
                             message = response.message ?: "Unkown error occurred"
@@ -108,7 +108,6 @@ class LoginViewModel @Inject constructor(
         userRepository.handleAuthorizationResponse(intent) { signedIn, serverResponse ->
             state.update { it ->
                 it.copy(
-                    isLoginError = !signedIn,
                     error = if (!signedIn) LoginScreenStates.LoginError(serverResponse) else null
                 )
             }
