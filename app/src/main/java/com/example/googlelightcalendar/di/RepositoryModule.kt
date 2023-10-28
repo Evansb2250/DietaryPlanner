@@ -1,8 +1,7 @@
 package com.example.googlelightcalendar.di
 
-import com.example.googlelightcalendar.GoogleOauthClient
-import com.example.googlelightcalendar.TokenManager
-import com.example.googlelightcalendar.data.room.UserDao
+import com.example.googlelightcalendar.auth.GoogleOauthClient
+import com.example.googlelightcalendar.core.TokenManager
 import com.example.googlelightcalendar.data.room.database.GoogleLightCalenderDatabase
 import com.example.googlelightcalendar.repo.UserRepository
 import com.example.googlelightcalendar.repo.UserRepositoryImpl

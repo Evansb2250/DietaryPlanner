@@ -1,10 +1,10 @@
-package com.example.googlelightcalendar.data.room
+package com.example.googlelightcalendar.data.room.database.dao
 
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
-import com.example.googlelightcalendar.model.UserEntity
+import com.example.googlelightcalendar.data.room.database.models.UserEntity
 
 @Dao
 interface UserDao {

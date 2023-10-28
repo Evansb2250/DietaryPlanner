@@ -4,8 +4,8 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.example.googlelightcalendar.data.room.UserDao
-import com.example.googlelightcalendar.model.UserEntity
+import com.example.googlelightcalendar.data.room.database.dao.UserDao
+import com.example.googlelightcalendar.data.room.database.models.UserEntity
 
 @Database(
     entities = arrayOf(UserEntity::class),

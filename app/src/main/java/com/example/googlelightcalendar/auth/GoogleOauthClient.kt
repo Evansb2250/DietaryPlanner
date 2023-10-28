@@ -1,4 +1,4 @@
-package com.example.googlelightcalendar
+package com.example.googlelightcalendar.auth
 
 import android.content.Context
 import android.content.Intent
@@ -7,12 +7,14 @@ import android.util.Base64
 import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
 import com.auth0.android.jwt.JWT
+import com.example.googlelightcalendar.common.Constants
+import com.example.googlelightcalendar.core.TokenManager
+import com.example.googlelightcalendar.utils.AsyncResponse
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import net.openid.appauth.AppAuthConfiguration
 import net.openid.appauth.AuthState
@@ -107,9 +109,8 @@ class GoogleOauthClient @Inject constructor(
     fun handleAuthorizationResponse(
         intent: Intent,
         signInState: (
-            Boolean,
-            String,
-        ) -> Unit = {_, _ -> }
+            AsyncResponse<String>
+        ) -> Unit = { _ -> }
     ) {
         val authorizationResponse: AuthorizationResponse? = AuthorizationResponse.fromIntent(intent)
         val error = AuthorizationException.fromIntent(intent)
@@ -136,13 +137,17 @@ class GoogleOauthClient @Inject constructor(
 
                         saveToken(response.accessToken ?: "")
 
-                        signInState(true, "SignedInt")
+                        signInState(
+                            AsyncResponse.Success(null)
+                        )
                     }
                 }
                 persistState()
             }
         } else {
-            signInState(false, "Failed Sign In")
+            signInState(
+                AsyncResponse.Failed<String>(null, "couldn't get token")
+            )
         }
     }
 

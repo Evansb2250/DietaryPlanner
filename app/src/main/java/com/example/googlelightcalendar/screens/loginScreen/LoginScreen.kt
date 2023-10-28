@@ -1,4 +1,4 @@
-package com.example.googlelightcalendar.screens
+package com.example.googlelightcalendar.screens.loginScreen
 
 import android.content.Intent
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -22,16 +22,26 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.googlelightcalendar.viewmodels.LoginScreenStates
-import com.example.googlelightcalendar.viewmodels.LoginViewModel
+import com.example.googlelightcalendar.core.viewmodels.login.LoginScreenStates
+import com.example.googlelightcalendar.core.viewmodels.login.LoginViewModel
+import com.example.googlelightcalendar.ui_components.dialog.ErrorAlertDialog
+
+val sidePadding = 16.dp
 
 @Composable
-fun LoginScreen() {
+fun LoginScreen(
+    navigateToHomeScreen: () -> Unit = {},
+    navigateToRegisterScreen: () -> Unit = {}
+) {
     val loginViewModel = hiltViewModel<LoginViewModel>()
 
     val googleSignInLauncher = rememberLauncherForActivityResult(
@@ -53,24 +63,29 @@ fun LoginScreen() {
         loginState = loginViewModel.state.collectAsState().value,
         signInManually = loginViewModel::signInManually,
         initiateGoogleSignIn = loginViewModel::signInWithGoogle,
+        retryLogin = loginViewModel::resetLoginScreenState,
+        navigateToHomeScreen = navigateToHomeScreen,
+        navigateToRegisterScreen = navigateToRegisterScreen,
     )
 }
 
 @Composable
 fun LoginContent(
     loginState: LoginScreenStates.LoginScreenState,
+    retryLogin: () -> Unit = {},
     signInManually: (userName: String, password: String) -> Unit = { _, _ -> },
     initiateGoogleSignIn: () -> Unit,
+    navigateToHomeScreen: () -> Unit = {},
+    navigateToRegisterScreen: () -> Unit = {}
 ) {
     LoginBottomSheet(
         loginState = loginState,
         signInManually = signInManually,
-        initiateGoogleSignIn = initiateGoogleSignIn
+        initiateGoogleSignIn = initiateGoogleSignIn,
+        navigateToHomeScreen = navigateToHomeScreen,
+        navigateToRegisterScreen = navigateToRegisterScreen,
     )
 }
-
-
-val sidePadding = 16.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -78,8 +93,13 @@ fun LoginBottomSheet(
     loginState: LoginScreenStates.LoginScreenState,
     signInManually: (userName: String, password: String) -> Unit = { _, _ -> },
     initiateGoogleSignIn: () -> Unit = {},
+    navigateToHomeScreen: () -> Unit = {},
+    navigateToRegisterScreen: () -> Unit = {}
 ) {
     val bottomSheetScaffoldState = rememberBottomSheetScaffoldState()
+    var containsIncompleteCredentials by remember {
+        mutableStateOf(false)
+    }
 
     ModalBottomSheet(
         modifier = Modifier.wrapContentWidth(),
@@ -96,6 +116,27 @@ fun LoginBottomSheet(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
+            if(containsIncompleteCredentials){
+                ErrorAlertDialog(
+                    title = "Invalid Credentials",
+                    error = "please fill in the required information",
+                    onDismiss = {
+                        containsIncompleteCredentials = false
+                    }
+                )
+            }
+
+            if(loginState.isLoginError){
+                ErrorAlertDialog(
+                    title = "Login Failed",
+                    error = loginState.error?.message ?:"Unable to login"
+                )
+
+            }
+
+            if(loginState.loggedInSuccessfully){
+
+            }
 
             Text(
                 modifier = Modifier.fillMaxWidth(),
@@ -141,7 +182,7 @@ fun LoginBottomSheet(
                             loginState.password.value,
                         )
                     } else {
-
+                        containsIncompleteCredentials = true
                     }
                 },
             ) {

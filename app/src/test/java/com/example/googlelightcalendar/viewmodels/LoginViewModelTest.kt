@@ -1,7 +1,7 @@
 package com.example.googlelightcalendar.viewmodels
 
-import com.example.googlelightcalendar.GoogleOauthClient
-import com.example.googlelightcalendar.TokenManager
+import com.example.googlelightcalendar.auth.GoogleOauthClient
+import com.example.googlelightcalendar.core.TokenManager
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

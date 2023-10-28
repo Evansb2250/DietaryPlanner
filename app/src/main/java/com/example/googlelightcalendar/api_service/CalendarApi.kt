@@ -1,13 +1,9 @@
-package com.example.googlelightcalendar.repo
+package com.example.googlelightcalendar.api_service
 
-import android.util.Log
-import com.example.googlelightcalendar.TokenManager
-import com.example.googlelightcalendar.api_service.GoogleCalendarClient
-import kotlinx.coroutines.flow.firstOrNull
-import retrofit2.await
+import com.example.googlelightcalendar.core.TokenManager
 
-class CalendarRepo(
-   val tokenManager: TokenManager,
+class CalendarAPI(
+    val tokenManager: TokenManager,
 ){
 //    suspend fun getCalendar(): String {
 //  //      val token: String = tokenManager.googleToken.firstOrNull() ?: "Nothing inside"

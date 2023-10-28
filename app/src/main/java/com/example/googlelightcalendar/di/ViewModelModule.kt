@@ -1,9 +1,7 @@
 package com.example.googlelightcalendar.di
 
-import com.example.googlelightcalendar.GoogleOauthClient
-import com.example.googlelightcalendar.TokenManager
 import com.example.googlelightcalendar.repo.UserRepository
-import com.example.googlelightcalendar.viewmodels.LoginViewModel
+import com.example.googlelightcalendar.core.viewmodels.login.LoginViewModel
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

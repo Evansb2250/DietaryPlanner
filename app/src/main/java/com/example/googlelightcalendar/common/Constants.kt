@@ -1,4 +1,4 @@
-package com.example.googlelightcalendar
+package com.example.googlelightcalendar.common
 
 class Constants {
     companion object {

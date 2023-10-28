@@ -2,10 +2,12 @@ package com.example.googlelightcalendar.repo
 
 import android.content.Intent
 import androidx.activity.result.ActivityResultLauncher
-import com.example.googlelightcalendar.GoogleOauthClient
-import com.example.googlelightcalendar.TokenManager
-import com.example.googlelightcalendar.data.room.UserDao
-import dagger.hilt.android.scopes.ActivityScoped
+import com.example.googlelightcalendar.auth.GoogleOauthClient
+import com.example.googlelightcalendar.core.TokenManager
+import com.example.googlelightcalendar.data.room.database.dao.UserDao
+import com.example.googlelightcalendar.data.room.database.models.toUser
+import com.example.googlelightcalendar.domain.User
+import com.example.googlelightcalendar.utils.AsyncResponse
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -19,7 +21,7 @@ interface UserRepository {
     suspend fun signIn(
         userName: String,
         password: String,
-    )
+    ): AsyncResponse<User?>
 
     fun handleAuthorizationResponse(
         intent: Intent,
@@ -35,7 +37,7 @@ interface UserRepository {
 @Singleton
 class UserRepositoryImpl @Inject constructor(
     private val googleOauthClient: Lazy<GoogleOauthClient>,
-    private val userDao : UserDao,
+    private val userDao: UserDao,
     private val tokenManager: TokenManager,
 ) : UserRepository {
 
@@ -47,7 +49,25 @@ class UserRepositoryImpl @Inject constructor(
         googleOauthClient.value.registerAuthLauncher(launcher)
     }
 
-    override suspend fun signIn(userName: String, password: String) {
+    override suspend fun signIn(userName: String, password: String): AsyncResponse<User?> {
+       val result = userDao.getUser(
+            userName,
+            password
+        )
+
+        return when(result){
+         null ->{
+                AsyncResponse.Failed(
+                    data = null,
+                    message = "Incorrect credentials"
+                )
+            }
+            else -> {
+                AsyncResponse.Success(
+                    data = result.toUser(),
+                )
+            }
+        }
     }
 
     override fun handleAuthorizationResponse(
@@ -59,8 +79,23 @@ class UserRepositoryImpl @Inject constructor(
     ) {
         googleOauthClient.value.handleAuthorizationResponse(
             intent = intent,
-            signInState = authorizationResponse,
+            signInState = { asyncResponse ->
+                when (asyncResponse) {
+                    is AsyncResponse.Failed<*> -> {
+                        authorizationResponse(
+                            false,
+                            asyncResponse.message ?:"Failed"
+                        )
+                    }
+
+                    is AsyncResponse.Success<*> -> {
+                        authorizationResponse(
+                            true,
+                            "SignedIn"
+                        )
+                    }
+                }
+            },
         )
     }
-
 }
