@@ -1,6 +1,6 @@
 package com.example.googlelightcalendar.di
 
-import com.example.googlelightcalendar.auth.GoogleOauthClient
+import com.example.googlelightcalendar.auth.OauthClientImp
 import com.example.googlelightcalendar.core.TokenManager
 import com.example.googlelightcalendar.data.room.database.GoogleLightCalenderDatabase
 import com.example.googlelightcalendar.repo.UserRepository
@@ -18,7 +18,7 @@ object RepositoryModule {
     @Singleton
     @Provides
     fun providesUserRepository(
-        googleOauthClient: GoogleOauthClient,
+        googleOauthClient: OauthClientImp,
         tokenManager: TokenManager,
         database: GoogleLightCalenderDatabase,
     ): UserRepository {

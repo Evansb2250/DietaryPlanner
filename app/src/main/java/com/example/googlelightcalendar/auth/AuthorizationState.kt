@@ -19,4 +19,6 @@ interface AuthorizationState {
         ) -> Unit,
     )
     fun toJsonSerializeString(): String
+
+    fun getAuthorizationScopes(): Set<String>
 }

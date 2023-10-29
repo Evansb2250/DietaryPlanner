@@ -14,8 +14,6 @@ s
 Capp/src/main/java/com/example/googlelightcalendar/ui/theme/Color.kt,0\8\08d82e155522aa2617662ead5507430ad2082967
 ƒ
 Sapp/src/androidTest/java/com/example/googlelightcalendar/ExampleInstrumentedTest.kt,9\b\9b06f46687037131d34fbb5d8b3ff41274572017
-t
-Dapp/src/test/java/com/example/googlelightcalendar/ExampleUnitTest.kt,2\e\2e87411f1f5c30a54c9dfa2ec1bb53ce8bfd9695
 s
 Capp/src/main/java/com/example/googlelightcalendar/ui/theme/Theme.kt,c\3\c36e3d657570f3cd14ee53c8f84c8df482d79e0c
 r
@@ -30,8 +28,6 @@ P
  app/src/main/AndroidManifest.xml,8\c\8c55c3ccc257e5907959013f99656e4c8ec3903e
 “
 capp/src/main/java/com/example/googlelightcalendar/data/room/database/GoogleLightCalendarDatabase.kt,4\2\42afc7fcd24f024911ed3c50a76f0d44d67d74cb
-‚
-Rapp/src/test/java/com/example/googlelightcalendar/viewmodels/LoginViewModelTest.kt,b\3\b301c6ed8c4e02743471c4bcbb461c1363ef04b7
 ~
 Napp/src/main/java/com/example/googlelightcalendar/ui_components/placeHolder.kt,f\3\f3a7e0dd6dcbd567865b6dc6cd49995d74960445
 Œ
@@ -40,8 +36,6 @@ D
 app/build.gradle.kts,d\2\d2a4383452aad84a18429a5844d31330a012a9e6
 @
 build.gradle.kts,d\b\dbcff70658daf80b53ce624f6adcaa529df5ed8d
-€
-Papp/src/test/java/com/example/googlelightcalendar/repo/UserRepositoryImplTest.kt,f\1\f1e964082b16d50434abbe9d5ea2d9863b60077f
 ‰
 Yapp/src/main/java/com/example/googlelightcalendar/api_service/GoogleCalendarApiService.kt,d\8\d8e8a2ca40357e16bbe544b5d62648a55d73e81c
 }

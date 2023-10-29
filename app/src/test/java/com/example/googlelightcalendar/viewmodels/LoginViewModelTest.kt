@@ -1,7 +1,10 @@
 package com.example.googlelightcalendar.viewmodels
 
-import com.example.googlelightcalendar.auth.GoogleOauthClient
-import com.example.googlelightcalendar.core.TokenManager
+import com.example.googlelightcalendar.core.viewmodels.login.LoginViewModel
+import com.example.googlelightcalendar.data.room.database.dao.UserDao
+import com.example.googlelightcalendar.fakes.UserDaoFake
+import com.example.googlelightcalendar.fakes.UserRepositoryFake
+import com.example.googlelightcalendar.repo.UserRepository
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -11,17 +14,24 @@ import org.junit.runners.JUnit4
 @RunWith(JUnit4::class)
 class LoginViewModelTest {
 
-    private lateinit var googleOauthClient: GoogleOauthClient
-    private lateinit var tokenManager: TokenManager
-
+    private lateinit var userRespositoryFake: UserRepositoryFake
+    private lateinit var loginViewModel: LoginViewModel
+    private lateinit var userDaoFake: UserDao
     @BeforeEach
     fun setUp(){
-
+        userDaoFake = UserDaoFake()
+        userRespositoryFake = UserRepositoryFake(
+            userDaoFake
+        )
+        loginViewModel = LoginViewModel(
+            userRepository = userRespositoryFake
+        )
     }
 
     @Test
     fun signIn(){
-
+       loginViewModel.signInWithGoogle()
+        userRespositoryFake
     }
 
     @Test

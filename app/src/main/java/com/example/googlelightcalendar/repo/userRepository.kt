@@ -2,7 +2,7 @@ package com.example.googlelightcalendar.repo
 
 import android.content.Intent
 import androidx.activity.result.ActivityResultLauncher
-import com.example.googlelightcalendar.auth.GoogleOauthClient
+import com.example.googlelightcalendar.auth.OauthClientImp
 import com.example.googlelightcalendar.core.TokenManager
 import com.example.googlelightcalendar.data.room.database.dao.UserDao
 import com.example.googlelightcalendar.data.room.database.models.toUser
@@ -38,17 +38,18 @@ interface UserRepository {
 
 @Singleton
 class UserRepositoryImpl @Inject constructor(
-    private val googleOauthClient: Lazy<GoogleOauthClient>,
+    private val googleOauthClient: Lazy<OauthClientImp>,
     private val userDao: UserDao,
     private val tokenManager: TokenManager,
 ) : UserRepository {
 
+    // Aysnc response is received in the ActivityResultLauncher in the loginScreen
     override fun attemptAuthorization(
         authorizationScopes: Array<String>
     ) {
         googleOauthClient.value.attemptAuthorization(authorizationScopes)
     }
-
+    //Registers the googleOauthClient to the activity launcher the googleOauthClient is a singleton, and it survives while mainActivity is alive.
     override fun registerAuthLauncher(launcher: ActivityResultLauncher<Intent>) {
         googleOauthClient.value.registerAuthLauncher(launcher)
     }

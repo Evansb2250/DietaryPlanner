@@ -15,7 +15,7 @@ interface UserDao {
     suspend fun getUser(
         emailName: String,
         password: String,
-    ): UserEntity
+    ): UserEntity?
 
     @Delete
     suspend fun deleteUser(

@@ -6,6 +6,7 @@ import android.net.Uri
 import com.example.googlelightcalendar.common.Constants
 import net.openid.appauth.AppAuthConfiguration
 import net.openid.appauth.AuthState
+import net.openid.appauth.AuthorizationException
 import net.openid.appauth.AuthorizationRequest
 import net.openid.appauth.AuthorizationService
 import net.openid.appauth.AuthorizationServiceConfiguration
@@ -65,24 +66,32 @@ class OAuthStateHandler @Inject constructor(
     override fun updateAuthState(authStateUpdate: AuthState) {
         authState = authStateUpdate
     }
+
     override fun performTokenRequest(
         tokenRequest: TokenRequest?,
         response: (token: TokenResponse?) -> Unit
     ) {
         if (tokenRequest != null) {
             authorizationService.performTokenRequest(tokenRequest) { response, exception ->
-                if (exception != null) {
-                    authState = AuthState()
-                } else {
-                    if (response != null) {
-                        authState.update(response, exception)
+                try {
+                    if (exception != null) {
+                        authState = AuthState()
+                    } else {
+                        if (response != null) {
+                            authState.update(response, exception)
 //                        response.accessToken
 //                        response.refreshToken
 //                        response.accessTokenExpirationTime
-                        response(response)
-                    }
+                            response(response)
+                        }
 
+                    }
+                } catch (
+                    e: AuthorizationException,
+                ) {
+                    response(null)
                 }
+
             }
         } else {
             response(null)
@@ -91,6 +100,10 @@ class OAuthStateHandler @Inject constructor(
 
     override fun toJsonSerializeString(): String {
         return authState.jsonSerializeString()
+    }
+
+    override fun getAuthorizationScopes(): Set<String> {
+        return authState.scopeSet?.mapNotNull { it }?.toSet() ?: emptySet()
     }
 
 //    fun signOutWithoutRedirect(

@@ -5,7 +5,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import com.example.googlelightcalendar.auth.AuthorizationState
 import com.example.googlelightcalendar.auth.OAuthStateHandler
-import com.example.googlelightcalendar.auth.GoogleOauthClient
+import com.example.googlelightcalendar.auth.OauthClientImp
 import com.example.googlelightcalendar.core.TokenManager
 import dagger.Module
 import dagger.Provides
@@ -45,9 +45,9 @@ class AppModule {
         tokenManager: TokenManager,
         coroutineScope: CoroutineScope,
         authState: OAuthStateHandler,
-    ): Lazy<GoogleOauthClient> {
+    ): Lazy<OauthClientImp> {
         return lazy {
-            GoogleOauthClient(
+            OauthClientImp(
                 context = context,
                 tokenManager = tokenManager,
                 coroutineScope = coroutineScope,

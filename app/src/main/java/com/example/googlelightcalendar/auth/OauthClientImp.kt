@@ -26,19 +26,32 @@ import javax.inject.Singleton
 
 const val TAG = "GoogleOauthClient"
 
+interface OauthClient {
+    var authorizationLauncher: ActivityResultLauncher<Intent>
+
+    fun registerAuthLauncher(
+        launcher: ActivityResultLauncher<Intent>,
+    )
+
+    fun attemptAuthorization(
+        authorizationScopes: Array<String>
+    )
+}
+
+
 @Singleton
-class GoogleOauthClient @Inject constructor(
+class OauthClientImp @Inject constructor(
     @ApplicationContext private val context: Context,
     private val oauthState: AuthorizationState,
     private val tokenManager: TokenManager,
     private val coroutineScope: CoroutineScope,
-) {
+) : OauthClient {
 
     private var scopes = mutableListOf<String>()
     private var jwt: JWT? = null
-    private lateinit var authorizationLauncher: ActivityResultLauncher<Intent>
+    override lateinit var authorizationLauncher: ActivityResultLauncher<Intent>
 
-    fun registerAuthLauncher(
+    override fun registerAuthLauncher(
         launcher: ActivityResultLauncher<Intent>,
     ) {
         // Perform any necessary setup or configuration of the launcher here
@@ -47,7 +60,7 @@ class GoogleOauthClient @Inject constructor(
     }
 
 
-    fun attemptAuthorization(
+    override fun attemptAuthorization(
         authorizationScopes: Array<String>
     ) {
         //clear previous scopes
@@ -70,7 +83,7 @@ class GoogleOauthClient @Inject constructor(
         )
     }
 
-    fun createCodeChallenge(
+    private fun createCodeChallenge(
         codeVerifier: String,
         encoding: Int
     ) {
@@ -84,7 +97,7 @@ class GoogleOauthClient @Inject constructor(
         )
     }
 
-    fun baseauthRequestBuilder(
+    private fun baseauthRequestBuilder(
         codeVerifier: String,
         codeChallenge: String,
     ) {
@@ -113,31 +126,37 @@ class GoogleOauthClient @Inject constructor(
             AsyncResponse<String>
         ) -> Unit = { _ -> }
     ) {
-        val authorizationResponse: AuthorizationResponse? = AuthorizationResponse.fromIntent(intent)
-        val error = AuthorizationException.fromIntent(intent)
+        try {
+            val authorizationResponse: AuthorizationResponse? = AuthorizationResponse.fromIntent(intent)
+            val error: AuthorizationException? = AuthorizationException.fromIntent(intent)
 
-        oauthState.updateAuthState(AuthState(authorizationResponse, error))
 
-        val tokenExchangeRequest = authorizationResponse?.createTokenExchangeRequest()
+            oauthState.updateAuthState(AuthState(authorizationResponse, error))
 
-        if (tokenExchangeRequest != null) {
+            val tokenExchangeRequest = authorizationResponse?.createTokenExchangeRequest()
 
-            oauthState.performTokenRequest(tokenExchangeRequest) { response ->
-                if (response != null) {
-                    jwt = JWT(response.idToken!!)
-                    Log.e(TAG, "Token received ${response.accessToken}")
+            if (tokenExchangeRequest != null) {
+                oauthState.performTokenRequest(tokenExchangeRequest) { response ->
+                    if (response != null) {
+                        jwt = JWT(response.idToken!!)
+                        Log.e(TAG, "Token received ${response.accessToken}")
 
-                    saveToken(response.accessToken ?: "")
+                        saveToken(response.accessToken ?: "")
 
-                    signInState(
-                        AsyncResponse.Success(null)
-                    )
+                        signInState(
+                            AsyncResponse.Success(null)
+                        )
+                    }
+                    persistState()
                 }
-                persistState()
+            } else {
+                signInState(
+                    AsyncResponse.Failed<String>(null, "couldn't get token")
+                )
             }
-        } else {
+        } catch (e: Exception) {
             signInState(
-                AsyncResponse.Failed<String>(null, "couldn't get token")
+                AsyncResponse.Failed<String>(null, "Error found")
             )
         }
     }
@@ -151,7 +170,7 @@ class GoogleOauthClient @Inject constructor(
         }
     }
 
-    fun persistState() {
+    private fun persistState() {
         context.getSharedPreferences(Constants.SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
             .edit()
             .putString(Constants.AUTH_STATE, oauthState.toJsonSerializeString())
