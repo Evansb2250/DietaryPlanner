@@ -16,21 +16,6 @@ import net.openid.appauth.browser.VersionedBrowserMatcher
 import javax.inject.Inject
 import javax.inject.Singleton
 
-interface AuthorizationState {
-    fun getAuthorizationRequestIntent(request: AuthorizationRequest): Intent
-    fun getAuthServiceConfig(): AuthorizationServiceConfiguration
-
-    fun updateAuthState(authStateUpdate: AuthState)
-    fun performTokenRequest(
-        tokenRequest: TokenRequest?,
-        response: (
-            token: TokenResponse?,
-        ) -> Unit,
-    )
-
-    fun toJsonSerializeString(): String
-}
-
 @Singleton
 class OAuthStateHandler @Inject constructor(
     private val context: Context,
@@ -80,7 +65,6 @@ class OAuthStateHandler @Inject constructor(
     override fun updateAuthState(authStateUpdate: AuthState) {
         authState = authStateUpdate
     }
-
     override fun performTokenRequest(
         tokenRequest: TokenRequest?,
         response: (token: TokenResponse?) -> Unit

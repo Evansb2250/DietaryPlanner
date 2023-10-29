@@ -16,7 +16,6 @@ import kotlinx.coroutines.launch
 import net.openid.appauth.AuthState
 import net.openid.appauth.AuthorizationException
 import net.openid.appauth.AuthorizationRequest
-import net.openid.appauth.AuthorizationRequest.Scope
 import net.openid.appauth.AuthorizationResponse
 import net.openid.appauth.ResponseTypeValues
 import java.security.MessageDigest
@@ -51,12 +50,17 @@ class GoogleOauthClient @Inject constructor(
     fun attemptAuthorization(
         authorizationScopes: Array<String>
     ) {
+        //clear previous scopes
+        scopes.clear()
+
         val secureRandom = SecureRandom()
         val bytes = ByteArray(64)
         secureRandom.nextBytes(bytes)
 
         val encoding: Int = Base64.URL_SAFE or Base64.NO_PADDING or Base64.NO_WRAP
         val codeVerifier: String = Base64.encodeToString(bytes, encoding)
+
+        //add new scopes
         scopes.addAll(authorizationScopes)
 
 
