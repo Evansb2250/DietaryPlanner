@@ -7,29 +7,18 @@ import android.util.Base64
 import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
 import com.auth0.android.jwt.JWT
+import com.example.googlelightcalendar.api_service.AuthorizationState
 import com.example.googlelightcalendar.common.Constants
 import com.example.googlelightcalendar.core.TokenManager
 import com.example.googlelightcalendar.utils.AsyncResponse
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import net.openid.appauth.AppAuthConfiguration
 import net.openid.appauth.AuthState
 import net.openid.appauth.AuthorizationException
 import net.openid.appauth.AuthorizationRequest
 import net.openid.appauth.AuthorizationResponse
-import net.openid.appauth.AuthorizationService
-import net.openid.appauth.AuthorizationServiceConfiguration
 import net.openid.appauth.ResponseTypeValues
-import net.openid.appauth.browser.BrowserAllowList
-import net.openid.appauth.browser.VersionedBrowserMatcher
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import org.json.JSONObject
-import java.io.IOException
 import java.security.MessageDigest
 import java.security.SecureRandom
 import javax.inject.Inject
@@ -41,21 +30,13 @@ const val TAG = "GoogleOauthClient"
 @Singleton
 class GoogleOauthClient @Inject constructor(
     @ApplicationContext private val context: Context,
+    private val oauthState: AuthorizationState,
     private val tokenManager: TokenManager,
-    private val coroutineScope: CoroutineScope
+    private val coroutineScope: CoroutineScope,
 ) {
 
-    private var authState: AuthState = AuthState()
     private var jwt: JWT? = null
-    private lateinit var authorizationService: AuthorizationService
-    private lateinit var authServiceConfig: AuthorizationServiceConfiguration
     private lateinit var authorizationLauncher: ActivityResultLauncher<Intent>
-
-    init {
-        initAuthService()
-        initAuthServiceConfig()
-    }
-
 
     fun registerAuthLauncher(
         launcher: ActivityResultLauncher<Intent>,
@@ -65,31 +46,6 @@ class GoogleOauthClient @Inject constructor(
         authorizationLauncher = launcher
     }
 
-
-    private fun initAuthService() {
-        val appAuthConfiguration = AppAuthConfiguration.Builder()
-            .setBrowserMatcher(
-                BrowserAllowList(
-                    VersionedBrowserMatcher.CHROME_CUSTOM_TAB,
-                    VersionedBrowserMatcher.SAMSUNG_CUSTOM_TAB
-                )
-            ).build()
-
-        authorizationService = AuthorizationService(
-            context.applicationContext,
-            appAuthConfiguration
-        )
-    }
-
-
-    private fun initAuthServiceConfig() {
-        authServiceConfig = AuthorizationServiceConfiguration(
-            Uri.parse(Constants.URL_AUTHORIZATION),
-            Uri.parse(Constants.URL_TOKEN_EXCHANGE),
-            null,
-            Uri.parse(Constants.URL_LOGOUT)
-        )
-    }
 
     fun attemptAuthorization() {
         val secureRandom = SecureRandom()
@@ -103,90 +59,7 @@ class GoogleOauthClient @Inject constructor(
             codeVerifier,
             encoding
         )
-
     }
-
-    fun handleAuthorizationResponse(
-        intent: Intent,
-        signInState: (
-            AsyncResponse<String>
-        ) -> Unit = { _ -> }
-    ) {
-        val authorizationResponse: AuthorizationResponse? = AuthorizationResponse.fromIntent(intent)
-        val error = AuthorizationException.fromIntent(intent)
-
-        authState = AuthState(authorizationResponse, error)
-
-        val tokenExchangeRequest = authorizationResponse?.createTokenExchangeRequest()
-
-        if (tokenExchangeRequest != null) {
-            authorizationService.performTokenRequest(tokenExchangeRequest) { response, exception ->
-                if (exception != null) {
-                    authState = AuthState()
-                } else {
-                    if (response != null) {
-                        authState.update(response, exception)
-                        Log.d(TAG, "Response  ${authState.jsonSerializeString()}")
-//                        response.accessToken
-//                        response.refreshToken
-//                        response.accessTokenExpirationTime
-//
-
-                        jwt = JWT(response.idToken!!)
-                        Log.e(TAG, "Token received ${response.accessToken}")
-
-                        saveToken(response.accessToken ?: "")
-
-                        signInState(
-                            AsyncResponse.Success(null)
-                        )
-                    }
-                }
-                persistState()
-            }
-        } else {
-            signInState(
-                AsyncResponse.Failed<String>(null, "couldn't get token")
-            )
-        }
-    }
-
-    private fun saveToken(
-        authToken: String,
-    ) {
-        Log.d("GOOGLE AUTH", " Saving token $authToken")
-        coroutineScope.launch {
-            tokenManager.saveToken(authToken)
-        }
-    }
-
-
-    fun persistState() {
-        context.getSharedPreferences(Constants.SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
-            .edit()
-            .putString(Constants.AUTH_STATE, authState.jsonSerializeString())
-            .commit()
-    }
-
-    fun signOutWithoutRedirect(
-        signInState: (Boolean) -> Unit = {}
-    ) {
-        GlobalScope.launch {
-            val client = OkHttpClient()
-            val request = Request.Builder()
-                .url(Constants.URL_LOGOUT + authState.idToken)
-                .build()
-
-            try {
-                client.newCall(request).execute()
-            } catch (e: IOException) {
-            } finally {
-                signInState(false)
-            }
-
-        }
-    }
-
 
     fun createCodeChallenge(
         codeVerifier: String,
@@ -207,7 +80,7 @@ class GoogleOauthClient @Inject constructor(
         codeChallenge: String
     ) {
         val builder = AuthorizationRequest.Builder(
-            authServiceConfig,
+            oauthState.getAuthServiceConfig(),
             Constants.CLIENT_ID,
             ResponseTypeValues.CODE,
             Uri.parse(Constants.URL_AUTH_REDIRECT)
@@ -225,43 +98,62 @@ class GoogleOauthClient @Inject constructor(
             Constants.CALENDAR_READ_ONLY,
         )
 
-
         val request = builder.build()
-        val authIntent: Intent = authorizationService.getAuthorizationRequestIntent(request)
-
+        val authIntent: Intent = oauthState.getAuthorizationRequestIntent(request)
 
         authorizationLauncher.launch(authIntent)
     }
 
-    fun makeApiCall() {
-        authState.performActionWithFreshTokens(
-            authorizationService,
-            object : AuthState.AuthStateAction {
-                override fun execute(
-                    accessToken: String?,
-                    idToken: String?,
-                    ex: AuthorizationException?
-                ) {
-                    GlobalScope.launch {
-                        async(Dispatchers.IO) {
-                            val client = OkHttpClient()
-                            val request = Request.Builder()
-                                .url(Constants.URL_API_CALL)
-                                .addHeader("Authorization", "Bearer " + authState.accessToken)
-                                .build()
 
-                            try {
-                                val response = client.newCall(request).execute()
-                                val jsonBody = response.body?.string() ?: ""
-                                Log.i(TAG, JSONObject(jsonBody).toString())
-                            } catch (e: Exception) {
-                            }
-                        }
-                    }
+    fun handleAuthorizationResponse(
+        intent: Intent,
+        signInState: (
+            AsyncResponse<String>
+        ) -> Unit = { _ -> }
+    ) {
+        val authorizationResponse: AuthorizationResponse? = AuthorizationResponse.fromIntent(intent)
+        val error = AuthorizationException.fromIntent(intent)
+
+        oauthState.updateAuthState(AuthState(authorizationResponse, error))
+
+        val tokenExchangeRequest = authorizationResponse?.createTokenExchangeRequest()
+
+        if (tokenExchangeRequest != null) {
+
+            oauthState.performTokenRequest(tokenExchangeRequest) { response ->
+                if (response != null) {
+                    jwt = JWT(response.idToken!!)
+                    Log.e(TAG, "Token received ${response.accessToken}")
+
+                    saveToken(response.accessToken ?: "")
+
+                    signInState(
+                        AsyncResponse.Success(null)
+                    )
                 }
-            },
-        )
+                persistState()
+            }
+        } else {
+            signInState(
+                AsyncResponse.Failed<String>(null, "couldn't get token")
+            )
+        }
     }
 
+    private fun saveToken(
+        authToken: String,
+    ) {
+        Log.d("GOOGLE AUTH", " Saving token $authToken")
+        coroutineScope.launch {
+            tokenManager.saveToken(authToken)
+        }
+    }
+
+    fun persistState() {
+        context.getSharedPreferences(Constants.SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
+            .edit()
+            .putString(Constants.AUTH_STATE, oauthState.toJsonSerializeString())
+            .commit()
+    }
 }
 

@@ -6,7 +6,6 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 
 const val BASE_URL = "https://www.googleapis.com"
 class GoogleCalendarClient {
-    companion object{
         private lateinit var instance: GoogleCalendarApiService
 
         fun getService(): GoogleCalendarApiService{
@@ -21,5 +20,4 @@ class GoogleCalendarClient {
 
             return instance
         }
-    }
 }
