@@ -1,4 +1,4 @@
-package com.example.googlelightcalendar.api_service
+package com.example.googlelightcalendar.auth
 
 import android.content.Context
 import android.content.Intent

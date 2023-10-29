@@ -5,6 +5,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.googlelightcalendar.common.Constants
 import com.example.googlelightcalendar.interfaces.AppAuthClient
 import com.example.googlelightcalendar.repo.UserRepository
 import com.example.googlelightcalendar.utils.AsyncResponse
@@ -63,7 +64,16 @@ class LoginViewModel @Inject constructor(
         MutableStateFlow(LoginScreenStates.LoginScreenState())
 
     fun signInWithGoogle() {
-        userRepository.attemptAuthorization()
+        userRepository.attemptAuthorization(
+            arrayOf(
+                Constants.SCOPE_PROFILE,
+                Constants.SCOPE_EMAIL,
+                Constants.SCOPE_OPENID,
+                Constants.CALENDAR_SCOPE,
+                Constants.CALENDAR_EVENTS,
+                Constants.CALENDAR_READ_ONLY,
+            )
+        )
     }
 
     fun signInManually(

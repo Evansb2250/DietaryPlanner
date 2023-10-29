@@ -7,7 +7,6 @@ import android.util.Base64
 import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
 import com.auth0.android.jwt.JWT
-import com.example.googlelightcalendar.api_service.AuthorizationState
 import com.example.googlelightcalendar.common.Constants
 import com.example.googlelightcalendar.core.TokenManager
 import com.example.googlelightcalendar.utils.AsyncResponse
@@ -17,6 +16,7 @@ import kotlinx.coroutines.launch
 import net.openid.appauth.AuthState
 import net.openid.appauth.AuthorizationException
 import net.openid.appauth.AuthorizationRequest
+import net.openid.appauth.AuthorizationRequest.Scope
 import net.openid.appauth.AuthorizationResponse
 import net.openid.appauth.ResponseTypeValues
 import java.security.MessageDigest
@@ -35,6 +35,7 @@ class GoogleOauthClient @Inject constructor(
     private val coroutineScope: CoroutineScope,
 ) {
 
+    private var scopes = mutableListOf<String>()
     private var jwt: JWT? = null
     private lateinit var authorizationLauncher: ActivityResultLauncher<Intent>
 
@@ -47,13 +48,17 @@ class GoogleOauthClient @Inject constructor(
     }
 
 
-    fun attemptAuthorization() {
+    fun attemptAuthorization(
+        authorizationScopes: Array<String>
+    ) {
         val secureRandom = SecureRandom()
         val bytes = ByteArray(64)
         secureRandom.nextBytes(bytes)
 
-        val encoding = Base64.URL_SAFE or Base64.NO_PADDING or Base64.NO_WRAP
-        val codeVerifier = Base64.encodeToString(bytes, encoding)
+        val encoding: Int = Base64.URL_SAFE or Base64.NO_PADDING or Base64.NO_WRAP
+        val codeVerifier: String = Base64.encodeToString(bytes, encoding)
+        scopes.addAll(authorizationScopes)
+
 
         createCodeChallenge(
             codeVerifier,
@@ -77,7 +82,7 @@ class GoogleOauthClient @Inject constructor(
 
     fun baseauthRequestBuilder(
         codeVerifier: String,
-        codeChallenge: String
+        codeChallenge: String,
     ) {
         val builder = AuthorizationRequest.Builder(
             oauthState.getAuthServiceConfig(),
@@ -89,14 +94,7 @@ class GoogleOauthClient @Inject constructor(
             codeChallenge,
             Constants.CODE_VERIFIER_CHALLENGE_METHOD
         )
-        builder.setScopes(
-            Constants.SCOPE_PROFILE,
-            Constants.SCOPE_EMAIL,
-            Constants.SCOPE_OPENID,
-            Constants.CALENDAR_SCOPE,
-            Constants.CALENDAR_EVENTS,
-            Constants.CALENDAR_READ_ONLY,
-        )
+        builder.setScopes(scopes)
 
         val request = builder.build()
         val authIntent: Intent = oauthState.getAuthorizationRequestIntent(request)

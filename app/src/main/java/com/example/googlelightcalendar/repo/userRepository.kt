@@ -12,7 +12,9 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 interface UserRepository {
-    fun attemptAuthorization()
+    fun attemptAuthorization(
+        authorizationScopes: Array<String>
+    )
 
     fun registerAuthLauncher(
         launcher: ActivityResultLauncher<Intent>
@@ -41,8 +43,10 @@ class UserRepositoryImpl @Inject constructor(
     private val tokenManager: TokenManager,
 ) : UserRepository {
 
-    override fun attemptAuthorization() {
-        googleOauthClient.value.attemptAuthorization()
+    override fun attemptAuthorization(
+        authorizationScopes: Array<String>
+    ) {
+        googleOauthClient.value.attemptAuthorization(authorizationScopes)
     }
 
     override fun registerAuthLauncher(launcher: ActivityResultLauncher<Intent>) {

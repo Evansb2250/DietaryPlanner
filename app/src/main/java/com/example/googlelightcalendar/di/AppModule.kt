@@ -3,8 +3,8 @@ package com.example.googlelightcalendar.di
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import com.example.googlelightcalendar.api_service.AuthorizationState
-import com.example.googlelightcalendar.api_service.OAuthStateHandler
+import com.example.googlelightcalendar.auth.AuthorizationState
+import com.example.googlelightcalendar.auth.OAuthStateHandler
 import com.example.googlelightcalendar.auth.GoogleOauthClient
 import com.example.googlelightcalendar.core.TokenManager
 import dagger.Module
