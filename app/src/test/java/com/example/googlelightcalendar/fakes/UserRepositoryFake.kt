@@ -2,6 +2,7 @@ package com.example.googlelightcalendar.fakes
 
 import android.content.Intent
 import androidx.activity.result.ActivityResultLauncher
+import com.example.googlelightcalendar.auth.OauthClient
 import com.example.googlelightcalendar.data.room.database.dao.UserDao
 import com.example.googlelightcalendar.data.room.database.models.toUser
 import com.example.googlelightcalendar.domain.User
@@ -11,11 +12,25 @@ import com.example.googlelightcalendar.utils.AsyncResponse
 data class GoogleOAuthClientFake(
     var attemptToAuthorize: Boolean = false,
     var isRegistered: Boolean = false,
-)
+): OauthClient{
+    override var authorizationLauncher: ActivityResultLauncher<Intent>
+        get() = TODO("Not yet implemented")
+        set(value) {}
+
+    override fun registerAuthLauncher(launcher: ActivityResultLauncher<Intent>) {
+        TODO("Not yet implemented")
+    }
+
+    override fun attemptAuthorization(authorizationScopes: Array<String>) {
+        TODO("Not yet implemented")
+    }
+
+}
 
 
 class UserRepositoryFake(
-    val userDaoFake: UserDao
+    val userDaoFake: UserDao,
+
 ) : UserRepository {
     var authStateScopes = mutableListOf<String>()
     var googleOAuthClient = GoogleOAuthClientFake()

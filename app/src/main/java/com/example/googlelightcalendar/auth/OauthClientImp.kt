@@ -127,7 +127,8 @@ class OauthClientImp @Inject constructor(
         ) -> Unit = { _ -> }
     ) {
         try {
-            val authorizationResponse: AuthorizationResponse? = AuthorizationResponse.fromIntent(intent)
+            val authorizationResponse: AuthorizationResponse? =
+                AuthorizationResponse.fromIntent(intent)
             val error: AuthorizationException? = AuthorizationException.fromIntent(intent)
 
 
@@ -139,9 +140,9 @@ class OauthClientImp @Inject constructor(
                 oauthState.performTokenRequest(tokenExchangeRequest) { response ->
                     if (response != null) {
                         jwt = JWT(response.idToken!!)
-                        Log.e(TAG, "Token received ${response.accessToken}")
 
-                        saveToken(response.accessToken ?: "")
+                        saveToken( TokenType.Access, response.accessToken ?: "")
+                        saveToken(TokenType.ID, response.idToken ?: "")
 
                         signInState(
                             AsyncResponse.Success(null)
@@ -162,11 +163,14 @@ class OauthClientImp @Inject constructor(
     }
 
     private fun saveToken(
+        tokenType: TokenType,
         authToken: String,
     ) {
         Log.d("GOOGLE AUTH", " Saving token $authToken")
         coroutineScope.launch {
-            tokenManager.saveToken(authToken)
+            tokenManager.saveToken(
+                tokenManager.getTokenType(tokenType), authToken
+            )
         }
     }
 

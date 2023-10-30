@@ -3,7 +3,7 @@ package com.example.googlelightcalendar.repo
 import android.content.Intent
 import androidx.activity.result.ActivityResultLauncher
 import com.example.googlelightcalendar.auth.OauthClientImp
-import com.example.googlelightcalendar.core.TokenManager
+import com.example.googlelightcalendar.core.GoogleTokenManagerImpl
 import com.example.googlelightcalendar.data.room.database.dao.UserDao
 import com.example.googlelightcalendar.data.room.database.models.toUser
 import com.example.googlelightcalendar.domain.User
@@ -40,7 +40,7 @@ interface UserRepository {
 class UserRepositoryImpl @Inject constructor(
     private val googleOauthClient: Lazy<OauthClientImp>,
     private val userDao: UserDao,
-    private val tokenManager: TokenManager,
+    private val tokenManager: GoogleTokenManagerImpl,
 ) : UserRepository {
 
     // Aysnc response is received in the ActivityResultLauncher in the loginScreen
