@@ -7,9 +7,9 @@ sealed class Token(
     open val tokenType: String
 ) {
     sealed class GoogleToken(
-        open val googleTokenType: String
+        open val tokenName: String
     ) : Token(
-        tokenType = googleTokenType
+        tokenType = tokenName
     ) {
         object IdToken : GoogleToken("GoogleToken")
         object AccessToken : GoogleToken("AccessToken")

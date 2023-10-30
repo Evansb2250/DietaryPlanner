@@ -6,7 +6,7 @@ import com.example.googlelightcalendar.data.room.database.dao.UserDao
 
 class UserRepositoryImplTest {
     private lateinit var repository: UserRepository
-    private lateinit var googleOauthClient: Lazy<OauthClientImp>
+    private lateinit var googleOauthClient: OauthClientImp
     private lateinit var userDao: UserDao
     private lateinit var tokenManager: GoogleTokenManagerImpl
 

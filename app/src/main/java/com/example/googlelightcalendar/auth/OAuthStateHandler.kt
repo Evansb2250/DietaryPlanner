@@ -79,9 +79,7 @@ class OAuthStateHandler @Inject constructor(
                     } else {
                         if (response != null) {
                             authState.update(response, exception)
-//                        response.accessToken
-//                        response.refreshToken
-//                        response.accessTokenExpirationTime
+
                             response(response)
                         }
 

@@ -6,7 +6,7 @@ import com.example.googlelightcalendar.data.room.database.models.UserEntity
 class UserDaoFake : UserDao {
     private val inMemeryUserDao = hashMapOf<String, UserEntity>()
     override suspend fun insertUser(newUser: UserEntity) {
-        inMemeryUserDao.put(newUser.userName, newUser)
+        inMemeryUserDao[newUser.userName] = newUser
     }
 
     override suspend fun getUser(emailName: String, password: String): UserEntity? =

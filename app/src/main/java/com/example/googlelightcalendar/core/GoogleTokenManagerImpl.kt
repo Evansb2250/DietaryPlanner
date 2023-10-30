@@ -5,9 +5,8 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.example.googlelightcalendar.auth.Token
-import com.example.googlelightcalendar.auth.TokenType
 import com.example.googlelightcalendar.auth.createPreferenceKey
-import com.example.googlelightcalendar.utils.getTokenKeyType
+import com.example.googlelightcalendar.utils.TokenUtil
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -16,9 +15,6 @@ import javax.inject.Singleton
 const val GoogleToken = "GoogleToken"
 
 interface TokenManager {
-    suspend fun getTokenType(
-        token: TokenType
-    ): Token
     suspend fun saveToken(key: Token, token: String)
     suspend fun <T : Token> fetchToken(
         key: T
@@ -41,16 +37,8 @@ class GoogleTokenManagerImpl @Inject constructor(
         preferences[Token.GoogleToken.ExpirationToken.createPreferenceKey()] ?: ""
     }
 
-    override suspend fun getTokenType(token: TokenType): Token {
-      return when(token){
-            TokenType.Access -> Token.GoogleToken.AccessToken
-            TokenType.Expiration -> Token.GoogleToken.ExpirationToken
-            TokenType.ID -> Token.GoogleToken.IdToken
-        }
-    }
-
     override suspend fun saveToken(key: Token, token: String) {
-        val dataStoreKey = getTokenKeyType(key)
+        val dataStoreKey =  TokenUtil.getTokenKey(key)
 
         val preferencesKey = stringPreferencesKey(dataStoreKey)
 

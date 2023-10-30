@@ -10,6 +10,7 @@ import com.auth0.android.jwt.JWT
 import com.example.googlelightcalendar.common.Constants
 import com.example.googlelightcalendar.core.TokenManager
 import com.example.googlelightcalendar.utils.AsyncResponse
+import com.example.googlelightcalendar.utils.TokenUtil.getTokenType
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -27,8 +28,6 @@ import javax.inject.Singleton
 const val TAG = "GoogleOauthClient"
 
 interface OauthClient {
-    var authorizationLauncher: ActivityResultLauncher<Intent>
-
     fun registerAuthLauncher(
         launcher: ActivityResultLauncher<Intent>,
     )
@@ -49,7 +48,7 @@ class OauthClientImp @Inject constructor(
 
     private var scopes = mutableListOf<String>()
     private var jwt: JWT? = null
-    override lateinit var authorizationLauncher: ActivityResultLauncher<Intent>
+    private lateinit var authorizationLauncher: ActivityResultLauncher<Intent>
 
     override fun registerAuthLauncher(
         launcher: ActivityResultLauncher<Intent>,
@@ -169,7 +168,7 @@ class OauthClientImp @Inject constructor(
         Log.d("GOOGLE AUTH", " Saving token $authToken")
         coroutineScope.launch {
             tokenManager.saveToken(
-                tokenManager.getTokenType(tokenType), authToken
+                getTokenType(tokenType), authToken
             )
         }
     }

@@ -9,37 +9,16 @@ import com.example.googlelightcalendar.domain.User
 import com.example.googlelightcalendar.repo.UserRepository
 import com.example.googlelightcalendar.utils.AsyncResponse
 
-data class GoogleOAuthClientFake(
-    var attemptToAuthorize: Boolean = false,
-    var isRegistered: Boolean = false,
-): OauthClient{
-    override var authorizationLauncher: ActivityResultLauncher<Intent>
-        get() = TODO("Not yet implemented")
-        set(value) {}
-
-    override fun registerAuthLauncher(launcher: ActivityResultLauncher<Intent>) {
-        TODO("Not yet implemented")
-    }
-
-    override fun attemptAuthorization(authorizationScopes: Array<String>) {
-        TODO("Not yet implemented")
-    }
-
-}
-
-
 class UserRepositoryFake(
+    val oauthClient: OauthClient,
     val userDaoFake: UserDao,
-
 ) : UserRepository {
-    var authStateScopes = mutableListOf<String>()
-    var googleOAuthClient = GoogleOAuthClientFake()
     override fun attemptAuthorization(authorizationScopes: Array<String>) {
-        authStateScopes.addAll(authorizationScopes)
+        oauthClient.attemptAuthorization(authorizationScopes)
     }
 
     override fun registerAuthLauncher(launcher: ActivityResultLauncher<Intent>) {
-        googleOAuthClient.isRegistered = true
+        oauthClient.registerAuthLauncher(launcher)
     }
 
     override suspend fun signIn(userName: String, password: String): AsyncResponse<User?> {
