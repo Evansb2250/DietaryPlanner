@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.activity.result.ActivityResultLauncher
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.room.util.copy
 import com.example.googlelightcalendar.common.Constants
 import com.example.googlelightcalendar.interfaces.AppAuthClient
 import com.example.googlelightcalendar.repo.UserRepository
@@ -32,7 +33,11 @@ class LoginViewModel @Inject constructor(
         Constants.CALENDAR_READ_ONLY,
     )
 
-    private val _state: MutableStateFlow<LoginScreenStates.LoginScreenState> = MutableStateFlow(LoginScreenStates.LoginScreenState())
+    private val _state: MutableStateFlow<LoginScreenStates.LoginScreenState> = MutableStateFlow(
+        LoginScreenStates.LoginScreenState(
+            isLoading = true,
+        )
+    )
 
     val state: StateFlow<LoginScreenStates.LoginScreenState> = _state.asStateFlow()
     fun signInWithGoogle() {
@@ -80,6 +85,8 @@ class LoginViewModel @Inject constructor(
         userRepository.handleAuthorizationResponse(intent) { signedIn, serverResponse ->
             _state.update { it ->
                 it.copy(
+                    loggedInSuccessfully = signedIn,
+                    isLoading = false,
                     error = if (!signedIn) LoginScreenStates.LoginError(serverResponse) else null
                 )
             }

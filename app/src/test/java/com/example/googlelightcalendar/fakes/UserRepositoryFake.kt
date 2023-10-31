@@ -40,9 +40,18 @@ class UserRepositoryFake(
         intent: Intent,
         authorizationResponse: (signedIn: Boolean, serverResponse: String) -> Unit
     ) {
-      authorizationResponse(
-          true,
-          "Will Mock this later"
-      )
+
+        if((oauthClient as OAuthClientFake).isRegistered && (oauthClient as OAuthClientFake).attemptToAuthorize){
+            authorizationResponse(
+                true,
+                "Will Mock this later"
+            )
+        }else{
+            authorizationResponse(
+                false,
+                "Will Mock this later"
+            )
+        }
+
     }
 }

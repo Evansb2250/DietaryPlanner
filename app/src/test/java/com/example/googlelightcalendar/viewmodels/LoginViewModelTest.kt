@@ -2,6 +2,7 @@ package com.example.googlelightcalendar.viewmodels
 
 import android.content.Intent
 import androidx.activity.result.ActivityResultLauncher
+import app.cash.turbine.test
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import com.example.googlelightcalendar.core.viewmodels.login.LoginViewModel
@@ -9,6 +10,7 @@ import com.example.googlelightcalendar.data.room.database.dao.UserDao
 import com.example.googlelightcalendar.fakes.OAuthClientFake
 import com.example.googlelightcalendar.fakes.UserDaoFake
 import com.example.googlelightcalendar.fakes.UserRepositoryFake
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -41,13 +43,29 @@ class LoginViewModelTest {
 
 
     @Test
-    fun signIn() {
+    fun signIn() = runBlocking {
         val mockedLauncher = mock<ActivityResultLauncher<Intent>>()
+        loginViewModel.state.test {
+            //Initial
+            val loadingState = awaitItem()
 
-        assertThat(oauthClientFake.attemptToAuthorize).isEqualTo(false)
-        loginViewModel.registerAuthLauncher(mockedLauncher)
-        loginViewModel.signInWithGoogle()
-        assertThat(oauthClientFake.attemptToAuthorize).isEqualTo(true)
+            assertThat(loadingState.isLoading).isEqualTo(true)
+
+            assertThat(oauthClientFake.attemptToAuthorize).isEqualTo(false)
+
+           loginViewModel.registerAuthLauncher(mockedLauncher)
+
+            loginViewModel.signInWithGoogle()
+
+           assertThat(oauthClientFake.attemptToAuthorize).isEqualTo(true)
+
+            loginViewModel.handleAuthorizationResponse(mock())
+
+
+            val nextState = awaitItem()
+
+            assertThat(nextState.loggedInSuccessfully).isEqualTo(true)
+        }
     }
 
     @Test

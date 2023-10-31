@@ -172,4 +172,7 @@ dependencies {
     testImplementation("org.mockito:mockito-core:5.1.0")
     testImplementation("org.mockito.kotlin:mockito-kotlin:5.1.0")
     testImplementation("io.mockk:mockk:1.12.5")
+
+    //Turbine dependency for testing flows
+    testImplementation("app.cash.turbine:turbine:1.0.0")
 }
