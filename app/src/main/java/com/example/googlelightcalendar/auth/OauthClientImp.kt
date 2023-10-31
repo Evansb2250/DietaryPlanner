@@ -1,5 +1,6 @@
 package com.example.googlelightcalendar.auth
 
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -100,22 +101,26 @@ class OauthClientImp @Inject constructor(
         codeVerifier: String,
         codeChallenge: String,
     ) {
-        val builder = AuthorizationRequest.Builder(
-            oauthState.getAuthServiceConfig(),
-            Constants.CLIENT_ID,
-            ResponseTypeValues.CODE,
-            Uri.parse(Constants.URL_AUTH_REDIRECT)
-        ).setCodeVerifier(
-            codeVerifier,
-            codeChallenge,
-            Constants.CODE_VERIFIER_CHALLENGE_METHOD
-        )
-        builder.setScopes(scopes)
+        try {
+            val builder = AuthorizationRequest.Builder(
+                oauthState.getAuthServiceConfig(),
+                Constants.CLIENT_ID,
+                ResponseTypeValues.CODE,
+                Uri.parse(Constants.URL_AUTH_REDIRECT)
+            ).setCodeVerifier(
+                codeVerifier,
+                codeChallenge,
+                Constants.CODE_VERIFIER_CHALLENGE_METHOD
+            )
+            builder.setScopes(scopes)
 
-        val request = builder.build()
-        val authIntent: Intent = oauthState.getAuthorizationRequestIntent(request)
+            val request = builder.build()
+            val authIntent: Intent = oauthState.getAuthorizationRequestIntent(request)
 
-        authorizationLauncher.launch(authIntent)
+            authorizationLauncher.launch(authIntent)
+        } catch (e: ActivityNotFoundException) {
+            // Create an error state here catches error.
+        }
     }
 
 
@@ -140,8 +145,15 @@ class OauthClientImp @Inject constructor(
                     if (response != null) {
                         jwt = JWT(response.idToken!!)
 
-                        saveToken( TokenType.Access, response.accessToken ?: "")
-                        saveToken(TokenType.ID, response.idToken ?: "")
+                        saveToken(
+                            tokenType = TokenType.Access,
+                            token = response.accessToken ?: "",
+                        )
+
+                        saveToken(
+                            tokenType = TokenType.ID,
+                            token = response.idToken ?: "",
+                        )
 
                         signInState(
                             AsyncResponse.Success(null)
@@ -163,12 +175,12 @@ class OauthClientImp @Inject constructor(
 
     private fun saveToken(
         tokenType: TokenType,
-        authToken: String,
+        token: String,
     ) {
-        Log.d("GOOGLE AUTH", " Saving token $authToken")
+        Log.d("GOOGLE AUTH", " Saving token $token")
         coroutineScope.launch {
             tokenManager.saveToken(
-                getTokenType(tokenType), authToken
+                getTokenType(tokenType), token
             )
         }
     }

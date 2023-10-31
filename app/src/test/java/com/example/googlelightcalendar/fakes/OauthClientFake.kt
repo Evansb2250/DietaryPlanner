@@ -1,5 +1,6 @@
 package com.example.googlelightcalendar.fakes
 
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import androidx.activity.result.ActivityResultLauncher
 import com.example.googlelightcalendar.auth.OauthClient
@@ -18,6 +19,13 @@ data class OAuthClientFake(
         // can only be called if the launcher has been registered.
         if(isRegistered){
             attemptToAuthorize = true
+        } else {
+            throw ActivityNotFoundException("Launcher is not registered")
         }
+
+    }
+
+    fun cancelOauthProcess(){
+        attemptToAuthorize = false
     }
 }

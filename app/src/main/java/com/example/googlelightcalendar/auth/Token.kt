@@ -16,7 +16,6 @@ sealed class Token(
         object ExpirationToken : GoogleToken("ExpirationToken")
     }
 
-    sealed class NutriotionKTokens : Token("nutrion")
 }
 
 
