@@ -10,19 +10,25 @@ import androidx.activity.result.ActivityResultLauncher
 import com.auth0.android.jwt.JWT
 import com.example.googlelightcalendar.common.Constants
 import com.example.googlelightcalendar.core.TokenManager
+import com.example.googlelightcalendar.domain.User
 import com.example.googlelightcalendar.utils.AsyncResponse
 import com.example.googlelightcalendar.utils.TokenUtil.getTokenType
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier
+import com.google.api.client.http.javanet.NetHttpTransport
+import com.google.api.client.json.gson.GsonFactory
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import net.openid.appauth.AuthState
 import net.openid.appauth.AuthorizationException
 import net.openid.appauth.AuthorizationRequest
 import net.openid.appauth.AuthorizationResponse
 import net.openid.appauth.ResponseTypeValues
+import net.openid.appauth.TokenResponse
 import java.security.MessageDigest
 import java.security.SecureRandom
+import java.util.Collections
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -129,15 +135,24 @@ class OauthClientImp @Inject constructor(
 
     fun handleAuthorizationResponse(
         intent: Intent,
-        signInState: (
-            AsyncResponse<String>
-        ) -> Unit = { _ -> }
+        authorizationResponse: AuthorizationResponse? = AuthorizationResponse.fromIntent(intent),
+        error: AuthorizationException? = AuthorizationException.fromIntent(intent),
+        authorizationResponseCallback: (
+            AsyncResponse<User?>
+        ) -> Unit = { _ -> },
     ) {
         try {
-            val authorizationResponse: AuthorizationResponse? =
-                AuthorizationResponse.fromIntent(intent)
-            val error: AuthorizationException? = AuthorizationException.fromIntent(intent)
 
+            val coroutineHandler = CoroutineExceptionHandler { _, exception ->
+                //If we can't verify the GoogleToken throw an exception.
+                println("CoroutineExceptionHandler got ${exception.message}")
+                authorizationResponseCallback(
+                    AsyncResponse.Failed(
+                        data = null,
+                        message = exception.message,
+                    )
+                )
+            }
 
             oauthState.updateAuthState(AuthState(authorizationResponse, error))
 
@@ -148,42 +163,90 @@ class OauthClientImp @Inject constructor(
                     if (response != null) {
                         jwt = JWT(response.idToken!!)
 
-                        saveToken(
-                            tokenType = TokenType.Access,
-                            token = response.accessToken ?: "",
-                        )
+                        storeTokenResponse(response)
 
-                        saveToken(
-                            tokenType = TokenType.ID,
-                            token = response.idToken ?: "",
-                        )
+                        validateGoogleToken(
+                            tokenId = response.idToken ?: "",
+                            coroutineScopeHandler = coroutineHandler,
+                        ) { email, name ->
 
-                        signInState(
-                            AsyncResponse.Success(null)
-                        )
+                            //If we can't attach the email to the account we should throw an error.
+                            if (email.isNullOrBlank()) {
+                                throw Exception(
+                                    "Missing information to create a user.",
+                                )
+                            }
+
+                            authorizationResponseCallback(
+                                AsyncResponse.Success(
+                                    data = User(
+                                        userName = email,
+                                        name = name ?: "",
+                                    )
+                                )
+                            )
+                        }
                     }
                     persistState()
                 }
             } else {
-                signInState(
-                    AsyncResponse.Failed<String>(null, "couldn't get token")
+                authorizationResponseCallback(
+                    AsyncResponse.Failed(null, "couldn't get token")
                 )
             }
         } catch (e: Exception) {
-            signInState(
-                AsyncResponse.Failed<String>(null, "Error found")
+            authorizationResponseCallback(
+                AsyncResponse.Failed(null, "Error found")
             )
         }
     }
 
-    private fun saveToken(
-        tokenType: TokenType,
-        token: String,
+    //Needs to be ran in a suspend function.
+    fun validateGoogleToken(
+        tokenId: String,
+        coroutineScopeHandler: CoroutineExceptionHandler,
+        userInfoCallBack: (String?, String?) -> Unit = { _, _ -> }
     ) {
-        Log.d("GOOGLE AUTH", " Saving token $token")
+        /**
+         * Needs to be ran in a coroutine to move the work of the main thread.
+         */
+        coroutineScope.launch(coroutineScopeHandler) {
+            val transport = NetHttpTransport()
+            val json = GsonFactory.getDefaultInstance()
+            val verifier: GoogleIdTokenVerifier = GoogleIdTokenVerifier.Builder(
+                transport,
+                json
+            ).setAudience(
+                Collections.singleton(Constants.CLIENT_ID)
+            ).build()
+
+            val idToken = verifier.verify(tokenId)
+            if (idToken != null) {
+                userInfoCallBack(
+                    idToken.getPayload().email,
+                    idToken.getPayload().get("name") as String,
+                )
+                Log.d(
+                    "googleIdTokenValidation ", " email ${idToken.getPayload().email}"
+                )
+            } else
+                throw Exception("Couldn't verify token")
+        }
+    }
+
+    private fun storeTokenResponse(
+        response: TokenResponse,
+    ) {
+        val accessToken: String = response.accessToken ?: return
+        val idToken: String = response.idToken ?: return
         coroutineScope.launch {
+
             tokenManager.saveToken(
-                getTokenType(tokenType), token
+                getTokenType(TokenType.Access), accessToken,
+            )
+
+            tokenManager.saveToken(
+                getTokenType(TokenType.ID), idToken,
             )
         }
     }

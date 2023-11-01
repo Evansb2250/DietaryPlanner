@@ -15,5 +15,5 @@ data class UserEntity(
 
 fun UserEntity.toUser(): User = User(
     userName = this.userName,
-    password = this.password,
+    name = this.name,
 )

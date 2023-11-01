@@ -34,10 +34,6 @@ Iapp/src/test/java/com/example/googlelightcalendar/auth/OauthClientTest.kt,8\0\
 Oapp/src/test/java/com/example/googlelightcalendar/auth/OAuthStateHandlerTest.kt,0\8\08a1fb31cbbbda3ddb2c130787aba2feb411dcb5
 r
 Bapp/src/main/java/com/example/googlelightcalendar/di/RoomModule.kt,8\3\832957e96d5dc076f9f3dc5e2cdb3ff01f2019bd
-Ñ
-Tapp/src/main/java/com/example/googlelightcalendar/screens/loginScreen/LoginScreen.kt,6\e\6ee6e84fed0b89cf5cdcc6ffc35d0fb029659c2d
-ê
-`app/src/test/java/com/example/googlelightcalendar/core/viewmodels/login/LoginScreenStatesTest.kt,2\2\221991ab371f37880781706d16f71476d5d99a0c
 â
 Yapp/src/main/java/com/example/googlelightcalendar/api_service/GoogleCalendarApiService.kt,d\8\d8e8a2ca40357e16bbe544b5d62648a55d73e81c
 Ö

@@ -20,10 +20,8 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.internal.verification.NoInteractions
 import org.mockito.internal.verification.Times
-import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
-import org.mockito.verification.VerificationMode
 
 class UserRepositoryImplTest {
     private lateinit var repository: UserRepository
@@ -119,12 +117,14 @@ class UserRepositoryImplTest {
     @Test
     fun handleAuthorizationResponseTest(){
         val intent = mock<Intent>()
-        //TODO("refactor handleAuthorizationResponse")
+
+        //TODO("must mock the server response")
         // Add a stateFlow
-//        repository.handleAuthorizationResponse(
-//            intent = intent,
-//            authorizationResponse = {true, "" -> Unit }
-//        )
+        repository.handleAuthorizationResponse(
+            intent = intent,
+        ){ signIn, response ->
+
+        }
     }
 
 

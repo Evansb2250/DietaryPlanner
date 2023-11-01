@@ -3,6 +3,7 @@ package com.example.googlelightcalendar.auth
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
 import com.example.googlelightcalendar.common.Constants
 import net.openid.appauth.AppAuthConfiguration
 import net.openid.appauth.AuthState
@@ -72,12 +73,19 @@ class OAuthStateHandler @Inject constructor(
         response: (token: TokenResponse?) -> Unit
     ) {
         if (tokenRequest != null) {
+
             authorizationService.performTokenRequest(tokenRequest) { response, exception ->
                 try {
                     if (exception != null) {
                         authState = AuthState()
                     } else {
                         if (response != null) {
+
+                            Log.d("CalendarRepo", "clientId ${tokenRequest.clientId}" +
+                                    "\nid scope ${authState.scope}" +
+                                    "\n access token ${response?.accessToken}" +
+                                    "\n additional params ${response?.additionalParameters}" +
+                                    "")
                             authState.update(response, exception)
 
                             response(response)

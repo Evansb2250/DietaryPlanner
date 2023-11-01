@@ -149,6 +149,9 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.3")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.3")
 
+    //Google Client Dependency for token Validation
+    implementation("com.google.api-client:google-api-client:1.32.1")
+
     // (Optional) If you need "Parameterized Tests"
     testImplementation("org.junit.jupiter:junit-jupiter-params:5.9.3")
 

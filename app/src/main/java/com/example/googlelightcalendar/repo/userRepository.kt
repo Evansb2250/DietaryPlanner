@@ -3,12 +3,13 @@ package com.example.googlelightcalendar.repo
 import android.content.Intent
 import androidx.activity.result.ActivityResultLauncher
 import com.example.googlelightcalendar.auth.OauthClientImp
-import com.example.googlelightcalendar.core.GoogleTokenManagerImpl
 import com.example.googlelightcalendar.core.TokenManager
 import com.example.googlelightcalendar.data.room.database.dao.UserDao
 import com.example.googlelightcalendar.data.room.database.models.toUser
 import com.example.googlelightcalendar.domain.User
 import com.example.googlelightcalendar.utils.AsyncResponse
+import net.openid.appauth.AuthorizationException
+import net.openid.appauth.AuthorizationResponse
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -28,7 +29,9 @@ interface UserRepository {
 
     fun handleAuthorizationResponse(
         intent: Intent,
-        authorizationResponse: (
+        authorizationResponse: AuthorizationResponse? = AuthorizationResponse.fromIntent(intent),
+        error: AuthorizationException? = AuthorizationException.fromIntent(intent),
+        authorizationResponseCallback: (
             signedIn: Boolean,
             serverResponse: String,
         ) -> Unit = { _, _ ->
@@ -78,24 +81,28 @@ class UserRepositoryImpl @Inject constructor(
 
     override fun handleAuthorizationResponse(
         intent: Intent,
-        authorizationResponse: (
+        authorizationResponse: AuthorizationResponse?,
+        error: AuthorizationException?,
+        authorizationResponseCallback: (
             signedIn: Boolean,
             serverResponse: String,
         ) -> Unit
     ) {
         googleOauthClient.value.handleAuthorizationResponse(
             intent = intent,
-            signInState = { asyncResponse ->
+            authorizationResponse = authorizationResponse,
+            error = error,
+            authorizationResponseCallback = { asyncResponse ->
                 when (asyncResponse) {
                     is AsyncResponse.Failed<*> -> {
-                        authorizationResponse(
+                        authorizationResponseCallback(
                             false,
                             asyncResponse.message ?:"Failed"
                         )
                     }
 
                     is AsyncResponse.Success<*> -> {
-                        authorizationResponse(
+                        authorizationResponseCallback(
                             true,
                             "SignedIn"
                         )

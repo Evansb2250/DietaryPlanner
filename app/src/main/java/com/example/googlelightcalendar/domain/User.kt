@@ -4,14 +4,14 @@ import com.example.googlelightcalendar.data.room.database.models.UserEntity
 
 data class User(
     val userName: String,
-    val password: String,
+    val name: String,
 )
 
 
 fun User.toUserEntity(): UserEntity {
     return UserEntity(
         userName = this.userName,
-        name = "",
-        password = this.password
+        password = "",
+        name = this.name,
     )
 }
