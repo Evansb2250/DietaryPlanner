@@ -14,6 +14,7 @@ import com.example.googlelightcalendar.utils.AsyncResponse
 import com.example.googlelightcalendar.utils.TokenUtil.getTokenType
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import net.openid.appauth.AuthState
 import net.openid.appauth.AuthorizationException
@@ -29,6 +30,8 @@ import javax.inject.Singleton
 const val TAG = "GoogleOauthClient"
 
 interface OauthClient {
+
+
     fun registerAuthLauncher(
         launcher: ActivityResultLauncher<Intent>,
     )

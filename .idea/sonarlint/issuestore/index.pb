@@ -36,8 +36,6 @@ r
 Bapp/src/main/java/com/example/googlelightcalendar/di/RoomModule.kt,8\3\832957e96d5dc076f9f3dc5e2cdb3ff01f2019bd
 Ñ
 Tapp/src/main/java/com/example/googlelightcalendar/screens/loginScreen/LoginScreen.kt,6\e\6ee6e84fed0b89cf5cdcc6ffc35d0fb029659c2d
-x
-Happ/src/main/java/com/example/googlelightcalendar/di/RepositoryModule.kt,2\6\26e8ff11bf01c7f36f9bf2a9d45e6b663dbe3da3
 ê
 `app/src/test/java/com/example/googlelightcalendar/core/viewmodels/login/LoginScreenStatesTest.kt,2\2\221991ab371f37880781706d16f71476d5d99a0c
 â
