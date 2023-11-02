@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.googlelightcalendar.common.Constants
 import com.example.googlelightcalendar.interfaces.AppAuthClient
+import com.example.googlelightcalendar.repo.AuthorizationResponseStates
 import com.example.googlelightcalendar.repo.UserRepository
 import com.example.googlelightcalendar.utils.AsyncResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -13,7 +14,6 @@ import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -33,25 +33,19 @@ class LoginViewModel @Inject constructor(
         Constants.CALENDAR_READ_ONLY,
     )
 
-    private val _state: MutableStateFlow<LoginScreenStates.LoginScreenState> = MutableStateFlow(
-        LoginScreenStates.LoginScreenState(
-            isLoading = true,
-        )
+    private val _state: MutableStateFlow<LoginScreenStates> = MutableStateFlow(
+        LoginScreenStates.LoginScreenState()
     )
 
-    val state: StateFlow<LoginScreenStates.LoginScreenState> = _state.asStateFlow()
+    val state: StateFlow<LoginScreenStates> = _state.asStateFlow()
     fun signInWithGoogle() {
         userRepository.attemptAuthorization(googleScopes)
     }
 
     private val coroutineExceptionHandler = CoroutineExceptionHandler { _, exception ->
-        _state.update {
-            it.copy(
-                loggedInSuccessfully = false,
-                isLoading = false,
-                error = LoginScreenStates.LoginError(exception.message?: "Unexpected Error")
-            )
-        }
+        _state.value = LoginScreenStates.LoginError(
+            message = exception.message ?: "Unexpected Error"
+        )
     }
 
     fun signInManually(
@@ -65,19 +59,22 @@ class LoginViewModel @Inject constructor(
             )
             when (response) {
                 is AsyncResponse.Failed -> {
-                    _state.value = LoginScreenStates.LoginScreenState(
-                        loggedInSuccessfully = false,
-                        error = LoginScreenStates.LoginError(
-                            message = response.message ?: "Unkown error occurred"
-                        )
+                    _state.value = LoginScreenStates.LoginError(
+                        message = response.message ?: "Unkown error occurred"
                     )
                 }
 
                 is AsyncResponse.Success -> {
-                    _state.value = LoginScreenStates.LoginScreenState(
-                        initialPassword = userName,
-                        loggedInSuccessfully = true
-                    )
+                    if (response.data != null) {
+                        _state.value = LoginScreenStates.UserSignInState(
+                            email = response.data.userName,
+                            name = response.data.name,
+                        )
+                    } else {
+                        _state.value = LoginScreenStates.LoginError(
+                            message = "Unknown User"
+                        )
+                    }
                 }
             }
         }
@@ -93,13 +90,27 @@ class LoginViewModel @Inject constructor(
 
     override fun handleAuthorizationResponse(intent: Intent) {
         viewModelScope.launch(coroutineExceptionHandler) {
-            userRepository.handleAuthorizationResponse(intent) { signedIn, serverResponse ->
-                _state.update { it ->
-                    it.copy(
-                        loggedInSuccessfully = signedIn,
-                        isLoading = false,
-                        error = if (!signedIn) LoginScreenStates.LoginError(serverResponse) else null
-                    )
+            userRepository.handleAuthorizationResponse(intent) { serverResponse ->
+
+                when (serverResponse) {
+                    is AuthorizationResponseStates.FailedResponsState -> {
+                        _state.value = LoginScreenStates.LoginError(
+                            message = serverResponse.message,
+                        )
+                    }
+
+                    is AuthorizationResponseStates.FirstTimeUserState -> {
+                        _state.value = LoginScreenStates.RegistrationRequiredState(
+                            email = serverResponse.email,
+                        )
+                    }
+
+                    is AuthorizationResponseStates.SuccessResponseState -> {
+                        _state.value = LoginScreenStates.UserSignInState(
+                            serverResponse.email,
+                            serverResponse.name,
+                        )
+                    }
                 }
             }
         }

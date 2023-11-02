@@ -6,13 +6,9 @@ sealed class LoginScreenStates {
     data class LoginScreenState(
         private val initialUserName: String = "",
         private val initialPassword: String = "",
-        val loggedInSuccessfully: Boolean = false,
-        val isLoading: Boolean = false,
-        val error: LoginError? = null,
     ) : LoginScreenStates() {
         var userName = mutableStateOf(initialUserName)
         var password = mutableStateOf(initialPassword)
-        val isLoginError: Boolean = containsLoginError()
 
         fun containsValidCredentials(): Boolean {
             return isValidPassword() && isValidEmail()
@@ -28,10 +24,16 @@ sealed class LoginScreenStates {
             val regex = Regex("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}\$")
             return regex.matches(userName.value)
         }
-
-        private fun containsLoginError(): Boolean {
-            return error != null
-        }
     }
+
+    data class RegistrationRequiredState(
+        val email: String,
+    ) : LoginScreenStates()
+
+    data class UserSignInState(
+        val email: String,
+        val name: String,
+    ) : LoginScreenStates()
+
     data class LoginError(val message: String) : LoginScreenStates()
 }

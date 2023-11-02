@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -71,21 +72,52 @@ fun LoginScreen(
 
 @Composable
 fun LoginContent(
-    loginState: LoginScreenStates.LoginScreenState,
+    loginState: LoginScreenStates,
     retryLogin: () -> Unit = {},
     signInManually: (userName: String, password: String) -> Unit = { _, _ -> },
     initiateGoogleSignIn: () -> Unit,
     navigateToHomeScreen: () -> Unit = {},
     navigateToRegisterScreen: () -> Unit = {}
 ) {
-    LoginBottomSheet(
-        loginState = loginState,
-        signInManually = signInManually,
-        retryLogin = retryLogin,
-        initiateGoogleSignIn = initiateGoogleSignIn,
-        navigateToHomeScreen = navigateToHomeScreen,
-        navigateToRegisterScreen = navigateToRegisterScreen,
-    )
+    Box(
+        modifier = Modifier.padding(
+
+        )
+    ) {
+
+
+        when (loginState) {
+            is LoginScreenStates.LoginError -> {
+                ErrorAlertDialog(
+                    title = "Login Failed",
+                    error = loginState.message,
+                    onDismiss = retryLogin
+                )
+
+                LoginBottomSheet(
+                    loginState = LoginScreenStates.LoginScreenState(),
+                    signInManually = signInManually,
+                    retryLogin = retryLogin,
+                    initiateGoogleSignIn = initiateGoogleSignIn,
+                    navigateToHomeScreen = navigateToHomeScreen,
+                    navigateToRegisterScreen = navigateToRegisterScreen,
+                )
+            }
+            is LoginScreenStates.LoginScreenState -> {
+                LoginBottomSheet(
+                    loginState = loginState,
+                    signInManually = signInManually,
+                    retryLogin = retryLogin,
+                    initiateGoogleSignIn = initiateGoogleSignIn,
+                    navigateToHomeScreen = navigateToHomeScreen,
+                    navigateToRegisterScreen = navigateToRegisterScreen,
+                )
+            }
+
+            is LoginScreenStates.RegistrationRequiredState -> TODO()
+            is LoginScreenStates.UserSignInState -> TODO()
+        }
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -98,6 +130,8 @@ fun LoginBottomSheet(
     navigateToHomeScreen: () -> Unit = {},
     navigateToRegisterScreen: () -> Unit = {}
 ) {
+
+
     val bottomSheetScaffoldState = rememberBottomSheetScaffoldState()
     var containsIncompleteCredentials by remember {
         mutableStateOf(false)
@@ -118,7 +152,7 @@ fun LoginBottomSheet(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            if(containsIncompleteCredentials){
+            if (containsIncompleteCredentials) {
                 ErrorAlertDialog(
                     title = "Invalid Credentials",
                     error = "please fill in the required information",
@@ -128,16 +162,16 @@ fun LoginBottomSheet(
                 )
             }
 
-            if(loginState.isLoginError){
+            if (loginState.isLoginError) {
                 ErrorAlertDialog(
                     title = "Login Failed",
-                    error = loginState.error?.message ?:"Unable to login",
+                    error = loginState.error?.message ?: "Unable to login",
                     onDismiss = retryLogin
                 )
 
             }
 
-            if(loginState.loggedInSuccessfully){
+            if (loginState.loggedInSuccessfully) {
 
             }
 

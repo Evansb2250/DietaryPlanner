@@ -42,14 +42,12 @@ class AppModule {
     fun providesGoogleAuthClient(
         @ApplicationContext context: Context,
         tokenManager: GoogleTokenManagerImpl,
-        coroutineScope: CoroutineScope,
         authState: OAuthStateHandler,
     ): Lazy<OauthClientImp> {
         return lazy {
             OauthClientImp(
                 context = context,
                 tokenManager = tokenManager,
-                coroutineScope = coroutineScope,
                 oauthState = authState,
             )
         }

@@ -50,7 +50,6 @@ class OauthClientImp @Inject constructor(
     @ApplicationContext private val context: Context,
     private val oauthState: AuthorizationState,
     private val tokenManager: TokenManager,
-    private val coroutineScope: CoroutineScope,
 ) : OauthClient {
 
     private var scopes = mutableListOf<String>()
@@ -151,7 +150,6 @@ class OauthClientImp @Inject constructor(
                     )
                 }
 
-
                 if (googleEmail.isNullOrBlank()) {
                     throw Exception(
                         "Missing Email Information from Token"
@@ -178,11 +176,10 @@ class OauthClientImp @Inject constructor(
             )
     }
 
-    //Needs to be ran in a suspend function.
-    suspend fun validateGoogleToken(
+    //Needs to be ran off the main thread.
+    fun validateGoogleToken(
         tokenId: String,
     ): Pair<String?, String?> {
-        //             * Needs to be ran in a coroutine to move the work of the main thread.
         try{
             val transport = NetHttpTransport()
             val json = GsonFactory.getDefaultInstance()

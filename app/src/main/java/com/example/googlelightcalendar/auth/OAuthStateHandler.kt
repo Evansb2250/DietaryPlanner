@@ -78,11 +78,10 @@ class OAuthStateHandler @Inject constructor(
                 authorizationService.performTokenRequest(tokenRequest) { response, exception ->
                     try {
                         if (exception != null) {
-                            //we update our authState
+                            //we update our authState an exception was found
                             authState = AuthState()
                         } else {
                             if (response != null) {
-
                                 authState.update(response, exception)
                                 continuation.resume(response)
                             }

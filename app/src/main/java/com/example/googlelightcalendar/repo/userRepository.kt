@@ -1,6 +1,7 @@
 package com.example.googlelightcalendar.repo
 
 import android.content.Intent
+import android.provider.ContactsContract.CommonDataKinds.Email
 import androidx.activity.result.ActivityResultLauncher
 import com.example.googlelightcalendar.auth.OauthClientImp
 import com.example.googlelightcalendar.core.TokenManager
@@ -34,12 +35,24 @@ interface UserRepository {
         authorizationResponse: AuthorizationResponse? = AuthorizationResponse.fromIntent(intent),
         error: AuthorizationException? = AuthorizationException.fromIntent(intent),
         authorizationResponseCallback: (
-            signedIn: Boolean,
-            serverResponse: String,
-        ) -> Unit = { _, _ ->
-
-        },
+            AuthorizationResponseStates,
+        ) -> Unit = {},
     )
+}
+
+sealed class AuthorizationResponseStates {
+    data class SuccessResponseState(
+        val email: String,
+        val name: String,
+    ) : AuthorizationResponseStates()
+
+    data class FirstTimeUserState(
+        val email: String
+    ) : AuthorizationResponseStates()
+
+    data class FailedResponsState(
+        val message: String,
+    ) : AuthorizationResponseStates()
 }
 
 @Singleton
@@ -88,8 +101,7 @@ class UserRepositoryImpl @Inject constructor(
         authorizationResponse: AuthorizationResponse?,
         error: AuthorizationException?,
         authorizationResponseCallback: (
-            signedIn: Boolean,
-            serverResponse: String,
+            AuthorizationResponseStates
         ) -> Unit
     ) {
         val asyncResponse = googleOauthClient.value.handleAuthorizationResponse(
@@ -97,30 +109,34 @@ class UserRepositoryImpl @Inject constructor(
             authorizationResponse = authorizationResponse,
             error = error,
         )
-        withContext(Dispatchers.IO){
+        withContext(Dispatchers.IO) {
             when (asyncResponse) {
                 is AsyncResponse.Failed<User?> -> {
                     authorizationResponseCallback(
-                        false,
-                        asyncResponse.message ?: "Failed"
+                        AuthorizationResponseStates.FailedResponsState(
+                            asyncResponse.message ?: "Failed"
+                        )
                     )
                 }
 
                 is AsyncResponse.Success<User?> -> {
 
-                    val user = userDao.getUserFromGmailSignIn(asyncResponse.data?.name ?: "")?.toUser()
+                    val user =
+                        userDao.getUserFromGmailSignIn(asyncResponse.data?.name ?: "")?.toUser()
 
                     if (user != null) {
-                        // ALlo SignIn
-//                        authorizationResponseCallback(
-//                            false,
-//                            "You need to register this account"
-//                        )
+                        authorizationResponseCallback(
+                            AuthorizationResponseStates.SuccessResponseState(
+                                email = user.userName,
+                                name = user.name,
+                            )
+                        )
                     } else {
                         // Have user register account.
                         authorizationResponseCallback(
-                            false,
-                            "You need to register this account"
+                            AuthorizationResponseStates.FirstTimeUserState(
+                                "You need to register this account"
+                            )
                         )
                     }
                 }
