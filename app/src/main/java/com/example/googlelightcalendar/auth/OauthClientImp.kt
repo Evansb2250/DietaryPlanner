@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.util.Base64
-import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
 import com.auth0.android.jwt.JWT
 import com.example.googlelightcalendar.common.Constants
@@ -17,15 +16,16 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier
 import com.google.api.client.http.javanet.NetHttpTransport
 import com.google.api.client.json.gson.GsonFactory
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import net.openid.appauth.AuthState
 import net.openid.appauth.AuthorizationException
 import net.openid.appauth.AuthorizationRequest
 import net.openid.appauth.AuthorizationResponse
 import net.openid.appauth.ResponseTypeValues
 import net.openid.appauth.TokenResponse
+import java.security.GeneralSecurityException
 import java.security.MessageDigest
 import java.security.SecureRandom
 import java.util.Collections
@@ -33,10 +33,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 
-const val TAG = "GoogleOauthClient"
-
 interface OauthClient {
-
 
     fun registerAuthLauncher(
         launcher: ActivityResultLauncher<Intent>,
@@ -132,85 +129,61 @@ class OauthClientImp @Inject constructor(
         }
     }
 
-
-    fun handleAuthorizationResponse(
+    suspend fun handleAuthorizationResponse(
         intent: Intent,
         authorizationResponse: AuthorizationResponse? = AuthorizationResponse.fromIntent(intent),
         error: AuthorizationException? = AuthorizationException.fromIntent(intent),
-        authorizationResponseCallback: (
-            AsyncResponse<User?>
-        ) -> Unit = { _ -> },
-    ) {
-        try {
+    ): AsyncResponse<User?> {
 
-            val coroutineHandler = CoroutineExceptionHandler { _, exception ->
-                //If we can't verify the GoogleToken throw an exception.
-                println("CoroutineExceptionHandler got ${exception.message}")
-                authorizationResponseCallback(
-                    AsyncResponse.Failed(
-                        data = null,
-                        message = exception.message,
+        oauthState.updateAuthState(AuthState(authorizationResponse, error))
+
+        val tokenExchangeRequest = authorizationResponse?.createTokenExchangeRequest()
+
+        if (tokenExchangeRequest != null) {
+            val response = oauthState.performTokenRequest(tokenExchangeRequest)
+
+            if (response != null) {
+                storeTokenResponse(response)
+
+                val (googleEmail, name) = withContext(Dispatchers.IO) {
+                    validateGoogleToken(
+                        tokenId = response.idToken ?: "",
+                    )
+                }
+
+
+                if (googleEmail.isNullOrBlank()) {
+                    throw Exception(
+                        "Missing Email Information from Token"
+                    )
+                }
+
+                return AsyncResponse.Success(
+                    data = User(
+                        userName = googleEmail,
+                        name = name ?: ""
                     )
                 )
             }
 
-            oauthState.updateAuthState(AuthState(authorizationResponse, error))
-
-            val tokenExchangeRequest = authorizationResponse?.createTokenExchangeRequest()
-
-            if (tokenExchangeRequest != null) {
-                oauthState.performTokenRequest(tokenExchangeRequest) { response ->
-                    if (response != null) {
-                        jwt = JWT(response.idToken!!)
-
-                        storeTokenResponse(response)
-
-                        validateGoogleToken(
-                            tokenId = response.idToken ?: "",
-                            coroutineScopeHandler = coroutineHandler,
-                        ) { email, name ->
-
-                            //If we can't attach the email to the account we should throw an error.
-                            if (email.isNullOrBlank()) {
-                                throw Exception(
-                                    "Missing information to create a user.",
-                                )
-                            }
-
-                            authorizationResponseCallback(
-                                AsyncResponse.Success(
-                                    data = User(
-                                        userName = email,
-                                        name = name ?: "",
-                                    )
-                                )
-                            )
-                        }
-                    }
-                    persistState()
-                }
-            } else {
-                authorizationResponseCallback(
-                    AsyncResponse.Failed(null, "couldn't get token")
-                )
-            }
-        } catch (e: Exception) {
-            authorizationResponseCallback(
-                AsyncResponse.Failed(null, "Error found")
+            return AsyncResponse.Failed(
+                data = null,
+                message = "response was null"
             )
-        }
+
+        } else
+            return AsyncResponse.Failed(
+                data = null,
+                message = "tokenExchangeRequest was null"
+            )
     }
 
     //Needs to be ran in a suspend function.
-    fun validateGoogleToken(
+    suspend fun validateGoogleToken(
         tokenId: String,
-        coroutineScopeHandler: CoroutineExceptionHandler,
-        userInfoCallBack: (String?, String?) -> Unit = { _, _ -> }
-    ) {
-        /**
-         * Needs to be ran in a coroutine to move the work of the main thread.
-         */
-        coroutineScope.launch(coroutineScopeHandler) {
+    ): Pair<String?, String?> {
+        //             * Needs to be ran in a coroutine to move the work of the main thread.
+        try{
             val transport = NetHttpTransport()
             val json = GsonFactory.getDefaultInstance()
             val verifier: GoogleIdTokenVerifier = GoogleIdTokenVerifier.Builder(
@@ -222,40 +195,33 @@ class OauthClientImp @Inject constructor(
 
             val idToken = verifier.verify(tokenId)
             if (idToken != null) {
-                userInfoCallBack(
+
+                return Pair(
                     idToken.getPayload().email,
                     idToken.getPayload().get("name") as String,
                 )
-                Log.d(
-                    "googleIdTokenValidation ", " email ${idToken.getPayload().email}"
-                )
-            } else
-                throw Exception("Couldn't verify token")
+
+            } else {
+                return (Pair(null, null))
+            }
+        }catch (e: GeneralSecurityException){
+            throw Exception("Can't validate Token")
         }
     }
 
-    private fun storeTokenResponse(
+    private suspend fun storeTokenResponse(
         response: TokenResponse,
     ) {
         val accessToken: String = response.accessToken ?: return
         val idToken: String = response.idToken ?: return
-        coroutineScope.launch {
 
-            tokenManager.saveToken(
-                getTokenType(TokenType.Access), accessToken,
-            )
+        tokenManager.saveToken(
+            getTokenType(TokenType.Access), accessToken,
+        )
 
-            tokenManager.saveToken(
-                getTokenType(TokenType.ID), idToken,
-            )
-        }
-    }
-
-    private fun persistState() {
-        context.getSharedPreferences(Constants.SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
-            .edit()
-            .putString(Constants.AUTH_STATE, oauthState.toJsonSerializeString())
-            .commit()
+        tokenManager.saveToken(
+            getTokenType(TokenType.ID), idToken,
+        )
     }
 }
 

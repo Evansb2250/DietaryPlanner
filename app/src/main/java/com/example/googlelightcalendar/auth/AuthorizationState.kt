@@ -12,12 +12,9 @@ interface AuthorizationState {
     fun getAuthServiceConfig(): AuthorizationServiceConfiguration
 
     fun updateAuthState(authStateUpdate: AuthState)
-    fun performTokenRequest(
+    suspend fun performTokenRequest(
         tokenRequest: TokenRequest?,
-        response: (
-            token: TokenResponse?,
-        ) -> Unit,
-    )
+    ) : TokenResponse?
     fun toJsonSerializeString(): String
 
     fun getAuthorizationScopes(): Set<String>

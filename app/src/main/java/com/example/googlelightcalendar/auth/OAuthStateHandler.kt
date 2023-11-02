@@ -5,6 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import android.util.Log
 import com.example.googlelightcalendar.common.Constants
+import kotlinx.coroutines.suspendCancellableCoroutine
 import net.openid.appauth.AppAuthConfiguration
 import net.openid.appauth.AuthState
 import net.openid.appauth.AuthorizationException
@@ -17,6 +18,7 @@ import net.openid.appauth.browser.BrowserAllowList
 import net.openid.appauth.browser.VersionedBrowserMatcher
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.coroutines.resume
 
 @Singleton
 class OAuthStateHandler @Inject constructor(
@@ -68,39 +70,30 @@ class OAuthStateHandler @Inject constructor(
         authState = authStateUpdate
     }
 
-    override fun performTokenRequest(
-        tokenRequest: TokenRequest?,
-        response: (token: TokenResponse?) -> Unit
-    ) {
-        if (tokenRequest != null) {
+    suspend override fun performTokenRequest(tokenRequest: TokenRequest?): TokenResponse? {
+        return suspendCancellableCoroutine { continuation ->
+            // retrieves the token request if it isn't null we will use this token to get an access Token
+            if (tokenRequest != null) {
 
-            authorizationService.performTokenRequest(tokenRequest) { response, exception ->
-                try {
-                    if (exception != null) {
-                        authState = AuthState()
-                    } else {
-                        if (response != null) {
+                authorizationService.performTokenRequest(tokenRequest) { response, exception ->
+                    try {
+                        if (exception != null) {
+                            //we update our authState
+                            authState = AuthState()
+                        } else {
+                            if (response != null) {
 
-                            Log.d("CalendarRepo", "clientId ${tokenRequest.clientId}" +
-                                    "\nid scope ${authState.scope}" +
-                                    "\n access token ${response?.accessToken}" +
-                                    "\n additional params ${response?.additionalParameters}" +
-                                    "")
-                            authState.update(response, exception)
-
-                            response(response)
+                                authState.update(response, exception)
+                                continuation.resume(response)
+                            }
                         }
-
+                    } catch (e: AuthorizationException) {
+                        continuation.resume(null)
                     }
-                } catch (
-                    e: AuthorizationException,
-                ) {
-                    response(null)
                 }
-
+            } else {
+                continuation.resume(null)
             }
-        } else {
-            response(null)
         }
     }
 

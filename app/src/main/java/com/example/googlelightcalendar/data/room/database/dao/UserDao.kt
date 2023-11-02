@@ -17,6 +17,9 @@ interface UserDao {
         password: String,
     ): UserEntity?
 
+    @Query("Select * From USERENTITY where userName=:gmail")
+    fun getUserFromGmailSignIn(gmail: String):UserEntity?
+
     @Delete
     suspend fun deleteUser(
         userEntity: UserEntity

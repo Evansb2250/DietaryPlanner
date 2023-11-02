@@ -4,12 +4,12 @@ import android.content.Intent
 import androidx.activity.result.ActivityResultLauncher
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.room.util.copy
 import com.example.googlelightcalendar.common.Constants
 import com.example.googlelightcalendar.interfaces.AppAuthClient
 import com.example.googlelightcalendar.repo.UserRepository
 import com.example.googlelightcalendar.utils.AsyncResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -42,6 +42,16 @@ class LoginViewModel @Inject constructor(
     val state: StateFlow<LoginScreenStates.LoginScreenState> = _state.asStateFlow()
     fun signInWithGoogle() {
         userRepository.attemptAuthorization(googleScopes)
+    }
+
+    private val coroutineExceptionHandler = CoroutineExceptionHandler { _, exception ->
+        _state.update {
+            it.copy(
+                loggedInSuccessfully = false,
+                isLoading = false,
+                error = LoginScreenStates.LoginError(exception.message?: "Unexpected Error")
+            )
+        }
     }
 
     fun signInManually(
@@ -82,13 +92,15 @@ class LoginViewModel @Inject constructor(
     }
 
     override fun handleAuthorizationResponse(intent: Intent) {
-        userRepository.handleAuthorizationResponse(intent) { signedIn, serverResponse ->
-            _state.update { it ->
-                it.copy(
-                    loggedInSuccessfully = signedIn,
-                    isLoading = false,
-                    error = if (!signedIn) LoginScreenStates.LoginError(serverResponse) else null
-                )
+        viewModelScope.launch(coroutineExceptionHandler) {
+            userRepository.handleAuthorizationResponse(intent) { signedIn, serverResponse ->
+                _state.update { it ->
+                    it.copy(
+                        loggedInSuccessfully = signedIn,
+                        isLoading = false,
+                        error = if (!signedIn) LoginScreenStates.LoginError(serverResponse) else null
+                    )
+                }
             }
         }
     }
