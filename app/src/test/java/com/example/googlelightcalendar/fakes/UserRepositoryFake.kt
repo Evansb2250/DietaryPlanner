@@ -6,8 +6,11 @@ import com.example.googlelightcalendar.auth.OauthClient
 import com.example.googlelightcalendar.data.room.database.dao.UserDao
 import com.example.googlelightcalendar.data.room.database.models.toUser
 import com.example.googlelightcalendar.domain.User
+import com.example.googlelightcalendar.repo.AuthorizationResponseStates
 import com.example.googlelightcalendar.repo.UserRepository
 import com.example.googlelightcalendar.utils.AsyncResponse
+import net.openid.appauth.AuthorizationException
+import net.openid.appauth.AuthorizationResponse
 
 class UserRepositoryFake(
     val oauthClient: OauthClient,
@@ -34,6 +37,15 @@ class UserRepositoryFake(
                 data = result.toUser()
             )
         }
+    }
+
+    override suspend fun handleAuthorizationResponse(
+        intent: Intent,
+        authorizationResponse: AuthorizationResponse?,
+        error: AuthorizationException?,
+        authorizationResponseCallback: (AuthorizationResponseStates) -> Unit
+    ) {
+        TODO("Not yet implemented")
     }
 
     override fun handleAuthorizationResponse(

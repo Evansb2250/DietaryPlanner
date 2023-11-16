@@ -6,6 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.googlelightcalendar.common.Constants
 import com.example.googlelightcalendar.interfaces.AppAuthClient
+import com.example.googlelightcalendar.navigation.components.NavigationDestinations
+import com.example.googlelightcalendar.navigation.components.NavigationManger
 import com.example.googlelightcalendar.repo.AuthorizationResponseStates
 import com.example.googlelightcalendar.repo.UserRepository
 import com.example.googlelightcalendar.utils.AsyncResponse
@@ -21,6 +23,7 @@ const val TAG = "LoginViewModel"
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
+    private val navigationManger: NavigationManger,
     private val userRepository: UserRepository,
 ) : ViewModel(), AppAuthClient {
 
@@ -48,6 +51,13 @@ class LoginViewModel @Inject constructor(
         )
     }
 
+    fun navigateToRegisterScreen(
+       email: String? = null
+    ){
+        navigationManger.navigate(
+            NavigationDestinations.registerScreen
+        )
+    }
     fun signInManually(
         userName: String,
         password: String,

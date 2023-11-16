@@ -40,8 +40,6 @@ Yapp/src/main/java/com/example/googlelightcalendar/api_service/GoogleCalendarApi
 Uapp/src/main/java/com/example/googlelightcalendar/api_service/GoogleCalendarClient.kt,0\0\002178bae7771ec5840a648f7a72f7543ab2aa79
 ‚
 Rapp/src/test/java/com/example/googlelightcalendar/viewmodels/LoginViewModelTest.kt,b\3\b301c6ed8c4e02743471c4bcbb461c1363ef04b7
-z
-Japp/src/test/java/com/example/googlelightcalendar/fakes/OauthClientFake.kt,0\9\09b51012b6c3fbf55488f5a41a162db4dc1c030e
 u
 Eapp/src/main/java/com/example/googlelightcalendar/common/Constants.kt,4\7\47c132d57b1f2122334f52fac07829966142002f
 D

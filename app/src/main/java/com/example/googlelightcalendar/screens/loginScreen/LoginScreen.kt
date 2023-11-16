@@ -39,10 +39,7 @@ import com.example.googlelightcalendar.ui_components.dialog.ErrorAlertDialog
 val sidePadding = 16.dp
 
 @Composable
-fun LoginScreen(
-    navigateToHomeScreen: () -> Unit = {},
-    navigateToRegisterScreen: () -> Unit = {}
-) {
+fun LoginScreen() {
     val loginViewModel = hiltViewModel<LoginViewModel>()
 
     val googleSignInLauncher = rememberLauncherForActivityResult(
@@ -65,8 +62,8 @@ fun LoginScreen(
         signInManually = loginViewModel::signInManually,
         initiateGoogleSignIn = loginViewModel::signInWithGoogle,
         retryLogin = loginViewModel::resetLoginScreenState,
-        navigateToHomeScreen = navigateToHomeScreen,
-        navigateToRegisterScreen = navigateToRegisterScreen,
+        navigateToHomeScreen = loginViewModel::navigateToRegisterScreen,
+        navigateToRegisterScreen = loginViewModel::navigateToRegisterScreen,
     )
 }
 
@@ -160,19 +157,6 @@ fun LoginBottomSheet(
                         containsIncompleteCredentials = false
                     }
                 )
-            }
-
-            if (loginState.isLoginError) {
-                ErrorAlertDialog(
-                    title = "Login Failed",
-                    error = loginState.error?.message ?: "Unable to login",
-                    onDismiss = retryLogin
-                )
-
-            }
-
-            if (loginState.loggedInSuccessfully) {
-
             }
 
             Text(
