@@ -44,19 +44,20 @@ class LoginScreenStatesTest {
     fun containsLoginErrorTest() {
         val state =
             LoginScreenStates.LoginScreenState(
-                error = LoginScreenStates.LoginError(
-                    "Network error"
-                )
+                initialUserName = "das",
+                initialPassword = "ds"
             )
 
-        assertThat(state.isLoginError).isEqualTo(true)
+        assertThat(state.containsValidCredentials()).isEqualTo(true)
     }
 
     @Test
     fun doesntContainLoginErrorTest() {
-        val state = LoginScreenStates.LoginScreenState()
-
-        assertThat(state.isLoginError).isEqualTo(false)
+        val state = LoginScreenStates.LoginScreenState(
+            "example23@gmail.com",
+            "examplePassword23"
+        )
+        assertThat(state.containsValidCredentials()).isEqualTo(false)
     }
 
 
