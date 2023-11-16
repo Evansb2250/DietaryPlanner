@@ -45,25 +45,18 @@ class UserRepositoryFake(
         error: AuthorizationException?,
         authorizationResponseCallback: (AuthorizationResponseStates) -> Unit
     ) {
-        TODO("Not yet implemented")
-    }
 
-    override fun handleAuthorizationResponse(
-        intent: Intent,
-        authorizationResponse: (signedIn: Boolean, serverResponse: String) -> Unit
-    ) {
-
-        if((oauthClient as OAuthClientFake).isRegistered && (oauthClient as OAuthClientFake).attemptToAuthorize){
-            authorizationResponse(
-                true,
-                "Will Mock this later"
-            )
-        }else{
-            authorizationResponse(
-                false,
-                "Will Mock this later"
-            )
-        }
+//        if((oauthClient as OAuthClientFake).isRegistered && (oauthClient as OAuthClientFake).attemptToAuthorize){
+//            authorizationResponse(
+//                true,
+//                "Will Mock this later"
+//            )
+//        }else{
+//            authorizationResponse(
+//                false,
+//                "Will Mock this later"
+//            )
+//        }
 
     }
 }
