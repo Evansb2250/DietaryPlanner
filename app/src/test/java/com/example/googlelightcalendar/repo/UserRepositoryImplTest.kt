@@ -115,16 +115,14 @@ class UserRepositoryImplTest {
     }
 
     @Test
-    fun handleAuthorizationResponseTest(){
+    fun handleAuthorizationResponseTest() = runTest{
         val intent = mock<Intent>()
 
         //TODO("must mock the server response")
         // Add a stateFlow
         repository.handleAuthorizationResponse(
             intent = intent,
-        ){ signIn, response ->
-
-        }
+        )
     }
 
 

@@ -23,7 +23,7 @@ const val TAG = "LoginViewModel"
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val navigationManger: NavigationManger,
+    private val navigationManager: NavigationManger,
     private val userRepository: UserRepository,
 ) : ViewModel(), AppAuthClient {
 
@@ -54,7 +54,7 @@ class LoginViewModel @Inject constructor(
     fun navigateToRegisterScreen(
        email: String? = null
     ){
-        navigationManger.navigate(
+        navigationManager.navigate(
             NavigationDestinations.registerScreen
         )
     }
@@ -76,7 +76,7 @@ class LoginViewModel @Inject constructor(
 
                 is AsyncResponse.Success -> {
                     if (response.data != null) {
-                        _state.value = LoginScreenStates.UserSignInState(
+                        _state.value = LoginScreenStates.UserSignedInState(
                             email = response.data.userName,
                             name = response.data.name,
                         )
@@ -116,7 +116,7 @@ class LoginViewModel @Inject constructor(
                     }
 
                     is AuthorizationResponseStates.SuccessResponseState -> {
-                        _state.value = LoginScreenStates.UserSignInState(
+                        _state.value = LoginScreenStates.UserSignedInState(
                             serverResponse.email,
                             serverResponse.name,
                         )

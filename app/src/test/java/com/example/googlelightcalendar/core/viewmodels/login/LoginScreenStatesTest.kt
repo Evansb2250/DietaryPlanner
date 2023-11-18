@@ -41,23 +41,48 @@ class LoginScreenStatesTest {
     }
 
     @Test
-    fun containsLoginErrorTest() {
+    fun failsValidCredentialsTest() {
         val state =
             LoginScreenStates.LoginScreenState(
                 initialUserName = "das",
                 initialPassword = "ds"
             )
 
-        assertThat(state.containsValidCredentials()).isEqualTo(true)
+        assertThat(state.containsValidCredentials()).isEqualTo(false)
     }
 
     @Test
-    fun doesntContainLoginErrorTest() {
+    fun passesValidCredentialsTest() {
         val state = LoginScreenStates.LoginScreenState(
             "example23@gmail.com",
             "examplePassword23"
         )
         assertThat(state.containsValidCredentials()).isEqualTo(false)
+    }
+
+    @MethodSource("providesFailedPasswordArgs")
+    @ParameterizedTest
+    fun isValidPasswordTest(
+        args: PasswordCredentials,
+        ){
+        val loginstate = LoginScreenStates.LoginScreenState(
+            initialPassword = args.password
+        )
+
+        assertThat(loginstate.isValidPassword()).isEqualTo(args.expectedResult)
+    }
+
+
+    @MethodSource("providesEmailCredentials")
+    @ParameterizedTest
+    fun isValidEmailFails(
+        args: EmailCredentials,
+    ){
+        val loginState = LoginScreenStates.LoginScreenState(
+            initialUserName = args.emailCredential,
+        )
+
+        assertThat(loginState.isValidEmail()).isEqualTo(args.expectedResult)
     }
 
 
@@ -98,7 +123,67 @@ class LoginScreenStatesTest {
             ),
         )
 
+        @JvmStatic
+        fun providesFailedPasswordArgs() : Stream<PasswordCredentials> = Stream.of(
+            PasswordCredentials(
+                "Dsaa",
+                false,
+            ),
+            PasswordCredentials(
+                "Dsadsa@",
+                true,
+            ),
+            PasswordCredentials(
+                "ds@gmail",
+                true,
+            ),
+
+            PasswordCredentials(
+                "aaaaaa",
+                false,
+            ),
+        )
+
+        @JvmStatic
+        fun providesEmailCredentials(): Stream<EmailCredentials> = Stream.of(
+            EmailCredentials(
+                "Dsads",
+                false,
+            ),
+            EmailCredentials(
+                "Dsadsa@",
+                false,
+            ),
+            EmailCredentials(
+                "Dsadsa@d",
+                false,
+            ),
+            EmailCredentials(
+                "Dsadsa@com",
+                false,
+            ),
+            EmailCredentials(
+                "Dsadsa@gmail",
+                false,
+            ),
+            EmailCredentials(
+                "Dsadsa@gmail.com",
+                true,
+            ),
+
+
+
+
+            )
+
     }
 
-
+    data class EmailCredentials(
+        val emailCredential: String,
+        val expectedResult: Boolean,
+    )
+    data class PasswordCredentials(
+        val password: String,
+        val expectedResult: Boolean,
+    )
 }

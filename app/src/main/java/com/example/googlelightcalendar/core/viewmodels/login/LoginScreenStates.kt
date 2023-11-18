@@ -30,7 +30,7 @@ sealed class LoginScreenStates {
         val email: String,
     ) : LoginScreenStates()
 
-    data class UserSignInState(
+    data class UserSignedInState(
         val email: String,
         val name: String,
     ) : LoginScreenStates()

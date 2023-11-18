@@ -18,7 +18,7 @@ object ViewModelModule {
         navigationManger: NavigationManger,
     ): LoginViewModel {
         return LoginViewModel(
-            navigationManger = navigationManger,
+            navigationManager = navigationManger,
             userRepository = userRepository,
         )
     }

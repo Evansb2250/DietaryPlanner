@@ -112,7 +112,7 @@ fun LoginContent(
             }
 
             is LoginScreenStates.RegistrationRequiredState -> TODO()
-            is LoginScreenStates.UserSignInState -> TODO()
+            is LoginScreenStates.UserSignedInState -> TODO()
         }
     }
 }
