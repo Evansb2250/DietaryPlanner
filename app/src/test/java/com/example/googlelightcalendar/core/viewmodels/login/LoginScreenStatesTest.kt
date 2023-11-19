@@ -57,7 +57,7 @@ class LoginScreenStatesTest {
             "example23@gmail.com",
             "examplePassword23"
         )
-        assertThat(state.containsValidCredentials()).isEqualTo(false)
+        assertThat(state.containsValidCredentials()).isEqualTo(true)
     }
 
     @MethodSource("providesFailedPasswordArgs")

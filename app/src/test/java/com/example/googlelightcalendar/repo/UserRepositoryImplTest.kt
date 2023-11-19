@@ -38,7 +38,7 @@ class UserRepositoryImplTest {
         tokenManager = TokenManagerFakeImpl()
 
         repository = UserRepositoryImpl(
-            googleOauthClient = lazy { googleOauthClient as OauthClientImp },
+            googleOauthClient = lazy { googleOauthClient },
             userDao = userDao,
             tokenManager = tokenManager,
         )
@@ -109,9 +109,9 @@ class UserRepositoryImplTest {
         userDao.insertUser(
             UserEntity("block@example", "dsa", "123")
         )
-        val result = repository.signIn("block@example", "123")
+        val result: AsyncResponse<User?> = repository.signIn("block@example", "123")
 
-        assertThat(result).isEqualTo(AsyncResponse.Success<User?>(data = User("block@example", "123") ))
+        assertThat(result).isEqualTo(AsyncResponse.Success<User?>(data = User("block@example", "dsa") ))
     }
 
     @Test

@@ -7,11 +7,12 @@ import app.cash.turbine.test
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.assertions.isInstanceOf
-import assertk.assertions.isNotNull
 import com.example.googlelightcalendar.core.viewmodels.login.LoginScreenStates
 import com.example.googlelightcalendar.core.viewmodels.login.LoginViewModel
 import com.example.googlelightcalendar.data.room.database.dao.UserDao
 import com.example.googlelightcalendar.data.room.database.models.UserEntity
+import com.example.googlelightcalendar.domain.User
+import com.example.googlelightcalendar.domain.toUserEntity
 import com.example.googlelightcalendar.fakes.OAuthClientFake
 import com.example.googlelightcalendar.fakes.UserDaoFake
 import com.example.googlelightcalendar.fakes.UserRepositoryFake
@@ -19,7 +20,6 @@ import com.example.googlelightcalendar.navigation.components.NavigationManger
 import com.example.googlelightcalendar.repo.UserRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
@@ -42,6 +42,22 @@ class LoginViewModelTest {
 
     private val mockedLauncher = mock<ActivityResultLauncher<Intent>>()
 
+    private suspend fun setUpDependencies(
+        emailInRoom: String = "",
+        gmailFoundDuringOauth: String? = null,
+    ) {
+
+        userDaoFake.insertUser(
+            User(
+                userName = emailInRoom,
+                name = ""
+            ).toUserEntity()
+        )
+
+        oauthClientFake.setGmailAccount(gmailFoundDuringOauth)
+    }
+
+
     @BeforeEach
     fun setUp() {
         val testDispatcher = StandardTestDispatcher()
@@ -63,12 +79,13 @@ class LoginViewModelTest {
 
         loginViewModel = LoginViewModel(
             navigationManager = navigationManager,
-            userRepository = userRespositoryFake
+            userRepository = userRespositoryFake,
+            dispatcher = testDispatcher
         )
     }
 
     @After
-    fun tearDown(){
+    fun tearDown() {
         Dispatchers.resetMain()
     }
 
@@ -97,7 +114,12 @@ class LoginViewModelTest {
     }
 
     @Test
-    fun `Sign in with Google successful`() = runBlocking {
+    fun `Sign in with Google successful`() = runTest {
+        setUpDependencies(
+            "sam",
+            "sam"
+        )
+
         loginViewModel.state.test {
             //Initial
             val loginScreenState: LoginScreenStates = awaitItem()
@@ -123,12 +145,12 @@ class LoginViewModelTest {
 
 
     @Test
-    fun `Sign in with Google Failed`() = runBlocking {
+    fun `Sign in with Google Failed due to cancelling`() = runTest {
         loginViewModel.state.test {
             //Initial
-            val loadingState = awaitItem()
+            val loginScreenState = awaitItem()
 
-//            assertThat(loginScreenState).isInstanceOf<LoginScreenStates.LoginScreenState>()
+          assertThat(loginScreenState).isInstanceOf<LoginScreenStates.LoginScreenState>()
 
             assertThat(oauthClientFake.attemptToAuthorize).isEqualTo(false)
 
@@ -147,49 +169,16 @@ class LoginViewModelTest {
 
             val nextState = awaitItem()
 
-//            assertThat(nextState.loggedInSuccessfully).isEqualTo(false)
-//            assertThat(nextState.isLoginError).assertThat(true)
-//            assertThat(nextState.error).isNotNull()
+            assertThat(nextState).isInstanceOf<LoginScreenStates.LoginError>()
 
             //reset state to attempt to log in aagin.
             loginViewModel.resetLoginScreenState()
 
-            val thirdState = awaitItem()
+            val thirdState: LoginScreenStates = awaitItem()
 
-//            assertThat(thirdState.isLoginError).assertThat(false)
-//            assertThat(thirdState.isLoading).assertThat(true)
-
+            assertThat(thirdState).isInstanceOf<LoginScreenStates.LoginScreenState>()
         }
     }
-
-    @Test
-    fun `handleAuthorizationResponse`() = runBlocking {
-        val intentMock = mock<Intent>()
-        loginViewModel.state.test {
-            //Initial
-            val loadingState = awaitItem()
-
-  //          assertThat(loadingState.isLoading).isEqualTo(true)
-
-            assertThat(oauthClientFake.attemptToAuthorize).isEqualTo(false)
-
-            loginViewModel.registerAuthLauncher(mockedLauncher)
-
-            loginViewModel.signInWithGoogle()
-
-            assertThat(oauthClientFake.attemptToAuthorize).isEqualTo(true)
-
-            //call back is received once we are back in the OnCreate function of our activity.
-            loginViewModel.handleAuthorizationResponse(mock())
-
-            val nextState = awaitItem()
-
-//            assertThat(nextState.loggedInSuccessfully).isEqualTo(true)
-
-        }
-
-    }
-
     @Test
     fun `sign in manually Failed  `() = runTest {
         loginViewModel.state.test {
@@ -201,10 +190,9 @@ class LoginViewModelTest {
 
             loginViewModel.signInManually("Sam", "1232")
 
-            val flowResult1 = awaitItem()
+            val loginViewModelState = awaitItem()
 
-     //       assertThat(flowResult1.loggedInSuccessfully).isEqualTo(false)
-
+            assertThat(loginViewModelState).isInstanceOf<LoginScreenStates.LoginError>()
         }
     }
 
@@ -219,12 +207,10 @@ class LoginViewModelTest {
 
             loginViewModel.signInManually("Sam", "1232")
 
-            val flowResult1 = awaitItem()
+            val loginViewModelState = awaitItem()
 
-    //        assertThat(flowResult1.loggedInSuccessfully).isEqualTo(true)
+            assertThat(loginViewModelState).isInstanceOf<LoginScreenStates.UserSignedInState>()
 
         }
     }
-
-
 }

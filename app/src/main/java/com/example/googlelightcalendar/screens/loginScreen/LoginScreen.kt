@@ -82,38 +82,40 @@ fun LoginContent(
         )
     ) {
 
+        if (loginState is LoginScreenStates.LoginError) {
+            ErrorAlertDialog(
+                title = "Login Failed",
+                error = loginState.message,
+                onDismiss = retryLogin
+            )
 
-        when (loginState) {
-            is LoginScreenStates.LoginError -> {
-                ErrorAlertDialog(
-                    title = "Login Failed",
-                    error = loginState.message,
-                    onDismiss = retryLogin
-                )
+        } else if (
+            loginState is LoginScreenStates.RegistrationRequiredState
+        ) {
+            ErrorAlertDialog(
+                title = "Need to Register User",
+                error = "feature isn't implemnented",
+                onDismiss = retryLogin
+            )
+        } else if (
+            loginState is LoginScreenStates.UserSignedInState
+        ) {
 
-                LoginBottomSheet(
-                    loginState = LoginScreenStates.LoginScreenState(),
-                    signInManually = signInManually,
-                    retryLogin = retryLogin,
-                    initiateGoogleSignIn = initiateGoogleSignIn,
-                    navigateToHomeScreen = navigateToHomeScreen,
-                    navigateToRegisterScreen = navigateToRegisterScreen,
-                )
-            }
-            is LoginScreenStates.LoginScreenState -> {
-                LoginBottomSheet(
-                    loginState = loginState,
-                    signInManually = signInManually,
-                    retryLogin = retryLogin,
-                    initiateGoogleSignIn = initiateGoogleSignIn,
-                    navigateToHomeScreen = navigateToHomeScreen,
-                    navigateToRegisterScreen = navigateToRegisterScreen,
-                )
-            }
-
-            is LoginScreenStates.RegistrationRequiredState -> TODO()
-            is LoginScreenStates.UserSignedInState -> TODO()
+            ErrorAlertDialog(
+                title = "Feature In Progress",
+                error = "feature isn't implemnented",
+                onDismiss = retryLogin
+            )
         }
+
+        LoginBottomSheet(
+            loginState = if (loginState is LoginScreenStates.LoginScreenState) loginState else LoginScreenStates.LoginScreenState(),
+            signInManually = signInManually,
+            retryLogin = retryLogin,
+            initiateGoogleSignIn = initiateGoogleSignIn,
+            navigateToHomeScreen = navigateToHomeScreen,
+            navigateToRegisterScreen = navigateToRegisterScreen,
+        )
     }
 }
 

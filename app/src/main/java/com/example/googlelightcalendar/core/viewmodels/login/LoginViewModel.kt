@@ -12,7 +12,9 @@ import com.example.googlelightcalendar.repo.AuthorizationResponseStates
 import com.example.googlelightcalendar.repo.UserRepository
 import com.example.googlelightcalendar.utils.AsyncResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -25,6 +27,7 @@ const val TAG = "LoginViewModel"
 class LoginViewModel @Inject constructor(
     private val navigationManager: NavigationManger,
     private val userRepository: UserRepository,
+    private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : ViewModel(), AppAuthClient {
 
     private val googleScopes = arrayOf(
@@ -99,7 +102,7 @@ class LoginViewModel @Inject constructor(
     }
 
     override fun handleAuthorizationResponse(intent: Intent) {
-        viewModelScope.launch(coroutineExceptionHandler) {
+        viewModelScope.launch(dispatcher) {
             userRepository.handleAuthorizationResponse(intent) { serverResponse ->
 
                 when (serverResponse) {

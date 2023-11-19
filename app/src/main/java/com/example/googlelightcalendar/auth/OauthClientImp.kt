@@ -42,6 +42,12 @@ interface OauthClient {
     fun attemptAuthorization(
         authorizationScopes: Array<String>
     )
+
+    suspend fun handleAuthorizationResponse(
+        intent: Intent,
+        authorizationResponse: AuthorizationResponse?,
+        error: AuthorizationException?,
+    ): AsyncResponse<User?>
 }
 
 
@@ -128,10 +134,10 @@ class OauthClientImp @Inject constructor(
         }
     }
 
-    suspend fun handleAuthorizationResponse(
+    suspend override fun handleAuthorizationResponse(
         intent: Intent,
-        authorizationResponse: AuthorizationResponse? = AuthorizationResponse.fromIntent(intent),
-        error: AuthorizationException? = AuthorizationException.fromIntent(intent),
+        authorizationResponse: AuthorizationResponse?,
+        error: AuthorizationException?
     ): AsyncResponse<User?> {
 
         oauthState.updateAuthState(AuthState(authorizationResponse, error))

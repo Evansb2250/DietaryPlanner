@@ -1,9 +1,8 @@
 package com.example.googlelightcalendar.repo
 
 import android.content.Intent
-import android.provider.ContactsContract.CommonDataKinds.Email
 import androidx.activity.result.ActivityResultLauncher
-import com.example.googlelightcalendar.auth.OauthClientImp
+import com.example.googlelightcalendar.auth.OauthClient
 import com.example.googlelightcalendar.core.TokenManager
 import com.example.googlelightcalendar.data.room.database.dao.UserDao
 import com.example.googlelightcalendar.data.room.database.models.toUser
@@ -57,7 +56,7 @@ sealed class AuthorizationResponseStates {
 
 @Singleton
 class UserRepositoryImpl @Inject constructor(
-    private val googleOauthClient: Lazy<OauthClientImp>,
+    private val googleOauthClient: Lazy<OauthClient>,
     private val userDao: UserDao,
     private val tokenManager: TokenManager,
 ) : UserRepository {

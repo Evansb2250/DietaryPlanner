@@ -29,8 +29,7 @@ class UserRepositoryFake(
 
         return when (result) {
             null -> AsyncResponse.Failed(
-                data = null,
-                message = "user not found"
+                data = null, message = "user not found"
             )
 
             else -> AsyncResponse.Success(
@@ -46,17 +45,31 @@ class UserRepositoryFake(
         authorizationResponseCallback: (AuthorizationResponseStates) -> Unit
     ) {
 
-//        if((oauthClient as OAuthClientFake).isRegistered && (oauthClient as OAuthClientFake).attemptToAuthorize){
-//            authorizationResponse(
-//                true,
-//                "Will Mock this later"
-//            )
-//        }else{
-//            authorizationResponse(
-//                false,
-//                "Will Mock this later"
-//            )
-//        }
+        if ((oauthClient as OAuthClientFake).isRegistered && (oauthClient as OAuthClientFake).attemptToAuthorize) {
+
+            val userExist = userDaoFake.getUserFromGmailSignIn(oauthClient.emailAddress ?: "Unkown")
+
+            if (userExist != null) {
+                authorizationResponseCallback(
+                    AuthorizationResponseStates.SuccessResponseState(
+                        oauthClient.emailAddress!!, "Will Mock this later"
+                    )
+                )
+            } else {
+                authorizationResponseCallback(
+                    AuthorizationResponseStates.FirstTimeUserState(
+                        ""
+                    )
+                )
+            }
+
+        } else {
+            authorizationResponseCallback(
+                AuthorizationResponseStates.FailedResponsState(
+                    ""
+                )
+            )
+        }
 
     }
 }

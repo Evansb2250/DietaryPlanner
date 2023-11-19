@@ -15,7 +15,7 @@ class UserDaoFake : UserDao {
         }
 
     override fun getUserFromGmailSignIn(gmail: String): UserEntity? {
-        TODO("Not yet implemented")
+        return  inMemoryUserDao.filter {  it.value.userName == gmail }.getOrDefault(gmail, null)
     }
 
     override suspend fun deleteUser(userEntity: UserEntity) {
