@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.googlelightcalendar.common.Constants
 import com.example.googlelightcalendar.interfaces.AppAuthClient
+import com.example.googlelightcalendar.navigation.components.NavigationBuilder
 import com.example.googlelightcalendar.navigation.components.NavigationDestinations
 import com.example.googlelightcalendar.navigation.components.NavigationManger
 import com.example.googlelightcalendar.repo.AuthorizationResponseStates
@@ -55,12 +56,24 @@ class LoginViewModel @Inject constructor(
     }
 
     fun navigateToRegisterScreen(
-       email: String? = null
-    ){
+        email: String = ""
+    ) {
+
+        val map = if (email.isEmpty()) {
+            emptyMap()
+        } else {
+            mapOf(
+                "email" to email
+            )
+        }
         navigationManager.navigate(
-            NavigationDestinations.registerScreen
+            NavigationBuilder.buildDestination(
+                NavigationDestinations.registerScreen,
+                map
+            )
         )
     }
+
     fun signInManually(
         userName: String,
         password: String,

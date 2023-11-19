@@ -16,6 +16,8 @@ import com.example.googlelightcalendar.domain.toUserEntity
 import com.example.googlelightcalendar.fakes.OAuthClientFake
 import com.example.googlelightcalendar.fakes.UserDaoFake
 import com.example.googlelightcalendar.fakes.UserRepositoryFake
+import com.example.googlelightcalendar.navigation.components.NavigationBuilder
+import com.example.googlelightcalendar.navigation.components.NavigationDestinations
 import com.example.googlelightcalendar.navigation.components.NavigationManger
 import com.example.googlelightcalendar.repo.UserRepository
 import kotlinx.coroutines.CoroutineScope
@@ -25,11 +27,14 @@ import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import org.mockito.Mockito
+import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
 
 class LoginViewModelTest {
 
@@ -66,9 +71,8 @@ class LoginViewModelTest {
 
         externalScope = mock()
 
-        navigationManager = NavigationManger(
-            externalScope
-        )
+        navigationManager = mock()
+
         userDaoFake = UserDaoFake()
         oauthClientFake = OAuthClientFake()
 
@@ -150,7 +154,7 @@ class LoginViewModelTest {
             //Initial
             val loginScreenState = awaitItem()
 
-          assertThat(loginScreenState).isInstanceOf<LoginScreenStates.LoginScreenState>()
+            assertThat(loginScreenState).isInstanceOf<LoginScreenStates.LoginScreenState>()
 
             assertThat(oauthClientFake.attemptToAuthorize).isEqualTo(false)
 
@@ -179,6 +183,7 @@ class LoginViewModelTest {
             assertThat(thirdState).isInstanceOf<LoginScreenStates.LoginScreenState>()
         }
     }
+
     @Test
     fun `sign in manually Failed  `() = runTest {
         loginViewModel.state.test {
@@ -194,6 +199,20 @@ class LoginViewModelTest {
 
             assertThat(loginViewModelState).isInstanceOf<LoginScreenStates.LoginError>()
         }
+    }
+
+    @Test
+    fun navigateToRegisterScreen() {
+
+        verify(navigationManager, times(0)).navigate(
+            NavigationDestinations.registerScreen
+        )
+
+        loginViewModel.navigateToRegisterScreen()
+
+        verify(navigationManager, times(1)).navigate(
+            any()
+        )
     }
 
     @Test

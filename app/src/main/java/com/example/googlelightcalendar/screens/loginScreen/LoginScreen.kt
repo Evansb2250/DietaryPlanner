@@ -217,7 +217,7 @@ fun LoginBottomSheet(
             Button(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(10.dp),
-                onClick = { /*TODO*/ }
+                onClick = navigateToRegisterScreen
             ) {
                 Text(
                     text = "Create account"
