@@ -35,6 +35,8 @@ import com.example.googlelightcalendar.core.registration.RegistrationScreenState
 import com.example.googlelightcalendar.core.registration.RegistrationScreenStates.RegistrationStatesPageOne.Success
 import com.example.googlelightcalendar.core.registration.RegistrationViewModel
 import com.example.googlelightcalendar.screens.loginScreen.sidePadding
+import com.example.googlelightcalendar.ui_components.dialog.ErrorAlertDialog
+import com.example.googlelightcalendar.ui_components.dialog.ToBeImplementedDialog
 
 
 @Composable
@@ -42,29 +44,41 @@ fun RegistrationScreen(
     registrationViewModel: RegistrationViewModel = hiltViewModel()
 ) {
     RegistrationScreenContent(
-        registrationState = registrationViewModel.state.collectAsState().value
+        registrationState = registrationViewModel.state.collectAsState().value,
+        onNext = registrationViewModel::onStoreCredentials
     )
 }
 
 @Composable
 private fun RegistrationScreenContent(
-    registrationState: RegistrationStatesPageOne
+    registrationState: RegistrationStatesPageOne,
+    onNext: (state: PersonalInformationState) -> Unit = {},
 ) {
     when (registrationState) {
-        is Failed -> {}
-        is PersonalInformationState -> {
-            InitialRegistrationScreen(
-                registrationState,
+        is Failed -> {
+            ErrorAlertDialog(
+                title = "Error",
+                error = registrationState.errorMessage,
             )
         }
 
-        Success -> TODO()
+        is PersonalInformationState -> {
+            InitialRegistrationScreen(
+                registrationState,
+                onNext = onNext
+            )
+        }
+
+        Success -> {
+            ToBeImplementedDialog()
+        }
     }
 }
 
 @Composable
 private fun InitialRegistrationScreen(
     state: PersonalInformationState,
+    onNext: (state: PersonalInformationState) -> Unit = {}
 ) {
     Column(
         modifier = Modifier
@@ -127,7 +141,8 @@ private fun InitialRegistrationScreen(
         )
 
         Button(
-            onClick = { /*TODO*/ },
+            onClick = { onNext(state) },
+            enabled = state.registrationComplete()
         ) {
             Text(
                 text = "Next"
@@ -208,24 +223,26 @@ fun CustomOutlineTextField(
     onTextChange: (String) -> Unit,
 ) {
 
-    OutlinedTextField(leadingIcon = {
-        if (leadingIcon != null) {
-            Image(
-                painter = painterResource(
-                    id = leadingIcon.leadingIcon,
-                ), contentDescription = leadingIcon.description
-            )
-        }
-    },
+    OutlinedTextField(
+        leadingIcon = {
+            if (leadingIcon != null) {
+                Image(
+                    painter = painterResource(
+                        id = leadingIcon.leadingIcon,
+                    ), contentDescription = leadingIcon.description
+                )
+            }
+        },
         value = text,
         onValueChange = onTextChange,
         label = {
-        if (label != null) {
-            Text(
-                text = label
-            )
-        }
-    })
+            if (label != null) {
+                Text(
+                    text = label
+                )
+            }
+        },
+    )
 }
 
 

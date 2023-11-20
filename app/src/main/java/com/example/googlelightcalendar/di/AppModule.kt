@@ -8,6 +8,8 @@ import com.example.googlelightcalendar.auth.OAuthStateHandler
 import com.example.googlelightcalendar.auth.OauthClientImp
 import com.example.googlelightcalendar.core.GoogleTokenManagerImpl
 import com.example.googlelightcalendar.core.TokenManager
+import com.example.googlelightcalendar.core.registration.UserRegistrationCache
+import com.example.googlelightcalendar.core.registration.UserRegistrationCacheImpl
 import com.example.googlelightcalendar.navigation.components.NavigationManger
 import dagger.Module
 import dagger.Provides
@@ -62,4 +64,7 @@ class AppModule {
         externalScope
     )
 
+    @Provides
+    @Singleton
+    fun provideRegistrationCache(): UserRegistrationCache = UserRegistrationCacheImpl()
 }

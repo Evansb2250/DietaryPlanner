@@ -1,6 +1,7 @@
 package com.example.googlelightcalendar.di
 
 import com.example.googlelightcalendar.core.registration.RegistrationViewModel
+import com.example.googlelightcalendar.core.registration.UserRegistrationCache
 import com.example.googlelightcalendar.repo.UserRepository
 import com.example.googlelightcalendar.core.viewmodels.login.LoginViewModel
 import com.example.googlelightcalendar.navigation.components.NavigationManger
@@ -25,7 +26,11 @@ object ViewModelModule {
     }
 
     @Provides
-    fun providesRegistrationViewMode():RegistrationViewModel{
-        return RegistrationViewModel()
+    fun providesRegistrationViewMode(
+        registrationCache: UserRegistrationCache
+    ):RegistrationViewModel{
+        return RegistrationViewModel(
+            registrationCache = registrationCache
+        )
     }
 }

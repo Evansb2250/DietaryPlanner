@@ -40,7 +40,10 @@ fun root(
 ) {
 
     val navControl = rememberNavController()
-    LaunchedEffect(key1 = navigationManger.navigationState){
+
+    LaunchedEffect(
+        key1 = navigationManger.navigationState,
+        ){
         navigationManger.navigationState.collectLatest {navDirection ->
             navControl.navigate(navDirection.destination)
         }

@@ -2,49 +2,79 @@ package com.example.googlelightcalendar.core.registration
 
 import androidx.compose.runtime.mutableStateOf
 import com.example.googlelightcalendar.utils.TextFieldUtils
+import java.util.Date
 
 sealed class RegistrationScreenStates {
 
-    sealed class RegistrationStatesPageOne: RegistrationScreenStates(){
+    sealed class RegistrationStatesPageOne : RegistrationScreenStates() {
         data class PersonalInformationState(
-            val initialFirstName: String = "",
-            val initialLastName: String = "",
-            val initialEmail: String = "",
-            val initialPassword: String = "",
-        ): RegistrationStatesPageOne(){
+            private val initialFirstName: String = "",
+            private val initialLastName: String = "",
+            private val initialEmail: String = "",
+            private val initialPassword: String = "",
+        ) : RegistrationStatesPageOne() {
 
             var firstName = mutableStateOf(initialFirstName)
-            var lastName =  mutableStateOf(initialLastName)
+            var lastName = mutableStateOf(initialLastName)
             var email = mutableStateOf(initialEmail)
             var password = mutableStateOf(initialPassword)
 
 
-            fun containsValidFirstName(): Boolean{
+            fun containsValidFirstName(): Boolean {
                 return TextFieldUtils.isValidName(firstName.value)
             }
 
-            fun containsValidLastName(): Boolean{
+            fun containsValidLastName(): Boolean {
                 return TextFieldUtils.isValidName(lastName.value)
             }
 
-            fun containsValidEmail(): Boolean{
+            fun containsValidEmail(): Boolean {
                 return TextFieldUtils.isValidEmail(email.value)
             }
 
-            fun containsValidPassword(): Boolean{
+            fun containsValidPassword(): Boolean {
                 return TextFieldUtils.isValidPassword(password.value)
             }
+
+            fun registrationComplete(): Boolean {
+                return containsValidEmail() &&
+                        containsValidPassword() &&
+                        containsValidLastName() &&
+                        containsValidFirstName()
+            }
         }
+
         object Success : RegistrationStatesPageOne()
 
         data class Failed(
             val errorMessage: String,
-        ): RegistrationStatesPageOne()
+        ) : RegistrationStatesPageOne()
 
     }
 
-    object PhysicalDetailsState: RegistrationScreenStates()
-    object GoalSelectionState: RegistrationScreenStates()
-    object ConfirmationState: RegistrationScreenStates()
+    sealed class PhysicalDetailsState : RegistrationScreenStates() {
+        data class UserInput(
+            val gender: Genders,
+            val birthDate: Date? = null,
+            val height: Double,
+            val weight: Double,
+        ) : PhysicalDetailsState()
 
+        data class Error(
+            val errorMessage: String,
+        ) : PhysicalDetailsState()
+
+        object Success : PhysicalDetailsState()
+    }
+
+    object GoalSelectionState : RegistrationScreenStates()
+    object ConfirmationState : RegistrationScreenStates()
+
+}
+
+
+enum class Genders {
+    MALE,
+    FEMALE,
+    OTHER,
 }

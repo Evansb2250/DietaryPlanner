@@ -9,10 +9,27 @@ import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 
 @HiltViewModel
-class RegistrationViewModel @Inject constructor() : ViewModel() {
+class RegistrationViewModel @Inject constructor(
+    val registrationCache: UserRegistrationCache
+) : ViewModel() {
     private var _state: MutableStateFlow<RegistrationStatesPageOne> = MutableStateFlow<RegistrationStatesPageOne>(
         PersonalInformationState()
     )
     val state = _state.asStateFlow()
+
+    init{
+
+    }
+
+    fun onStoreCredentials(
+       state: PersonalInformationState
+    ){
+        registrationCache.storeKey(RegistrationKeys.FirstName, state.firstName.value)
+        registrationCache.storeKey(RegistrationKeys.LASTNAME, state.lastName.value)
+        registrationCache.storeKey(RegistrationKeys.EMAIL, state.email.value)
+        registrationCache.storeKey(RegistrationKeys.PASSWORD, state.password.value)
+
+        _state.value =  Success
+    }
 
 }
