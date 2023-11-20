@@ -68,7 +68,7 @@ class LoginViewModel @Inject constructor(
         }
         navigationManager.navigate(
             NavigationBuilder.buildDestination(
-                NavigationDestinations.registerScreen,
+                NavigationDestinations.RegistrationPath,
                 map
             )
         )
@@ -102,6 +102,8 @@ class LoginViewModel @Inject constructor(
                         )
                     }
                 }
+
+                else -> {}
             }
         }
     }
@@ -137,6 +139,8 @@ class LoginViewModel @Inject constructor(
                             serverResponse.name,
                         )
                     }
+
+                    else -> {}
                 }
             }
         }

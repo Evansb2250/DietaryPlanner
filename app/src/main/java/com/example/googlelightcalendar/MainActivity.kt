@@ -5,8 +5,10 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import com.example.googlelightcalendar.navigation.components.NavigationDestinations
 import com.example.googlelightcalendar.navigation.components.NavigationManger
@@ -54,10 +56,46 @@ fun root(
             LoginScreen()
         }
 
+        RegisterUserPath()
+    }
+}
+
+
+fun NavGraphBuilder.RegisterUserPath(){
+    navigation(
+        route = NavigationDestinations.RegistrationPath.destination,
+        startDestination =  NavigationDestinations.registerScreen.destination
+    ){
         composable(
             route = NavigationDestinations.registerScreen.destination
         ){
             RegistrationScreen()
         }
+
+        composable(
+            route = NavigationDestinations.registerPhysicalScreen.destination
+        ){
+            @Composable
+            fun RegisterUserPhysicalScreen() {
+
+            }
+
+        }
+        composable(
+            route = NavigationDestinations.registerGoalsScreen.destination
+        ){
+            @Composable
+            fun UserGoalScreen() {
+
+            }
+
+        }
+
+        composable(
+            route = NavigationDestinations.registerConfirmationScreen.destination
+        ){
+
+        }
     }
+
 }

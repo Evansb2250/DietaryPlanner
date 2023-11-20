@@ -171,9 +171,9 @@ fun LoginBottomSheet(
             )
 
             OutlinedTextField(
-                value = loginState.userName.value,
+                value = loginState.email.value,
                 onValueChange = { userNameUpdate ->
-                    loginState.userName.value = userNameUpdate
+                    loginState.email.value = userNameUpdate
                 },
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(20.dp)
@@ -201,7 +201,7 @@ fun LoginBottomSheet(
                 onClick = {
                     if (loginState.containsValidCredentials()) {
                         signInManually(
-                            loginState.userName.value,
+                            loginState.email.value,
                             loginState.password.value,
                         )
                     } else {
