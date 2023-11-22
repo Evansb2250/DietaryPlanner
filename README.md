@@ -1,6 +1,6 @@
 # DietaryPlanner
 **Meal Planning Application**
-**Overview**
+**Overview**     **In Progress**
 Welcome to the Meal Planning Application! This project aims to provide a user-friendly platform for planning meals, setting dietary goals, and integrating meal plans with Google Calendar. Whether you're looking to eat healthier, achieve balanced nutrition, lose or gain weight, this app has you covered.
 
 **Features**
