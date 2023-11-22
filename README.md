@@ -36,12 +36,14 @@ Kaggle Food Database
 Technology Stack
 We are in the early stages of development and are implementing the following technologies and design patterns:
 
-Architecture: MVVM (Model-View-ViewModel), as recommended by Google.
-OAuth2.0: Utilizing AppAuth for handling access tokens for Gmail Calendar integration.
-Local Storage: Room for local data storage.
-Cloud Storage: Google Firebase for securely storing and managing user information.
+**Architecture:**
+**MVVM** (Model-View-ViewModel), as recommended by Google.
+OAuth2.0: Utilizing **AppAuth** for handling access tokens for Gmail Calendar integration.
+Local Storage: **Room** for local data storage.
+Cloud Storage:** Google Firebase** for securely storing and managing user information.
 Caching Strategy: Ensuring data is up-to-date and providing offline functionality.
-Future Plans
+
+**Future Plans**
 We have ambitious plans for further development, including enhancing the user interface, adding more features, and improving overall user experience. Stay tuned for updates and new releases!
 
 Thank you for your interest in our Meal Planning Application. We look forward to helping you achieve your dietary and nutrition goals.
