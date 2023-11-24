@@ -13,7 +13,7 @@ class Constants {
         val CALENDAR_READ_ONLY = "https://www.googleapis.com/auth/calendar.readonly"
         val CALENDAR_SCOPE = "https://www.googleapis.com/auth/calendar"
 
-        val CLIENT_ID = "436600699866-9k1anku3bi46bk5io480gcuht0lhanpp.apps.googleusercontent.com"
+        val CLIENT_ID = ""
         val CODE_VERIFIER_CHALLENGE_METHOD = "S256"
         val MESSAGE_DIGEST_ALGORITHM = "SHA-256"
 
