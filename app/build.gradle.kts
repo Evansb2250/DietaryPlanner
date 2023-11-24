@@ -1,9 +1,11 @@
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
-    id ("kotlin-android")
+    id("kotlin-android")
     id("com.google.devtools.ksp")
-    id ("de.mannodermaus.android-junit5") version "1.9.3.0"
+    id("de.mannodermaus.android-junit5")
     id("com.google.dagger.hilt.android")
 }
 
@@ -13,8 +15,8 @@ android {
 
     testOptions{
         unitTests.all {
-                it.ignoreFailures = false
-                it.enabled = true
+            it.ignoreFailures = false
+            it.enabled = true
         }
     }
 
@@ -31,6 +33,17 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+
+        val myPropert = Properties()
+        myPropert.load(
+            project.file("C:\\Users\\samue\\GoogleLightCalendar\\private_keys.properties")
+                .inputStream()
+        )
+
+        val clientSecret = myPropert.getProperty("client")
+        if (clientSecret != null)
+            buildConfigField("String", "CLIENT_SECRET", "\"$clientSecret\"")
+
     }
 
     buildTypes {
@@ -50,6 +63,7 @@ android {
         jvmTarget = "17"
     }
     buildFeatures {
+        buildConfig = true
         compose = true
     }
     composeOptions {
@@ -64,7 +78,6 @@ android {
 }
 
 dependencies {
-
     val lifecycle_version = "2.6.2"
 
     //Google Calendar imports
