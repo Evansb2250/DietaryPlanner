@@ -7,6 +7,8 @@ plugins {
     id("com.google.devtools.ksp")
     id("de.mannodermaus.android-junit5")
     id("com.google.dagger.hilt.android")
+    // Add the Google services Gradle plugin
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -156,6 +158,16 @@ dependencies {
     // Compose Navigation
     val nav_version = "2.7.4"
     implementation("androidx.navigation:navigation-compose:$nav_version")
+
+    //Android Firebase
+    // Import the Firebase BoM
+    implementation(platform("com.google.firebase:firebase-bom:32.6.0"))
+
+
+    // TODO: Add the dependencies for Firebase products you want to use
+    // When using the BoM, don't specify versions in Firebase dependencies
+    implementation("com.google.firebase:firebase-analytics")
+
 
     //TestImplementations
     // (Required) Writing and executing Unit Tests on the JUnit Platform
