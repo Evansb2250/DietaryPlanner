@@ -4,11 +4,13 @@ import androidx.compose.foundation.Image
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import com.example.googlelightcalendar.common.imageHolder
 
 @Composable
 fun CustomOutlineTextField(
+    modifier: Modifier = Modifier,
     leadingIcon: imageHolder? = null,
     label: String? = null,
     text: String,
@@ -16,6 +18,7 @@ fun CustomOutlineTextField(
 ) {
 
     OutlinedTextField(
+        modifier = modifier,
         leadingIcon = {
             if (leadingIcon != null) {
                 Image(
