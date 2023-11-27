@@ -27,10 +27,12 @@ object ViewModelModule {
 
     @Provides
     fun providesRegistrationViewMode(
-        registrationCache: UserRegistrationCache
+        registrationCache: UserRegistrationCache,
+        navigationManger: NavigationManger,
     ):RegistrationViewModel{
         return RegistrationViewModel(
-            registrationCache = registrationCache
+            registrationCache = registrationCache,
+            navigationManger = navigationManger,
         )
     }
 }

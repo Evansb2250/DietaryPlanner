@@ -34,6 +34,8 @@ fun CustomDropDownMenu(
         TextField(
             modifier = modifier.menuAnchor(),
             value = selectedOptionText,
+            enabled = false,
+            readOnly = true,
             onValueChange = { },
             label = { Text(text = "Label") },
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },

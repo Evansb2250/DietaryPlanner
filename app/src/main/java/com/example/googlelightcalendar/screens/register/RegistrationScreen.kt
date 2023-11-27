@@ -1,5 +1,6 @@
 package com.example.googlelightcalendar.screens.register
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -13,6 +14,7 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,6 +27,7 @@ import com.example.googlelightcalendar.core.registration.RegistrationScreenState
 import com.example.googlelightcalendar.core.registration.RegistrationScreenStates.RegistrationStatesPageOne.PersonalInformationState
 import com.example.googlelightcalendar.core.registration.RegistrationScreenStates.RegistrationStatesPageOne.Success
 import com.example.googlelightcalendar.core.registration.RegistrationViewModel
+import com.example.googlelightcalendar.navigation.components.NavigationDestinations.registerPhysicalScreen
 import com.example.googlelightcalendar.screens.loginScreen.sidePadding
 import com.example.googlelightcalendar.ui_components.dialog.ErrorAlertDialog
 import com.example.googlelightcalendar.ui_components.dialog.ToBeImplementedDialog
@@ -34,11 +37,16 @@ import com.example.googlelightcalendar.ui_components.text_fields.CustomPasswordT
 
 @Composable
 fun RegistrationScreen(
-    registrationViewModel: RegistrationViewModel = hiltViewModel()
+    registrationViewModel: RegistrationViewModel = hiltViewModel(),
 ) {
+    BackHandler {
+        registrationViewModel.onBackSpace()
+    }
     RegistrationScreenContent(
         registrationState = registrationViewModel.state.collectAsState().value,
-        onNext = registrationViewModel::onStoreCredentials
+        onNext = registrationViewModel::onStoreCredentials,
+        navigateToNextPage = registrationViewModel::navigateNextPage,
+        onReset = registrationViewModel::reset
     )
 }
 
@@ -46,6 +54,8 @@ fun RegistrationScreen(
 private fun RegistrationScreenContent(
     registrationState: RegistrationStatesPageOne,
     onNext: (state: PersonalInformationState) -> Unit = {},
+    navigateToNextPage: () -> Unit = {},
+    onReset: () -> Unit = {},
 ) {
     Scaffold { it ->
 
@@ -58,7 +68,6 @@ private fun RegistrationScreenContent(
             }
 
             is PersonalInformationState -> {
-        //        PhysicalDetailContent()
                 InitialRegistrationScreen(
                     registrationState,
                     onNext = onNext
@@ -66,7 +75,8 @@ private fun RegistrationScreenContent(
             }
 
             Success -> {
-                ToBeImplementedDialog()
+                navigateToNextPage()
+                onReset()
             }
         }
     }
@@ -139,7 +149,7 @@ private fun InitialRegistrationScreen(
 
         Button(
             onClick = { onNext(state) },
-            enabled = state.registrationComplete()
+            enabled = !state.registrationComplete()
         ) {
             Text(
                 text = "Next"

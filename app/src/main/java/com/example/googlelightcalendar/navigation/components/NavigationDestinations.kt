@@ -33,7 +33,7 @@ object NavigationDestinations {
 
     val registerGoalsScreen = object : Navigation{
         override val destination: String
-            get() = "registerPhysicalScreen/"
+            get() = "registerGoalScreen/"
         override val arguments: List<String>
             get() = emptyList()
 
