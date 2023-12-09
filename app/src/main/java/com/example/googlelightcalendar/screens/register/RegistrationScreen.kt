@@ -51,7 +51,7 @@ private fun RegistrationScreenContent(
 
     AppColumnContainer(
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(10.dp),
+        verticalArrangement = Arrangement.spacedBy(15.dp),
     ) {
         when (registrationState) {
             is Failed -> {
