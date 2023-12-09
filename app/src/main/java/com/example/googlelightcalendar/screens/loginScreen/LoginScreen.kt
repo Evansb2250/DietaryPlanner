@@ -1,13 +1,18 @@
 package com.example.googlelightcalendar.screens.loginScreen
 
 import android.content.Intent
+import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -16,11 +21,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberBottomSheetScaffoldState
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -29,15 +35,24 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.Green
+import androidx.compose.ui.graphics.Color.Companion.Yellow
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.googlelightcalendar.R
 import com.example.googlelightcalendar.core.viewmodels.login.LoginScreenStates
 import com.example.googlelightcalendar.core.viewmodels.login.LoginViewModel
+import com.example.googlelightcalendar.screens.register.RegistrationScreen
+import com.example.googlelightcalendar.ui.theme.GoogleLightCalendarTheme
 import com.example.googlelightcalendar.ui_components.dialog.ErrorAlertDialog
+import com.example.googlelightcalendar.ui_components.textfields.CustomOutlineTextField
 
 val sidePadding = 16.dp
 
+@RequiresApi(Build.VERSION_CODES.P)
 @Composable
 fun LoginScreen() {
     val loginViewModel = hiltViewModel<LoginViewModel>()
@@ -57,14 +72,60 @@ fun LoginScreen() {
         googleSignInLauncher
     )
 
-    LoginContent(
-        loginState = loginViewModel.state.collectAsState().value,
-        signInManually = loginViewModel::signInManually,
-        initiateGoogleSignIn = loginViewModel::signInWithGoogle,
-        retryLogin = loginViewModel::resetLoginScreenState,
-        navigateToHomeScreen = loginViewModel::navigateToRegisterScreen,
-        navigateToRegisterScreen = loginViewModel::navigateToRegisterScreen,
-    )
+    var tabIndex by remember { mutableStateOf(0) }
+
+    val tabs = listOf("Login", "Sign Up")
+
+    GoogleLightCalendarTheme {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Color.Black),
+
+            ) {
+            Image(
+                painter = painterResource(
+                    id = R.drawable.splash_calendar
+                ),
+                contentDescription = "",
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            TabRow(
+                modifier = Modifier.align(
+                    Alignment.CenterHorizontally
+                ),
+                containerColor = Color.Black,
+                selectedTabIndex = tabIndex
+            ) {
+                tabs.forEachIndexed { index, title ->
+                    Tab(
+                        text = { Text(title) },
+                        selected = tabIndex == index,
+                        onClick = { tabIndex = index },
+                        selectedContentColor = Color.White
+                    )
+                }
+
+
+            }
+
+            when(tabIndex){
+                0 ->{
+                    LoginContent(
+                        loginState = loginViewModel.state.collectAsState().value,
+                        signInManually = loginViewModel::signInManually,
+                        initiateGoogleSignIn = loginViewModel::signInWithGoogle,
+                        retryLogin = loginViewModel::resetLoginScreenState,
+                        navigateToHomeScreen = loginViewModel::navigateToRegisterScreen,
+                        navigateToRegisterScreen = loginViewModel::navigateToRegisterScreen,
+                    )
+                }
+                else -> RegistrationScreen()
+            }
+        }
+    }
+
 }
 
 @Composable
@@ -77,9 +138,7 @@ fun LoginContent(
     navigateToRegisterScreen: () -> Unit = {}
 ) {
     Box(
-        modifier = Modifier.padding(
-
-        )
+        modifier = Modifier.background(Color.Black)
     ) {
 
         if (loginState is LoginScreenStates.LoginError) {
@@ -129,143 +188,118 @@ fun LoginBottomSheet(
     navigateToHomeScreen: () -> Unit = {},
     navigateToRegisterScreen: () -> Unit = {}
 ) {
-
-
-    val bottomSheetScaffoldState = rememberBottomSheetScaffoldState()
     var containsIncompleteCredentials by remember {
         mutableStateOf(false)
     }
-
-    ModalBottomSheet(
-        modifier = Modifier.wrapContentWidth(),
-        sheetState = bottomSheetScaffoldState.bottomSheetState,
-        onDismissRequest = { },
-        shape = RoundedCornerShape(20.dp)
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxSize()
+            .padding(
+                horizontal = sidePadding
+            )
+            .background(
+                color = Color.Black,
+            ),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Top
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(
-                    horizontal = sidePadding
-                ),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            if (containsIncompleteCredentials) {
-                ErrorAlertDialog(
-                    title = "Invalid Credentials",
-                    error = "please fill in the required information",
-                    onDismiss = {
-                        containsIncompleteCredentials = false
-                    }
-                )
-            }
-
-            Text(
-                modifier = Modifier.fillMaxWidth(),
-                text = "Pheonix",
-                textAlign = TextAlign.Center,
-            )
-            Spacer(
-                modifier = Modifier.size(30.dp)
-            )
-
-            OutlinedTextField(
-                value = loginState.userName.value,
-                onValueChange = { userNameUpdate ->
-                    loginState.userName.value = userNameUpdate
-                },
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(20.dp)
-            )
-
-            Spacer(
-                modifier = Modifier.size(30.dp)
-            )
-
-            OutlinedTextField(
-                value = loginState.password.value,
-                onValueChange = { passwordUpdate ->
-                    loginState.password.value = passwordUpdate
-                },
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(20.dp)
-            )
-            Spacer(
-                modifier = Modifier.size(20.dp)
-            )
-
-            Button(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(10.dp),
-                onClick = {
-                    if (loginState.containsValidCredentials()) {
-                        signInManually(
-                            loginState.userName.value,
-                            loginState.password.value,
-                        )
-                    } else {
-                        containsIncompleteCredentials = true
-                    }
-                },
-            ) {
-                Text(
-                    text = "Log in"
-                )
-            }
-
-            Button(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(10.dp),
-                onClick = navigateToRegisterScreen
-            ) {
-                Text(
-                    text = "Create account"
-                )
-            }
-
-            Spacer(
-                modifier = Modifier.size(20.dp)
-            )
-
-            Divider(
-                modifier = Modifier.wrapContentWidth()
-            )
-
-            Text(
-                modifier = Modifier.fillMaxWidth(),
-                textAlign = TextAlign.Center,
-                text = "Or"
-            )
-
-            Spacer(
-                modifier = Modifier.size(20.dp)
-            )
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center,
-            ) {
-                OutlinedButton(
-                    shape = RoundedCornerShape(10.dp),
-                    onClick = { /*TODO*/ },
-                ) {
-                    Text(text = "FaceBook")
+        if (containsIncompleteCredentials) {
+            ErrorAlertDialog(
+                title = "Invalid Credentials",
+                error = "please fill in the required information",
+                onDismiss = {
+                    containsIncompleteCredentials = false
                 }
-                Spacer(
-                    modifier = Modifier.size(10.dp)
-                )
-                OutlinedButton(
-                    shape = RoundedCornerShape(10.dp),
-                    onClick = initiateGoogleSignIn,
-                ) {
-                    Text(text = "Google")
-                }
-            }
-            Spacer(
-                modifier = Modifier.size(10.dp)
             )
         }
+        Spacer(
+            modifier = Modifier.size(20.dp)
+        )
+        CustomOutlineTextField(
+            value = loginState.userName.value,
+            onValueChange = { userNameUpdate ->
+                loginState.userName.value = userNameUpdate
+            },
+            label = "Email",
+        )
+
+        Spacer(
+            modifier = Modifier.size(20.dp)
+        )
+
+        CustomOutlineTextField(
+            value = loginState.password.value,
+            onValueChange = { passwordUpdate ->
+                loginState.password.value = passwordUpdate
+            },
+            label = "Password",
+        )
+        Spacer(
+            modifier = Modifier.size(10.dp)
+        )
+        Text(
+            modifier = Modifier.fillMaxWidth(),
+            text = "Forgot Password?",
+            textAlign = TextAlign.End,
+            color = Color.White,
+        )
+
+        Spacer(
+            modifier = Modifier.size(40.dp)
+        )
+
+        Button(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(10.dp),
+            onClick = {
+                if (loginState.containsValidCredentials()) {
+                    signInManually(
+                        loginState.userName.value,
+                        loginState.password.value,
+                    )
+                } else {
+                    containsIncompleteCredentials = true
+                }
+            },
+        ) {
+            Text(
+                text = "Log in"
+            )
+        }
+
+        Spacer(
+            modifier = Modifier.size(20.dp)
+        )
+
+        Divider(
+            modifier = Modifier.wrapContentWidth()
+        )
+
+        Text(
+            modifier = Modifier.fillMaxWidth(),
+            textAlign = TextAlign.Center,
+            text = "Or"
+        )
+
+        Spacer(
+            modifier = Modifier.size(20.dp)
+        )
+
+        OutlinedButton(
+            shape = RoundedCornerShape(10.dp),
+            modifier = Modifier.fillMaxWidth(),
+            onClick = initiateGoogleSignIn,
+        ) {
+            Text(
+                text = "Sign up with Google",
+                color = Color.White,
+            )
+        }
+
+        Spacer(
+            modifier = Modifier.size(10.dp)
+        )
     }
 
 
