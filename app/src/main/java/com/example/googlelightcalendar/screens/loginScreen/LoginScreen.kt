@@ -48,6 +48,7 @@ import com.example.googlelightcalendar.core.viewmodels.login.LoginViewModel
 import com.example.googlelightcalendar.screens.register.RegistrationScreen
 import com.example.googlelightcalendar.ui.theme.GoogleLightCalendarTheme
 import com.example.googlelightcalendar.ui_components.dialog.ErrorAlertDialog
+import com.example.googlelightcalendar.ui_components.divider.CustomDividerText
 import com.example.googlelightcalendar.ui_components.textfields.CustomOutlineTextField
 
 val sidePadding = 16.dp
@@ -110,8 +111,8 @@ fun LoginScreen() {
 
             }
 
-            when(tabIndex){
-                0 ->{
+            when (tabIndex) {
+                0 -> {
                     LoginContent(
                         loginState = loginViewModel.state.collectAsState().value,
                         signInManually = loginViewModel::signInManually,
@@ -121,6 +122,7 @@ fun LoginScreen() {
                         navigateToRegisterScreen = loginViewModel::navigateToRegisterScreen,
                     )
                 }
+
                 else -> RegistrationScreen()
             }
         }
@@ -178,7 +180,6 @@ fun LoginContent(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginBottomSheet(
     loginState: LoginScreenStates.LoginScreenState,
@@ -272,9 +273,8 @@ fun LoginBottomSheet(
             modifier = Modifier.size(20.dp)
         )
 
-        Divider(
-            modifier = Modifier.wrapContentWidth()
-        )
+        CustomDividerText()
+
 
         Text(
             modifier = Modifier.fillMaxWidth(),
@@ -301,6 +301,4 @@ fun LoginBottomSheet(
             modifier = Modifier.size(10.dp)
         )
     }
-
-
 }
