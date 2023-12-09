@@ -13,7 +13,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun CustomDividerText(){
+fun CustomDividerText(
+    textColor: Color = Color.White
+){
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -31,7 +33,7 @@ fun CustomDividerText(){
                 )
                 .wrapContentWidth(),
             text = "Or",
-            color = Color.White,
+            color = textColor,
             textAlign = TextAlign.Center
         )
         Divider(

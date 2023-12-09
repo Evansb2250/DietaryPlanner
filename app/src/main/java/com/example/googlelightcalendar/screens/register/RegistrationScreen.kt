@@ -3,21 +3,18 @@ package com.example.googlelightcalendar.screens.register
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
-import androidx.compose.material3.Divider
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.googlelightcalendar.R
@@ -27,10 +24,10 @@ import com.example.googlelightcalendar.core.registration.RegistrationScreenState
 import com.example.googlelightcalendar.core.registration.RegistrationScreenStates.RegistrationStatesPageOne.PersonalInformationState
 import com.example.googlelightcalendar.core.registration.RegistrationScreenStates.RegistrationStatesPageOne.Success
 import com.example.googlelightcalendar.core.registration.RegistrationViewModel
-import com.example.googlelightcalendar.navigation.components.NavigationDestinations.registerPhysicalScreen
 import com.example.googlelightcalendar.screens.loginScreen.sidePadding
+import com.example.googlelightcalendar.ui.theme.Purple80
 import com.example.googlelightcalendar.ui_components.dialog.ErrorAlertDialog
-import com.example.googlelightcalendar.ui_components.dialog.ToBeImplementedDialog
+import com.example.googlelightcalendar.ui_components.divider.CustomDividerText
 import com.example.googlelightcalendar.ui_components.text_fields.CustomOutlineTextField
 import com.example.googlelightcalendar.ui_components.text_fields.CustomPasswordTextField
 
@@ -96,14 +93,6 @@ private fun InitialRegistrationScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(20.dp),
     ) {
-        Spacer(
-            modifier = Modifier.size(40.dp)
-        )
-
-        Text(
-            text = "Welcome to the registration Screen",
-        )
-
         CustomOutlineTextField(
             leadingIcon = imageHolder(
                 leadingIcon = R.drawable.avatar_icon, description = "first name avatar"
@@ -141,10 +130,13 @@ private fun InitialRegistrationScreen(
 
 
         CustomPasswordTextField(
-            text = state.password.value,
-            onTextChange = {
+            value = state.password.value,
+            onValueChange = {
                 state.password.value = it
-            }
+            },
+            textColor = Color.Black,
+            onFocusBorderColor = Purple80,
+            unFocusBorderColor = Color.Black,
         )
 
         Button(
@@ -156,8 +148,9 @@ private fun InitialRegistrationScreen(
             )
         }
 
-        Divider()
-
+        CustomDividerText(
+            textColor = Color.Black
+        )
         OutlinedButton(
             shape = RoundedCornerShape(10.dp),
             onClick = {},

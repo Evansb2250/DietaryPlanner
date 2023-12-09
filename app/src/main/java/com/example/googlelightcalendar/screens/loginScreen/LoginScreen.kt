@@ -38,9 +38,9 @@ import com.example.googlelightcalendar.R
 import com.example.googlelightcalendar.core.viewmodels.login.LoginScreenStates
 import com.example.googlelightcalendar.core.viewmodels.login.LoginViewModel
 import com.example.googlelightcalendar.screens.register.RegistrationScreen
-import com.example.googlelightcalendar.ui.theme.GoogleLightCalendarTheme
 import com.example.googlelightcalendar.ui_components.dialog.ErrorAlertDialog
 import com.example.googlelightcalendar.ui_components.divider.CustomDividerText
+import com.example.googlelightcalendar.ui_components.text_fields.CustomPasswordTextField
 import com.example.googlelightcalendar.ui_components.textfields.CustomOutlineTextField
 
 val sidePadding = 16.dp
@@ -209,9 +209,9 @@ fun LoginBottomSheet(
             modifier = Modifier.size(20.dp)
         )
         CustomOutlineTextField(
-            value = loginState.userName.value,
+            value = loginState.email.value,
             onValueChange = { userNameUpdate ->
-                loginState.userName.value = userNameUpdate
+                loginState.email.value = userNameUpdate
             },
             label = "Email",
         )
@@ -220,12 +220,19 @@ fun LoginBottomSheet(
             modifier = Modifier.size(20.dp)
         )
 
-        CustomOutlineTextField(
+
+        CustomPasswordTextField(
             value = loginState.password.value,
             onValueChange = { passwordUpdate ->
                 loginState.password.value = passwordUpdate
             },
-            label = "Password",
+            textColor = Color.Black,
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(
+                    Color.White,
+                    RoundedCornerShape(5.dp)
+                )
         )
         Spacer(
             modifier = Modifier.size(10.dp)
@@ -247,7 +254,7 @@ fun LoginBottomSheet(
             onClick = {
                 if (loginState.containsValidCredentials()) {
                     signInManually(
-                        loginState.userName.value,
+                        loginState.email.value,
                         loginState.password.value,
                     )
                 } else {

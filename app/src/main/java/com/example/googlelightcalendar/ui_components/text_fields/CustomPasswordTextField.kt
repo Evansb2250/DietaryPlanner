@@ -1,8 +1,13 @@
 package com.example.googlelightcalendar.ui_components.text_fields
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -10,21 +15,41 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.unit.dp
 import com.example.googlelightcalendar.R
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CustomPasswordTextField(
-    text: String,
-    onTextChange: (String) -> Unit
+    value: String,
+    onValueChange: (String) -> Unit,
+    textColor: Color,
+    modifier: Modifier = Modifier,
+    unFocusBorderColor: Color = Color.White,
+    backGroundColor: Color = Color.White,
+    onFocusBorderColor: Color = Color.White
 ) {
     var showPassword: Boolean by rememberSaveable {
         mutableStateOf(false)
     }
 
+
     OutlinedTextField(
+        value = value,
+        onValueChange = onValueChange,
+        label = {
+                Text(
+                    modifier = Modifier.background(
+                        color = backGroundColor,
+                    ),
+                    text = "Password",
+                    color = textColor,
+                )
+        },
         leadingIcon = {
             Image(
                 painter = painterResource(
@@ -53,14 +78,12 @@ fun CustomPasswordTextField(
             )
 
         },
-        value = text,
-        onValueChange = onTextChange,
-        label = {
-            Text(
-                text = "password"
-            )
-        },
+        modifier = modifier,
+        shape = RoundedCornerShape(5.dp),
+        colors = OutlinedTextFieldDefaults.colors(
+            focusedBorderColor = onFocusBorderColor,
+            unfocusedBorderColor = unFocusBorderColor,
+        ),
         visualTransformation = if (showPassword) VisualTransformation.None else PasswordVisualTransformation()
     )
-
 }
