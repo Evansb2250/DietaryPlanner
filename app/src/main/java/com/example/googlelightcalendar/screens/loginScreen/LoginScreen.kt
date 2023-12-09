@@ -5,6 +5,12 @@ import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.EaseInBounce
+import androidx.compose.animation.core.KeyframesSpec
+import androidx.compose.animation.core.TweenSpec
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -13,9 +19,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
@@ -37,6 +40,8 @@ import com.example.googlelightcalendar.common.imageHolder
 import com.example.googlelightcalendar.core.viewmodels.login.LoginScreenStates
 import com.example.googlelightcalendar.core.viewmodels.login.LoginViewModel
 import com.example.googlelightcalendar.screens.register.RegistrationScreen
+import com.example.googlelightcalendar.ui_components.buttons.GoogleButton
+import com.example.googlelightcalendar.ui_components.buttons.StandardButton
 import com.example.googlelightcalendar.ui_components.custom_column.AppColumnContainer
 import com.example.googlelightcalendar.ui_components.dialog.ErrorAlertDialog
 import com.example.googlelightcalendar.ui_components.divider.CustomDividerText
@@ -78,7 +83,7 @@ fun LoginScreen() {
         ) {
         Image(
             painter = painterResource(
-                id = R.drawable.splash_calendar
+                id = R.drawable.chooseuloginlogo
             ),
             contentDescription = "",
             modifier = Modifier.fillMaxWidth()
@@ -99,23 +104,58 @@ fun LoginScreen() {
                     selectedContentColor = Color.White
                 )
             }
-
-
         }
+
 
         when (tabIndex) {
             0 -> {
-                LoginContent(
-                    loginState = loginViewModel.state.collectAsState().value,
-                    signInManually = loginViewModel::signInManually,
-                    initiateGoogleSignIn = loginViewModel::signInWithGoogle,
-                    retryLogin = loginViewModel::resetLoginScreenState,
-                    navigateToHomeScreen = loginViewModel::navigateToRegisterScreen,
-                    navigateToRegisterScreen = loginViewModel::navigateToRegisterScreen,
-                )
+                AnimatedVisibility(
+                    visible = true,
+                    enter = fadeIn(
+                        animationSpec = TweenSpec(
+                            durationMillis = 40000,
+                            easing = EaseInBounce
+                        ),
+                    ),
+                    exit = fadeOut(
+                        KeyframesSpec(
+                            config = KeyframesSpec.KeyframesSpecConfig<Float>().apply {
+                                durationMillis = 5000
+                            }
+                        )
+                    )
+                ) {
+                    LoginContent(
+                        loginState = loginViewModel.state.collectAsState().value,
+                        signInManually = loginViewModel::signInManually,
+                        initiateGoogleSignIn = loginViewModel::signInWithGoogle,
+                        retryLogin = loginViewModel::resetLoginScreenState,
+                        navigateToHomeScreen = loginViewModel::navigateToRegisterScreen,
+                        navigateToRegisterScreen = loginViewModel::navigateToRegisterScreen,
+                    )
+                }
             }
 
-            else -> RegistrationScreen()
+            else -> {
+                AnimatedVisibility(
+                    visible = true,
+                    enter = fadeIn(
+                        animationSpec = TweenSpec(
+                            durationMillis = 10000,
+                            easing = EaseInBounce
+                        ),
+                    ),
+                    exit = fadeOut(
+                        KeyframesSpec(
+                            config = KeyframesSpec.KeyframesSpecConfig<Float>().apply {
+                                durationMillis = 5000
+                            }
+                        )
+                    )
+                ) {
+                    RegistrationScreen()
+                }
+            }
         }
     }
 }
@@ -233,9 +273,8 @@ fun LoginBottomSheet(
             modifier = Modifier.size(40.dp)
         )
 
-        Button(
-            modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(10.dp),
+        StandardButton(
+            text = "Log in",
             onClick = {
                 if (loginState.containsValidCredentials()) {
                     signInManually(
@@ -246,11 +285,7 @@ fun LoginBottomSheet(
                     containsIncompleteCredentials = true
                 }
             },
-        ) {
-            Text(
-                text = "Log in"
-            )
-        }
+        )
 
         Spacer(
             modifier = Modifier.size(20.dp)
@@ -262,16 +297,9 @@ fun LoginBottomSheet(
             modifier = Modifier.size(20.dp)
         )
 
-        OutlinedButton(
-            shape = RoundedCornerShape(10.dp),
-            modifier = Modifier.fillMaxWidth(),
+        GoogleButton(
             onClick = initiateGoogleSignIn,
-        ) {
-            Text(
-                text = "Sign up with Google",
-                color = Color.White,
-            )
-        }
+        )
 
         Spacer(
             modifier = Modifier.size(10.dp)

@@ -2,13 +2,12 @@ package com.example.googlelightcalendar.screens.register
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.googlelightcalendar.R
@@ -18,11 +17,13 @@ import com.example.googlelightcalendar.core.registration.RegistrationScreenState
 import com.example.googlelightcalendar.core.registration.RegistrationScreenStates.RegistrationStatesPageOne.PersonalInformationState
 import com.example.googlelightcalendar.core.registration.RegistrationScreenStates.RegistrationStatesPageOne.Success
 import com.example.googlelightcalendar.core.registration.RegistrationViewModel
+import com.example.googlelightcalendar.ui_components.buttons.GoogleButton
+import com.example.googlelightcalendar.ui_components.buttons.StandardButton
 import com.example.googlelightcalendar.ui_components.custom_column.AppColumnContainer
 import com.example.googlelightcalendar.ui_components.dialog.ErrorAlertDialog
 import com.example.googlelightcalendar.ui_components.divider.CustomDividerText
-import com.example.googlelightcalendar.ui_components.text_fields.CustomPasswordTextField
 import com.example.googlelightcalendar.ui_components.text_fields.CustomOutlineTextField
+import com.example.googlelightcalendar.ui_components.text_fields.CustomPasswordTextField
 
 
 @Composable
@@ -48,31 +49,31 @@ private fun RegistrationScreenContent(
     onReset: () -> Unit = {},
 ) {
 
-AppColumnContainer(
-    horizontalAlignment = Alignment.CenterHorizontally,
-    verticalArrangement = Arrangement.spacedBy(20.dp),
-) {
-    when (registrationState) {
-        is Failed -> {
-            ErrorAlertDialog(
-                title = "Error",
-                error = registrationState.errorMessage,
-            )
-        }
+    AppColumnContainer(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(10.dp),
+    ) {
+        when (registrationState) {
+            is Failed -> {
+                ErrorAlertDialog(
+                    title = "Error",
+                    error = registrationState.errorMessage,
+                )
+            }
 
-        is PersonalInformationState -> {
-            InitialRegistrationScreen(
-                registrationState,
-                onNext = onNext
-            )
-        }
+            is PersonalInformationState -> {
+                InitialRegistrationScreen(
+                    registrationState,
+                    onNext = onNext
+                )
+            }
 
-        Success -> {
-            navigateToNextPage()
-            onReset()
+            Success -> {
+                navigateToNextPage()
+                onReset()
+            }
         }
     }
-}
 }
 
 @Composable
@@ -80,67 +81,59 @@ private fun InitialRegistrationScreen(
     state: PersonalInformationState,
     onNext: (state: PersonalInformationState) -> Unit = {}
 ) {
-        CustomOutlineTextField(
-            leadingIcon = imageHolder(
-                leadingIcon = R.drawable.avatar_icon, description = "first name avatar"
-            ),
-            label = "first name",
-            value = state.firstName.value,
-            onValueChange = {
-                state.firstName.value = it
-            },
-        )
+    CustomOutlineTextField(
+        leadingIcon = imageHolder(
+            leadingIcon = R.drawable.avatar_icon, description = "first name avatar"
+        ),
+        label = "first name",
+        value = state.firstName.value,
+        onValueChange = {
+            state.firstName.value = it
+        },
+    )
 
-        CustomOutlineTextField(
-            leadingIcon = imageHolder(
-                leadingIcon = R.drawable.avatar_icon,
-                description = "last name avatar",
-            ),
-            label = "lastName",
-            value = state.lastName.value,
-            onValueChange = {
-                state.lastName.value = it
-            },
-        )
-
-
-        CustomOutlineTextField(
-            leadingIcon = imageHolder(
-                leadingIcon = R.drawable.email_envelope, description = "envelope"
-            ),
-            label = "email",
-            value = state.email.value,
-            onValueChange = {
-                state.email.value = it
-            },
-        )
+    CustomOutlineTextField(
+        leadingIcon = imageHolder(
+            leadingIcon = R.drawable.avatar_icon,
+            description = "last name avatar",
+        ),
+        label = "lastName",
+        value = state.lastName.value,
+        onValueChange = {
+            state.lastName.value = it
+        },
+    )
 
 
-        CustomPasswordTextField(
-            value = state.password.value,
-            onValueChange = {
-                state.password.value = it
-            },
-        )
+    CustomOutlineTextField(
+        leadingIcon = imageHolder(
+            leadingIcon = R.drawable.email_envelope, description = "envelope"
+        ),
+        label = "email",
+        value = state.email.value,
+        onValueChange = {
+            state.email.value = it
+        },
+    )
 
-        Button(
-            onClick = { onNext(state) },
-            enabled = !state.registrationComplete()
-        ) {
-            Text(
-                text = "Next"
-            )
-        }
 
-        CustomDividerText()
-        OutlinedButton(
-            shape = RoundedCornerShape(10.dp),
-            onClick = {},
-        ) {
-            Text(text = "Google")
-        }
+    CustomPasswordTextField(
+        value = state.password.value,
+        onValueChange = {
+            state.password.value = it
+        },
+    )
 
-        Text(
-            text = "sign up with google"
-        )
+    StandardButton(
+        text = "Next",
+        onClick = { onNext(state) },
+        enabled = !state.registrationComplete()
+    )
+
+    CustomDividerText()
+
+    GoogleButton(
+        onClick = { TODO() }
+    )
+    Spacer(modifier = Modifier.size(20.dp))
 }
