@@ -2,19 +2,13 @@ package com.example.googlelightcalendar.screens.register
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.googlelightcalendar.R
@@ -24,12 +18,11 @@ import com.example.googlelightcalendar.core.registration.RegistrationScreenState
 import com.example.googlelightcalendar.core.registration.RegistrationScreenStates.RegistrationStatesPageOne.PersonalInformationState
 import com.example.googlelightcalendar.core.registration.RegistrationScreenStates.RegistrationStatesPageOne.Success
 import com.example.googlelightcalendar.core.registration.RegistrationViewModel
-import com.example.googlelightcalendar.screens.loginScreen.sidePadding
-import com.example.googlelightcalendar.ui.theme.Purple80
+import com.example.googlelightcalendar.ui_components.custom_column.AppColumnContainer
 import com.example.googlelightcalendar.ui_components.dialog.ErrorAlertDialog
 import com.example.googlelightcalendar.ui_components.divider.CustomDividerText
-import com.example.googlelightcalendar.ui_components.text_fields.CustomOutlineTextField
 import com.example.googlelightcalendar.ui_components.text_fields.CustomPasswordTextField
+import com.example.googlelightcalendar.ui_components.text_fields.CustomOutlineTextField
 
 
 @Composable
@@ -54,29 +47,32 @@ private fun RegistrationScreenContent(
     navigateToNextPage: () -> Unit = {},
     onReset: () -> Unit = {},
 ) {
-    Scaffold { it ->
 
-        when (registrationState) {
-            is Failed -> {
-                ErrorAlertDialog(
-                    title = "Error",
-                    error = registrationState.errorMessage,
-                )
-            }
+AppColumnContainer(
+    horizontalAlignment = Alignment.CenterHorizontally,
+    verticalArrangement = Arrangement.spacedBy(20.dp),
+) {
+    when (registrationState) {
+        is Failed -> {
+            ErrorAlertDialog(
+                title = "Error",
+                error = registrationState.errorMessage,
+            )
+        }
 
-            is PersonalInformationState -> {
-                InitialRegistrationScreen(
-                    registrationState,
-                    onNext = onNext
-                )
-            }
+        is PersonalInformationState -> {
+            InitialRegistrationScreen(
+                registrationState,
+                onNext = onNext
+            )
+        }
 
-            Success -> {
-                navigateToNextPage()
-                onReset()
-            }
+        Success -> {
+            navigateToNextPage()
+            onReset()
         }
     }
+}
 }
 
 @Composable
@@ -84,22 +80,13 @@ private fun InitialRegistrationScreen(
     state: PersonalInformationState,
     onNext: (state: PersonalInformationState) -> Unit = {}
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(
-                horizontal = sidePadding
-            ),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(20.dp),
-    ) {
         CustomOutlineTextField(
             leadingIcon = imageHolder(
                 leadingIcon = R.drawable.avatar_icon, description = "first name avatar"
             ),
             label = "first name",
-            text = state.firstName.value,
-            onTextChange = {
+            value = state.firstName.value,
+            onValueChange = {
                 state.firstName.value = it
             },
         )
@@ -110,8 +97,8 @@ private fun InitialRegistrationScreen(
                 description = "last name avatar",
             ),
             label = "lastName",
-            text = state.lastName.value,
-            onTextChange = {
+            value = state.lastName.value,
+            onValueChange = {
                 state.lastName.value = it
             },
         )
@@ -122,8 +109,8 @@ private fun InitialRegistrationScreen(
                 leadingIcon = R.drawable.email_envelope, description = "envelope"
             ),
             label = "email",
-            text = state.email.value,
-            onTextChange = {
+            value = state.email.value,
+            onValueChange = {
                 state.email.value = it
             },
         )
@@ -134,9 +121,6 @@ private fun InitialRegistrationScreen(
             onValueChange = {
                 state.password.value = it
             },
-            textColor = Color.Black,
-            onFocusBorderColor = Purple80,
-            unFocusBorderColor = Color.Black,
         )
 
         Button(
@@ -148,9 +132,7 @@ private fun InitialRegistrationScreen(
             )
         }
 
-        CustomDividerText(
-            textColor = Color.Black
-        )
+        CustomDividerText()
         OutlinedButton(
             shape = RoundedCornerShape(10.dp),
             onClick = {},
@@ -161,5 +143,4 @@ private fun InitialRegistrationScreen(
         Text(
             text = "sign up with google"
         )
-    }
 }

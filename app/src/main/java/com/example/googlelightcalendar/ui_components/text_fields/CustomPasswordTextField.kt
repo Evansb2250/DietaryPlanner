@@ -5,7 +5,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
@@ -21,14 +20,19 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.example.googlelightcalendar.R
+import com.example.googlelightcalendar.ui.theme.appColor
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CustomPasswordTextField(
     value: String,
     onValueChange: (String) -> Unit,
-    textColor: Color,
-    modifier: Modifier = Modifier,
+    textColor: Color = appColor,
+    modifier: Modifier = Modifier
+        .fillMaxWidth()
+        .background(
+            Color.White,
+            RoundedCornerShape(5.dp)
+        ),
     unFocusBorderColor: Color = Color.White,
     backGroundColor: Color = Color.White,
     onFocusBorderColor: Color = Color.White
@@ -42,13 +46,13 @@ fun CustomPasswordTextField(
         value = value,
         onValueChange = onValueChange,
         label = {
-                Text(
-                    modifier = Modifier.background(
-                        color = backGroundColor,
-                    ),
-                    text = "Password",
-                    color = textColor,
-                )
+            Text(
+                modifier = Modifier.background(
+                    color = backGroundColor,
+                ),
+                text = "Password",
+                color = textColor,
+            )
         },
         leadingIcon = {
             Image(

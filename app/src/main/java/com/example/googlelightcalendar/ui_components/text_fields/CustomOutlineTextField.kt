@@ -1,31 +1,42 @@
 package com.example.googlelightcalendar.ui_components.text_fields
 
 import androidx.compose.foundation.Image
-import androidx.compose.material3.LocalTextStyle
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import com.example.googlelightcalendar.common.imageHolder
+import com.example.googlelightcalendar.ui.theme.appColor
 
 @Composable
 fun CustomOutlineTextField(
     modifier: Modifier = Modifier,
-    leadingIcon: imageHolder? = null,
+    value: String,
+    onValueChange: (String) -> Unit = {},
     label: String? = null,
-    text: String,
     enabled: Boolean = true,
     readOnly:Boolean = false,
-    onTextChange: (String) -> Unit,
-) {
-
+    leadingIcon: imageHolder? = null,
+    ){
     OutlinedTextField(
-        value = text,
-        onValueChange = onTextChange,
-        readOnly = readOnly,
-        modifier = modifier,
+        modifier = modifier
+            .fillMaxWidth()
+            .background(
+                Color.White,
+                RoundedCornerShape(5.dp)
+            ),
+        value = value,
+        onValueChange = onValueChange,
         leadingIcon = {
             if (leadingIcon != null) {
                 Image(
@@ -35,13 +46,26 @@ fun CustomOutlineTextField(
                 )
             }
         },
-        enabled = enabled,
         label = {
-            if (label != null) {
+            if(label != null){
                 Text(
-                    text = label
+                    modifier = Modifier.background(
+                        color = Color.White,
+                    ),
+                    text = label,
+                    color = appColor,
                 )
             }
         },
+        readOnly = readOnly,
+        enabled = enabled,
+        shape = RoundedCornerShape(5.dp),
+        colors = OutlinedTextFieldDefaults.colors(
+            focusedBorderColor = Color.White,
+            unfocusedBorderColor = Color.White,
+        ),
     )
 }
+
+
+

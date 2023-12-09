@@ -6,7 +6,6 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
-import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.NavGraphBuilder
@@ -20,6 +19,7 @@ import com.example.googlelightcalendar.screens.loginScreen.LoginScreen
 import com.example.googlelightcalendar.screens.register.PhysicalDetailContent
 import com.example.googlelightcalendar.screens.register.RegisterGoalsScreen
 import com.example.googlelightcalendar.screens.register.RegistrationScreen
+import com.example.googlelightcalendar.ui.theme.GoogleLightCalendarTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import javax.inject.Inject
@@ -29,12 +29,15 @@ class MainActivity : ComponentActivity() {
 
     @Inject
     lateinit var navigationManger: NavigationManger
+    @RequiresApi(Build.VERSION_CODES.P)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            root(
-                navigationManger
-            )
+            GoogleLightCalendarTheme {
+                root(
+                    navigationManger
+                )
+            }
         }
     }
 }

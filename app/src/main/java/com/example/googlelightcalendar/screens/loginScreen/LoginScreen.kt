@@ -11,9 +11,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -35,13 +33,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.googlelightcalendar.R
+import com.example.googlelightcalendar.common.imageHolder
 import com.example.googlelightcalendar.core.viewmodels.login.LoginScreenStates
 import com.example.googlelightcalendar.core.viewmodels.login.LoginViewModel
 import com.example.googlelightcalendar.screens.register.RegistrationScreen
+import com.example.googlelightcalendar.ui_components.custom_column.AppColumnContainer
 import com.example.googlelightcalendar.ui_components.dialog.ErrorAlertDialog
 import com.example.googlelightcalendar.ui_components.divider.CustomDividerText
+import com.example.googlelightcalendar.ui_components.text_fields.CustomOutlineTextField
 import com.example.googlelightcalendar.ui_components.text_fields.CustomPasswordTextField
-import com.example.googlelightcalendar.ui_components.textfields.CustomOutlineTextField
 
 val sidePadding = 16.dp
 
@@ -183,16 +183,7 @@ fun LoginBottomSheet(
     var containsIncompleteCredentials by remember {
         mutableStateOf(false)
     }
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxSize()
-            .padding(
-                horizontal = sidePadding
-            )
-            .background(
-                color = Color.Black,
-            ),
+    AppColumnContainer(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
@@ -205,14 +196,15 @@ fun LoginBottomSheet(
                 }
             )
         }
-        Spacer(
-            modifier = Modifier.size(20.dp)
-        )
         CustomOutlineTextField(
             value = loginState.email.value,
             onValueChange = { userNameUpdate ->
                 loginState.email.value = userNameUpdate
             },
+            leadingIcon = imageHolder(
+                leadingIcon = R.drawable.email_envelope,
+                description = "last name avatar",
+            ),
             label = "Email",
         )
 
@@ -226,13 +218,6 @@ fun LoginBottomSheet(
             onValueChange = { passwordUpdate ->
                 loginState.password.value = passwordUpdate
             },
-            textColor = Color.Black,
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(
-                    Color.White,
-                    RoundedCornerShape(5.dp)
-                )
         )
         Spacer(
             modifier = Modifier.size(10.dp)
@@ -272,13 +257,6 @@ fun LoginBottomSheet(
         )
 
         CustomDividerText()
-
-
-        Text(
-            modifier = Modifier.fillMaxWidth(),
-            textAlign = TextAlign.Center,
-            text = "Or"
-        )
 
         Spacer(
             modifier = Modifier.size(20.dp)
