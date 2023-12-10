@@ -24,6 +24,7 @@ import com.example.googlelightcalendar.ui_components.dialog.ErrorAlertDialog
 import com.example.googlelightcalendar.ui_components.divider.CustomDividerText
 import com.example.googlelightcalendar.ui_components.text_fields.CustomOutlineTextField
 import com.example.googlelightcalendar.ui_components.text_fields.CustomPasswordTextField
+import kotlinx.coroutines.Dispatchers
 
 
 @Composable
@@ -34,7 +35,7 @@ fun RegistrationScreen(
         registrationViewModel.onBackSpace()
     }
     RegistrationScreenContent(
-        registrationState = registrationViewModel.state.collectAsState().value,
+        registrationState = registrationViewModel.state.collectAsState(Dispatchers.Main.immediate).value,
         onNext = registrationViewModel::onStoreCredentials,
         navigateToNextPage = registrationViewModel::navigateNextPage,
         onReset = registrationViewModel::reset
@@ -116,13 +117,14 @@ private fun InitialRegistrationScreen(
         },
     )
 
-
     CustomPasswordTextField(
         value = state.password.value,
         onValueChange = {
             state.password.value = it
         },
     )
+
+    Spacer(modifier = Modifier.size(10.dp))
 
     StandardButton(
         text = "Next",

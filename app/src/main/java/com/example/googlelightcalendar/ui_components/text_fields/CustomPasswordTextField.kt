@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -15,6 +16,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -28,6 +30,9 @@ fun CustomPasswordTextField(
     onValueChange: (String) -> Unit,
     textColor: Color = appColor,
     modifier: Modifier = Modifier
+        .height(
+            60.dp
+        )
         .fillMaxWidth()
         .background(
             Color.White,
@@ -35,7 +40,8 @@ fun CustomPasswordTextField(
         ),
     unFocusBorderColor: Color = Color.White,
     backGroundColor: Color = Color.White,
-    onFocusBorderColor: Color = Color.White
+    onFocusBorderColor: Color = Color.White,
+    shape: Shape = RoundedCornerShape(4.dp),
 ) {
     var showPassword: Boolean by rememberSaveable {
         mutableStateOf(false)
@@ -83,7 +89,8 @@ fun CustomPasswordTextField(
 
         },
         modifier = modifier,
-        shape = RoundedCornerShape(5.dp),
+        maxLines = 1,
+        shape = shape,
         colors = OutlinedTextFieldDefaults.colors(
             focusedBorderColor = onFocusBorderColor,
             unfocusedBorderColor = unFocusBorderColor,

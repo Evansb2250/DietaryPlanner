@@ -5,22 +5,12 @@ import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.EaseInBounce
-import androidx.compose.animation.core.KeyframesSpec
-import androidx.compose.animation.core.TweenSpec
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -31,7 +21,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -39,7 +28,6 @@ import com.example.googlelightcalendar.R
 import com.example.googlelightcalendar.common.imageHolder
 import com.example.googlelightcalendar.core.viewmodels.login.LoginScreenStates
 import com.example.googlelightcalendar.core.viewmodels.login.LoginViewModel
-import com.example.googlelightcalendar.screens.register.RegistrationScreen
 import com.example.googlelightcalendar.ui_components.buttons.GoogleButton
 import com.example.googlelightcalendar.ui_components.buttons.StandardButton
 import com.example.googlelightcalendar.ui_components.custom_column.AppColumnContainer
@@ -47,6 +35,7 @@ import com.example.googlelightcalendar.ui_components.dialog.ErrorAlertDialog
 import com.example.googlelightcalendar.ui_components.divider.CustomDividerText
 import com.example.googlelightcalendar.ui_components.text_fields.CustomOutlineTextField
 import com.example.googlelightcalendar.ui_components.text_fields.CustomPasswordTextField
+import kotlinx.coroutines.Dispatchers
 
 val sidePadding = 16.dp
 
@@ -54,7 +43,6 @@ val sidePadding = 16.dp
 @Composable
 fun LoginScreen() {
     val loginViewModel = hiltViewModel<LoginViewModel>()
-
     val googleSignInLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult(),
         onResult = { result ->
@@ -70,94 +58,14 @@ fun LoginScreen() {
         googleSignInLauncher
     )
 
-    var tabIndex by remember { mutableStateOf(0) }
-
-    val tabs = listOf("Login", "Sign Up")
-
-
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(Color.Black),
-
-        ) {
-        Image(
-            painter = painterResource(
-                id = R.drawable.chooseuloginlogo
-            ),
-            contentDescription = "",
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        TabRow(
-            modifier = Modifier.align(
-                Alignment.CenterHorizontally
-            ),
-            containerColor = Color.Black,
-            selectedTabIndex = tabIndex
-        ) {
-            tabs.forEachIndexed { index, title ->
-                Tab(
-                    text = { Text(title) },
-                    selected = tabIndex == index,
-                    onClick = { tabIndex = index },
-                    selectedContentColor = Color.White
-                )
-            }
-        }
-
-
-        when (tabIndex) {
-            0 -> {
-                AnimatedVisibility(
-                    visible = true,
-                    enter = fadeIn(
-                        animationSpec = TweenSpec(
-                            durationMillis = 40000,
-                            easing = EaseInBounce
-                        ),
-                    ),
-                    exit = fadeOut(
-                        KeyframesSpec(
-                            config = KeyframesSpec.KeyframesSpecConfig<Float>().apply {
-                                durationMillis = 5000
-                            }
-                        )
-                    )
-                ) {
-                    LoginContent(
-                        loginState = loginViewModel.state.collectAsState().value,
-                        signInManually = loginViewModel::signInManually,
-                        initiateGoogleSignIn = loginViewModel::signInWithGoogle,
-                        retryLogin = loginViewModel::resetLoginScreenState,
-                        navigateToHomeScreen = loginViewModel::navigateToRegisterScreen,
-                        navigateToRegisterScreen = loginViewModel::navigateToRegisterScreen,
-                    )
-                }
-            }
-
-            else -> {
-                AnimatedVisibility(
-                    visible = true,
-                    enter = fadeIn(
-                        animationSpec = TweenSpec(
-                            durationMillis = 10000,
-                            easing = EaseInBounce
-                        ),
-                    ),
-                    exit = fadeOut(
-                        KeyframesSpec(
-                            config = KeyframesSpec.KeyframesSpecConfig<Float>().apply {
-                                durationMillis = 5000
-                            }
-                        )
-                    )
-                ) {
-                    RegistrationScreen()
-                }
-            }
-        }
-    }
+    LoginContent(
+        loginState = loginViewModel.state.collectAsState(Dispatchers.Main.immediate).value,
+        signInManually = loginViewModel::signInManually,
+        initiateGoogleSignIn = loginViewModel::signInWithGoogle,
+        retryLogin = loginViewModel::resetLoginScreenState,
+        navigateToHomeScreen = loginViewModel::navigateToRegisterScreen,
+        navigateToRegisterScreen = loginViewModel::navigateToRegisterScreen,
+    )
 }
 
 
