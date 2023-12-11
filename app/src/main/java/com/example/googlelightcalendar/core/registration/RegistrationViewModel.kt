@@ -46,7 +46,6 @@ class RegistrationViewModel @Inject constructor(
     }
 
     fun onBackSpace() {
-        navigationManger.onBackSpace()
     }
 
 }

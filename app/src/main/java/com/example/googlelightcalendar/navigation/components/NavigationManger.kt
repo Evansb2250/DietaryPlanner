@@ -20,10 +20,4 @@ class NavigationManger @Inject constructor(
         }
     }
 
-    fun onBackSpace(){
-        externalScope.launch {
-            onBackSpace.emit(num)
-            num++
-        }
-    }
 }
