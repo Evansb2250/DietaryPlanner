@@ -1,5 +1,8 @@
 package com.example.googlelightcalendar.ui_components.calendar
 
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.wrapContentWidth
@@ -7,6 +10,8 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -18,7 +23,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import com.example.googlelightcalendar.R
+import com.example.googlelightcalendar.ui_components.text_fields.CustomOutlineTextField
 import java.text.SimpleDateFormat
 import java.util.Date
 
@@ -85,7 +95,7 @@ fun MyDatePickerDialog(
     modifier: Modifier
 ) {
     var date by remember {
-        mutableStateOf("Open date picker dialog")
+        mutableStateOf("Date of Birth")
     }
 
     var showDatePicker by remember {
@@ -94,6 +104,12 @@ fun MyDatePickerDialog(
 
     Box(
         modifier = modifier
+            .border(
+                border = BorderStroke(
+                    width = 0.dp,
+                    color = Color.White,
+                    )
+    )
             .clickable(
                 enabled = true,
                 onClickLabel = null,
@@ -103,12 +119,18 @@ fun MyDatePickerDialog(
         contentAlignment = Alignment.Center
     ) {
 
-        OutlinedTextField(
-            value = date,
-            onValueChange = {},
-            readOnly = true,
+        CustomOutlineTextField(
             modifier = modifier,
+            value = date,
             enabled = false,
+            readOnly = true,
+            onValueChange = { },
+            trailingIcon = {
+                Image(
+                    painter = painterResource(id = R.drawable.calendar),
+                    contentDescription = "calendar"
+                )
+            },
             textStyle = LocalTextStyle.current.copy(textAlign = TextAlign.Center)
         )
     }

@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,9 +32,7 @@ import kotlinx.coroutines.Dispatchers
 fun RegistrationScreen(
     registrationViewModel: RegistrationViewModel = hiltViewModel(),
 ) {
-    BackHandler {
-        registrationViewModel.onBackSpace()
-    }
+
     RegistrationScreenContent(
         registrationState = registrationViewModel.state.collectAsState(Dispatchers.Main.immediate).value,
         onNext = registrationViewModel::onStoreCredentials,
@@ -68,7 +67,6 @@ private fun RegistrationScreenContent(
                     onNext = onNext
                 )
             }
-
             Success -> {
                 navigateToNextPage()
                 onReset()

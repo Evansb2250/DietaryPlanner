@@ -1,18 +1,31 @@
 package com.example.googlelightcalendar.ui_components.menu
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuBoxScope
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -28,51 +41,84 @@ fun CustomDropDownMenu(
     var selectedOptionText by remember { mutableStateOf(if (options.isNotEmpty()) options[0] else "") }
 
     ExposedDropdownMenuBox(
+        modifier = modifier
+            .background(
+                color = Color.White
+            )
+            .size(
+                width = 63.dp,
+                height = 56.dp,
+            ),
         expanded = expanded,
         onExpandedChange = { it -> expanded = it },
-    ) {
-        TextField(
-            modifier = modifier.menuAnchor(),
-            value = selectedOptionText,
-            enabled = false,
-            readOnly = true,
-            onValueChange = { },
-            label = { Text(text = "Label") },
-            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-            colors = ExposedDropdownMenuDefaults.textFieldColors(),
-        )
+
+
+        ) {
+        Row(
+            modifier = Modifier.fillMaxSize(),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text(
+                text = selectedOptionText,
+                modifier = Modifier
+                    .padding(horizontal = 8.dp)
+                    .menuAnchor(),
+                textAlign = TextAlign.End
+            )
+
+            ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
+        }
 
         dropDown(
+            modifier = modifier
+                .size(
+                    width = 63.dp,
+                    height = 56.dp,
+                )
+                .menuAnchor(),
             expanded = expanded,
             options = options,
-            selectedOptionText = { select -> selectedOptionText = select},
-            onExpand = { expanded = false}
+            selectedOptionText = { select -> selectedOptionText = select },
+            onExpand = { expanded = false }
         )
     }
+
+
 }
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 private fun ExposedDropdownMenuBoxScope.dropDown(
+    modifier: Modifier = Modifier,
     expanded: Boolean,
     options: List<String>,
     selectedOptionText: (String) -> Unit,
     onExpand: () -> Unit,
-
-    ){
+) {
     this.ExposedDropdownMenu(
+        modifier = modifier,
         expanded = expanded,
         onDismissRequest = onExpand,
     ) {
         options.forEach { selectedOption ->
-            DropdownMenuItem(
-                text = { Text(selectedOption) },
-                onClick = {
-                    selectedOptionText(selectedOption)
-                    onExpand()
-                },
-                contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
-            )
+            Row(
+                modifier = Modifier
+                    .fillMaxSize(),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Spacer(modifier = Modifier.size(10.dp))
+                Text(
+                    modifier = Modifier
+                        .clickable {
+                            selectedOptionText(selectedOption)
+                            onExpand()
+                        }
+                        .padding(ExposedDropdownMenuDefaults.ItemContentPadding),
+                    text = selectedOption)
+            }
+
         }
     }
 }
