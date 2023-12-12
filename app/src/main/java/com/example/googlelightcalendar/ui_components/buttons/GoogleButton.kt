@@ -23,10 +23,10 @@ fun GoogleButton(
     OutlinedButton(
         shape = shape,
         modifier = Modifier
+            .fillMaxWidth()
             .height(
                 height = 52.dp
-            )
-            .fillMaxWidth(),
+            ),
         onClick = onClick,
     ) {
         Image(

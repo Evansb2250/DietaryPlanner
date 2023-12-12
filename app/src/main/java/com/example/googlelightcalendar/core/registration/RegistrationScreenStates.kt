@@ -44,8 +44,6 @@ sealed class RegistrationScreenStates {
             }
         }
 
-        object Success : RegistrationStatesPageOne()
-
         data class Failed(
             val errorMessage: String,
         ) : RegistrationStatesPageOne()

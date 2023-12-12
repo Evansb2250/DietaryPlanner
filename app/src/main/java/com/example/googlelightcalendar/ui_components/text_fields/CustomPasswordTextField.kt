@@ -30,10 +30,10 @@ fun CustomPasswordTextField(
     onValueChange: (String) -> Unit,
     textColor: Color = appColor,
     modifier: Modifier = Modifier
+        .fillMaxWidth()
         .height(
             60.dp
         )
-        .fillMaxWidth()
         .background(
             Color.White,
             RoundedCornerShape(5.dp)

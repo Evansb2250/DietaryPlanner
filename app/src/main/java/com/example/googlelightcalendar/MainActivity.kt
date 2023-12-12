@@ -17,6 +17,7 @@ import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -34,12 +35,14 @@ import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import com.example.googlelightcalendar.navigation.components.NavigationDestinations
 import com.example.googlelightcalendar.navigation.components.NavigationManger
+import com.example.googlelightcalendar.screens.loginScreen.LoginContent
 import com.example.googlelightcalendar.screens.loginScreen.LoginScreen
 import com.example.googlelightcalendar.screens.register.PhysicalDetailContent
 import com.example.googlelightcalendar.screens.register.RegisterGoalsScreen
 import com.example.googlelightcalendar.screens.register.RegistrationScreen
 import com.example.googlelightcalendar.ui.theme.GoogleLightCalendarTheme
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import javax.inject.Inject
 
@@ -78,7 +81,7 @@ fun root(
         key1 = navigationManger.navigationState,
     ) {
         navigationManger.navigationState.collectLatest { navDirection ->
-            navControl.navigate(navDirection.destination){
+            navControl.navigate(navDirection.destination) {
                 this.launchSingleTop
             }
 
@@ -87,7 +90,11 @@ fun root(
     }
 
     Scaffold(
-    ){
+        topBar = {
+
+
+        }
+    ) {
         NavHost(
             modifier = Modifier.padding(it),
             navController = navControl,

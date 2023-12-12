@@ -1,11 +1,9 @@
 package com.example.googlelightcalendar.screens.register
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -16,7 +14,6 @@ import com.example.googlelightcalendar.common.imageHolder
 import com.example.googlelightcalendar.core.registration.RegistrationScreenStates.RegistrationStatesPageOne
 import com.example.googlelightcalendar.core.registration.RegistrationScreenStates.RegistrationStatesPageOne.Failed
 import com.example.googlelightcalendar.core.registration.RegistrationScreenStates.RegistrationStatesPageOne.PersonalInformationState
-import com.example.googlelightcalendar.core.registration.RegistrationScreenStates.RegistrationStatesPageOne.Success
 import com.example.googlelightcalendar.core.registration.RegistrationViewModel
 import com.example.googlelightcalendar.ui_components.buttons.GoogleButton
 import com.example.googlelightcalendar.ui_components.buttons.StandardButton
@@ -36,7 +33,6 @@ fun RegistrationScreen(
     RegistrationScreenContent(
         registrationState = registrationViewModel.state.collectAsState(Dispatchers.Main.immediate).value,
         onNext = registrationViewModel::onStoreCredentials,
-        navigateToNextPage = registrationViewModel::navigateNextPage,
         onReset = registrationViewModel::reset
     )
 }
@@ -45,7 +41,6 @@ fun RegistrationScreen(
 private fun RegistrationScreenContent(
     registrationState: RegistrationStatesPageOne,
     onNext: (state: PersonalInformationState) -> Unit = {},
-    navigateToNextPage: () -> Unit = {},
     onReset: () -> Unit = {},
 ) {
 
@@ -66,10 +61,6 @@ private fun RegistrationScreenContent(
                     registrationState,
                     onNext = onNext
                 )
-            }
-            Success -> {
-                navigateToNextPage()
-                onReset()
             }
         }
     }
@@ -122,7 +113,7 @@ private fun InitialRegistrationScreen(
         },
     )
 
-    Spacer(modifier = Modifier.size(10.dp))
+   Spacer(modifier = Modifier.size(10.dp))
 
     StandardButton(
         text = "Next",

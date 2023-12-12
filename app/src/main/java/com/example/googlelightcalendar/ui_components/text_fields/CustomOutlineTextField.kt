@@ -44,11 +44,10 @@ fun CustomOutlineTextField(
 ) {
     OutlinedTextField(
         modifier = modifier
+            .fillMaxWidth()
             .height(
                 60.dp
-            )
-            .fillMaxWidth()
-            .background(
+            ).background(
                 Color.White,
                 shape,
             ),

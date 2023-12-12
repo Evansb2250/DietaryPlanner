@@ -18,6 +18,7 @@ import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -33,7 +34,6 @@ import com.example.googlelightcalendar.R
 import com.example.googlelightcalendar.common.imageHolder
 import com.example.googlelightcalendar.core.viewmodels.login.LoginScreenStates
 import com.example.googlelightcalendar.core.viewmodels.login.LoginViewModel
-import com.example.googlelightcalendar.navigation.components.NavigationDestinations
 import com.example.googlelightcalendar.screens.register.RegistrationScreen
 import com.example.googlelightcalendar.ui_components.buttons.GoogleButton
 import com.example.googlelightcalendar.ui_components.buttons.StandardButton
@@ -65,10 +65,10 @@ fun LoginScreen() {
         googleSignInLauncher
     )
 
-        var tabIndex by remember { mutableStateOf(0) }
-
+        val tabIndex by remember {
+            derivedStateOf { mutableStateOf(0) }
+        }
         val tabs = listOf("Login", "Sign Up")
-
 
         Column(
             modifier = Modifier
@@ -89,18 +89,19 @@ fun LoginScreen() {
                     Alignment.CenterHorizontally
                 ),
                 containerColor = Color.Black,
-                selectedTabIndex = tabIndex,
+                selectedTabIndex = tabIndex.value,
             ) {
                 tabs.forEachIndexed { index, title ->
                     Tab(
                         text = { Text(title) },
-                        selected = tabIndex == index,
-                        onClick = { tabIndex = index },
+                        selected = tabIndex.value == index,
+                        onClick = { tabIndex.value = index },
                         selectedContentColor = Color.White
                     )
                 }
             }
-            when (tabIndex) {
+
+            when (tabIndex.value) {
                 0 -> {
                     LoginContent(
                         loginState = loginViewModel.state.collectAsState(Dispatchers.Main.immediate).value,
@@ -111,14 +112,17 @@ fun LoginScreen() {
                         navigateToRegisterScreen = loginViewModel::navigateToRegisterScreen,
                     )
                 }
+
                 else -> {
                         RegistrationScreen()
-                    }
                 }
+
             }
         }
 
 
+
+}
 
 
 @Composable

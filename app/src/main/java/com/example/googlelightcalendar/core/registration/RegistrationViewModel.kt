@@ -33,7 +33,7 @@ class RegistrationViewModel @Inject constructor(
         registrationCache.storeKey(RegistrationKeys.EMAIL, state.email.value)
         registrationCache.storeKey(RegistrationKeys.PASSWORD, state.password.value)
 
-        _state.value = Success
+        navigateNextPage()
     }
 
     fun navigateNextPage() {
