@@ -10,6 +10,12 @@ object NavigationDestinations {
 
     }
 
+    object  RegistrationPath : Navigation{
+        override val destination: String
+            get() = "registerPaths/{email}"
+        override val arguments: List<String>
+            get() = emptyList()
+    }
     val registerScreen = object : Navigation{
         override val destination: String
             get() = "registration/{email}"
@@ -17,6 +23,31 @@ object NavigationDestinations {
             get() = emptyList()
 
     }
+    val registerPhysicalScreen = object : Navigation{
+        override val destination: String
+            get() = "registerPhysicalScreen/"
+        override val arguments: List<String>
+            get() = emptyList()
+
+    }
+
+    val registerGoalsScreen = object : Navigation{
+        override val destination: String
+            get() = "registerGoalScreen/"
+        override val arguments: List<String>
+            get() = emptyList()
+
+    }
+
+    val registerConfirmationScreen = object : Navigation{
+        override val destination: String
+            get() = "registerConfirmationScreen/"
+        override val arguments: List<String>
+            get() = emptyList()
+
+    }
+
+
 
 
     val experiment = object : Navigation{

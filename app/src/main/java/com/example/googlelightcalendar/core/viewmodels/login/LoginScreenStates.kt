@@ -1,13 +1,14 @@
 package com.example.googlelightcalendar.core.viewmodels.login
 
 import androidx.compose.runtime.mutableStateOf
+import com.example.googlelightcalendar.utils.TextFieldUtils
 
 sealed class LoginScreenStates {
     data class LoginScreenState(
         private val initialUserName: String = "",
         private val initialPassword: String = "",
     ) : LoginScreenStates() {
-        var userName = mutableStateOf(initialUserName)
+        var email = mutableStateOf(initialUserName)
         var password = mutableStateOf(initialPassword)
 
         fun containsValidCredentials(): Boolean {
@@ -16,13 +17,11 @@ sealed class LoginScreenStates {
 
         fun isValidPassword(): Boolean {
             //checks to see if it contains the same letters
-            val passwordRegex = Regex("(.)\\1+")
-            return password.value.length > 6 && !passwordRegex.matches(password.value)
+            return TextFieldUtils.isValidPassword(password = password.value)
         }
 
         fun isValidEmail(): Boolean {
-            val regex = Regex("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}\$")
-            return regex.matches(userName.value)
+            return TextFieldUtils.isValidEmail(email.value)
         }
     }
 
