@@ -16,6 +16,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
@@ -29,11 +30,25 @@ import com.example.googlelightcalendar.ui_components.menu.CustomDropDownMenu
 import com.example.googlelightcalendar.ui_components.text_fields.CustomOutlineTextField
 
 
+@Composable
+fun PhysicalDetailScreen(){
+    val viewModel: PhysicalDetailsViewModel = hiltViewModel()
+
+    PhysicalDetailContent(
+        navToRegisterGoals = viewModel::navToRegisterGoals
+    )
+
+}
+
+
 @OptIn(ExperimentalMaterial3Api::class)
+@Preview(showBackground = true)
 @Composable
 fun PhysicalDetailContent(
-    viewModel: PhysicalDetailsViewModel = hiltViewModel()
+    navToRegisterGoals: () -> Unit = {}
 ) {
+
+
     AppColumnContainer(
         modifier = Modifier.padding(
             20.dp,
@@ -126,7 +141,7 @@ fun PhysicalDetailContent(
 
         Spacer(modifier = Modifier.size(30.dp))
 
-        val genderOptions  = listOf("Male", "Female", "Other")
+        val genderOptions = listOf("Male", "Female", "Other")
 
 
         Row {
@@ -140,7 +155,7 @@ fun PhysicalDetailContent(
                 )
                 .fillMaxWidth(),
             text = "next 2/3",
-            onClick = { viewModel.navToRegisterGoals() },
+            onClick = navToRegisterGoals,
         )
     }
 }
