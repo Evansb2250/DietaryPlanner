@@ -16,7 +16,7 @@ class RegistrationViewModel @Inject constructor(
     val navigationManger: NavigationManger,
 ) : ViewModel() {
 
-    private var _state: MutableStateFlow<InitialRegistrationState> =
+    private var _state: MutableStateFlow<InitialRegistrationState.PersonalInformationState> =
         MutableStateFlow(
             InitialRegistrationState.PersonalInformationState()
         )
@@ -37,13 +37,19 @@ class RegistrationViewModel @Inject constructor(
 
             navigateNextPage()
         } else {
-            _state.value = InitialRegistrationState.Failed("Form not completed")
+            _state.value = InitialRegistrationState.PersonalInformationState(
+                initialFailedLoginState = InitialRegistrationState.Failed(
+                    true,
+                    "Form not completed"
+                )
+            )
         }
     }
 
     private fun navigateNextPage() {
         navigationManger.navigate(registerPhysicalScreen)
     }
+
     fun reset() {
         // reset needed
         _state.value = InitialRegistrationState.PersonalInformationState()
@@ -57,13 +63,14 @@ sealed class InitialRegistrationState : RegistrationScreenStates() {
         private val initialLastName: String = "",
         private val initialEmail: String = "",
         private val initialPassword: String = "",
+        private val initialFailedLoginState: Failed = Failed()
     ) : InitialRegistrationState() {
 
         var firstName = mutableStateOf(initialFirstName)
         var lastName = mutableStateOf(initialLastName)
         var email = mutableStateOf(initialEmail)
         var password = mutableStateOf(initialPassword)
-
+        var failedSignUp = mutableStateOf(initialFailedLoginState)
 
         fun containsValidFirstName(): Boolean {
             return TextFieldUtils.isValidName(firstName.value)
@@ -90,8 +97,9 @@ sealed class InitialRegistrationState : RegistrationScreenStates() {
     }
 
     data class Failed(
-        val errorMessage: String,
-    ) : InitialRegistrationState()
+        val isError: Boolean = false,
+        val errorMessage: String? = null,
+    )
 
 }
 

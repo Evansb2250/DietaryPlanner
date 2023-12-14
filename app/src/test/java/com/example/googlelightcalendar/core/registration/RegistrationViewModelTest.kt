@@ -2,6 +2,7 @@ package com.example.googlelightcalendar.core.registration
 
 import app.cash.turbine.test
 import assertk.assertThat
+import assertk.assertions.isEqualTo
 import assertk.assertions.isInstanceOf
 import com.example.googlelightcalendar.navigation.components.NavigationDestinations
 import com.example.googlelightcalendar.navigation.components.NavigationManger
@@ -74,7 +75,7 @@ class RegistrationViewModelTest {
         viewModel.state.test {
             val stateAfterOnStoreCredentials = awaitItem()
 
-            assertThat(stateAfterOnStoreCredentials).isInstanceOf(InitialRegistrationState.Failed::class)
+            assertThat(stateAfterOnStoreCredentials.failedSignUp.value.isError).isEqualTo(true)
         }
     }
 
@@ -86,11 +87,11 @@ class RegistrationViewModelTest {
 
         viewModel.state.test {
             val stateAfterMethodCall = awaitItem()
-            assertThat(stateAfterMethodCall).isInstanceOf(InitialRegistrationState.Failed::class.java)
+            assertThat(stateAfterMethodCall.failedSignUp.value.isError).isEqualTo(true)
 
             viewModel.reset()
             val stateAfterReset = awaitItem()
-            assertThat(stateAfterReset).isInstanceOf(InitialRegistrationState.PersonalInformationState::class.java)
+            assertThat(stateAfterReset.failedSignUp.value.isError).isEqualTo(false)
         }
     }
 }
