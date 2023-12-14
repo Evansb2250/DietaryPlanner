@@ -2,16 +2,54 @@ package com.example.googlelightcalendar.core.registration
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.example.googlelightcalendar.navigation.components.NavigationDestinations.registerPhysicalScreen
 import com.example.googlelightcalendar.navigation.components.NavigationManger
 import com.example.googlelightcalendar.utils.TextFieldUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
 import javax.inject.Inject
+
+@HiltViewModel
+class RegistrationViewModel @Inject constructor(
+    val registrationCache: UserRegistrationCache,
+    val navigationManger: NavigationManger,
+) : ViewModel() {
+
+    private var _state: MutableStateFlow<InitialRegistrationState> =
+        MutableStateFlow(
+            InitialRegistrationState.PersonalInformationState()
+        )
+    val state = _state.asStateFlow()
+
+    init {
+        _state.value = InitialRegistrationState.PersonalInformationState()
+    }
+
+    fun onStoreCredentials(
+        state: InitialRegistrationState.PersonalInformationState
+    ) {
+        if (state.registrationComplete()) {
+            registrationCache.storeKey(RegistrationKeys.FirstName, state.firstName.value)
+            registrationCache.storeKey(RegistrationKeys.LASTNAME, state.lastName.value)
+            registrationCache.storeKey(RegistrationKeys.EMAIL, state.email.value)
+            registrationCache.storeKey(RegistrationKeys.PASSWORD, state.password.value)
+
+            navigateNextPage()
+        } else {
+            _state.value = InitialRegistrationState.Failed("Form not completed")
+        }
+    }
+
+    private fun navigateNextPage() {
+        navigationManger.navigate(registerPhysicalScreen)
+    }
+    fun reset() {
+        // reset needed
+        _state.value = InitialRegistrationState.PersonalInformationState()
+    }
+}
+
 
 sealed class InitialRegistrationState : RegistrationScreenStates() {
     data class PersonalInformationState(
@@ -57,52 +95,3 @@ sealed class InitialRegistrationState : RegistrationScreenStates() {
 
 }
 
-
-@HiltViewModel
-class RegistrationViewModel @Inject constructor(
-    val registrationCache: UserRegistrationCache,
-    val navigationManger: NavigationManger,
-) : ViewModel() {
-    private var _state: MutableStateFlow<InitialRegistrationState> =
-        MutableStateFlow(
-            InitialRegistrationState.PersonalInformationState()
-        )
-    val state = _state.asStateFlow()
-
-    init {
-        _state.value = InitialRegistrationState.PersonalInformationState()
-    }
-
-    fun onStoreCredentials(
-        state: InitialRegistrationState.PersonalInformationState
-    ) {
-        if (state.registrationComplete()) {
-            registrationCache.storeKey(RegistrationKeys.FirstName, state.firstName.value)
-            registrationCache.storeKey(RegistrationKeys.LASTNAME, state.lastName.value)
-            registrationCache.storeKey(RegistrationKeys.EMAIL, state.email.value)
-            registrationCache.storeKey(RegistrationKeys.PASSWORD, state.password.value)
-
-            navigateNextPage()
-        } else {
-            _state.value = InitialRegistrationState.Failed("Form not completed")
-        }
-    }
-
-    fun navigateNextPage() {
-        navigationManger.navigate(registerPhysicalScreen)
-
-        viewModelScope.launch {
-            delay(2000)
-            reset()
-        }
-    }
-
-    fun reset(){
-        // reset needed
-        _state.value = InitialRegistrationState.PersonalInformationState()
-    }
-
-    fun onBackSpace() {
-    }
-
-}

@@ -7,6 +7,20 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import java.util.Date
 import javax.inject.Inject
 
+@HiltViewModel
+class PhysicalDetailsViewModel @Inject constructor(
+   private val navigationManger: NavigationManger,
+   private val cache: UserRegistrationCache,
+) : ViewModel() {
+
+    fun navToRegisterGoals(){
+        navigationManger.navigate(
+            registerGoalsScreen
+        )
+    }
+}
+
+
 sealed class PhysicalDetailsState : RegistrationScreenStates() {
     data class UserInput(
         val gender: Genders,
@@ -20,18 +34,4 @@ sealed class PhysicalDetailsState : RegistrationScreenStates() {
     ) : PhysicalDetailsState()
 
     object Success : PhysicalDetailsState()
-}
-
-
-@HiltViewModel
-class PhysicalDetailsViewModel @Inject constructor(
-   private val navigationManger: NavigationManger,
-   private val cache: UserRegistrationCache,
-) : ViewModel() {
-
-    fun navToRegisterGoals(){
-        navigationManger.navigate(
-            registerGoalsScreen
-        )
-    }
 }

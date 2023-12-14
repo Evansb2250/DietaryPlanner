@@ -8,12 +8,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -47,13 +46,11 @@ fun PhysicalDetailScreen() {
 }
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true)
 @Composable
 fun PhysicalDetailContent(
     navToRegisterGoals: () -> Unit = {}
 ) {
-
 
     AppColumnContainer(
         modifier = Modifier.padding(
@@ -148,7 +145,7 @@ fun PhysicalDetailContent(
         Spacer(modifier = Modifier.size(30.dp))
 
         var selecteGender by remember {
-            mutableStateOf(0)
+            mutableIntStateOf(0)
         }
         val genderOptions = listOf("Male", "Female", "Other")
 
