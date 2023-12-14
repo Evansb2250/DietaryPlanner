@@ -1,7 +1,9 @@
 package com.example.googlelightcalendar.screens.register
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -11,9 +13,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.googlelightcalendar.R
 import com.example.googlelightcalendar.common.imageHolder
-import com.example.googlelightcalendar.core.registration.RegistrationScreenStates.RegistrationStatesPageOne
-import com.example.googlelightcalendar.core.registration.RegistrationScreenStates.RegistrationStatesPageOne.Failed
-import com.example.googlelightcalendar.core.registration.RegistrationScreenStates.RegistrationStatesPageOne.PersonalInformationState
+import com.example.googlelightcalendar.core.registration.InitialRegistrationState
 import com.example.googlelightcalendar.core.registration.RegistrationViewModel
 import com.example.googlelightcalendar.ui_components.buttons.GoogleButton
 import com.example.googlelightcalendar.ui_components.buttons.StandardButton
@@ -39,8 +39,8 @@ fun RegistrationScreen(
 
 @Composable
 private fun RegistrationScreenContent(
-    registrationState: RegistrationStatesPageOne,
-    onNext: (state: PersonalInformationState) -> Unit = {},
+    registrationState: InitialRegistrationState.PersonalInformationState,
+    onNext: (state: InitialRegistrationState.PersonalInformationState) -> Unit = {},
     onReset: () -> Unit = {},
 ) {
 
@@ -48,28 +48,25 @@ private fun RegistrationScreenContent(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(15.dp),
     ) {
-        when (registrationState) {
-            is Failed -> {
-                ErrorAlertDialog(
-                    title = "Error",
-                    error = registrationState.errorMessage,
-                )
-            }
 
-            is PersonalInformationState -> {
-                InitialRegistrationScreen(
-                    registrationState,
-                    onNext = onNext
-                )
-            }
+        if(registrationState.failedSignUp.value.isError){
+            ErrorAlertDialog(
+                title = "Error",
+                error = registrationState.failedSignUp.value.errorMessage ?: "unkown",
+                onDismiss = onReset
+            )
         }
+        InitialRegistrationScreen(
+            registrationState,
+            onNext = onNext
+        )
     }
 }
 
 @Composable
 private fun InitialRegistrationScreen(
-    state: PersonalInformationState,
-    onNext: (state: PersonalInformationState) -> Unit = {}
+    state: InitialRegistrationState.PersonalInformationState,
+    onNext: (state: InitialRegistrationState.PersonalInformationState) -> Unit = {}
 ) {
     CustomOutlineTextField(
         leadingIcon = imageHolder(
@@ -113,7 +110,7 @@ private fun InitialRegistrationScreen(
         },
     )
 
-   Spacer(modifier = Modifier.size(10.dp))
+    Spacer(modifier = Modifier.size(10.dp))
 
     StandardButton(
         text = "Next",

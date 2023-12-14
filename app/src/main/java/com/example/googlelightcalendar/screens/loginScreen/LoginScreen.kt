@@ -48,8 +48,60 @@ val sidePadding = 16.dp
 
 @RequiresApi(Build.VERSION_CODES.P)
 @Composable
-fun LoginScreen() {
+fun InitialScreen() {
+    val tabIndex by remember {
+        derivedStateOf { mutableStateOf(0) }
+    }
+
+    val tabs = listOf("Login", "Sign Up")
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(Color.Black),
+
+        ) {
+        Image(
+            painter = painterResource(
+                id = R.drawable.chooseuloginlogo
+            ),
+            contentDescription = "",
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        TabRow(
+            modifier = Modifier.align(
+                Alignment.CenterHorizontally
+            ),
+            containerColor = Color.Black,
+            selectedTabIndex = tabIndex.value,
+        ) {
+            tabs.forEachIndexed { index, title ->
+                Tab(
+                    text = { Text(title) },
+                    selected = tabIndex.value == index,
+                    onClick = { tabIndex.value = index },
+                    selectedContentColor = Color.White
+                )
+            }
+        }
+
+        when (tabIndex.value) {
+            0 -> {
+                LoginScreen()
+            }
+
+            else -> {
+                RegistrationScreen()
+            }
+        }
+    }
+}
+
+@Composable
+private fun LoginScreen(){
     val loginViewModel = hiltViewModel<LoginViewModel>()
+
     val googleSignInLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult(),
         onResult = { result ->
@@ -65,64 +117,18 @@ fun LoginScreen() {
         googleSignInLauncher
     )
 
-        val tabIndex by remember {
-            derivedStateOf { mutableStateOf(0) }
-        }
-        val tabs = listOf("Login", "Sign Up")
 
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(Color.Black),
-
-            ) {
-            Image(
-                painter = painterResource(
-                    id = R.drawable.chooseuloginlogo
-                ),
-                contentDescription = "",
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            TabRow(
-                modifier = Modifier.align(
-                    Alignment.CenterHorizontally
-                ),
-                containerColor = Color.Black,
-                selectedTabIndex = tabIndex.value,
-            ) {
-                tabs.forEachIndexed { index, title ->
-                    Tab(
-                        text = { Text(title) },
-                        selected = tabIndex.value == index,
-                        onClick = { tabIndex.value = index },
-                        selectedContentColor = Color.White
-                    )
-                }
-            }
-
-            when (tabIndex.value) {
-                0 -> {
-                    LoginContent(
-                        loginState = loginViewModel.state.collectAsState(Dispatchers.Main.immediate).value,
-                        signInManually = loginViewModel::signInManually,
-                        initiateGoogleSignIn = loginViewModel::signInWithGoogle,
-                        retryLogin = loginViewModel::resetLoginScreenState,
-                        navigateToHomeScreen = loginViewModel::navigateToRegisterScreen,
-                        navigateToRegisterScreen = loginViewModel::navigateToRegisterScreen,
-                    )
-                }
-
-                else -> {
-                        RegistrationScreen()
-                }
-
-            }
-        }
-
-
-
+    LoginContent(
+        loginState = loginViewModel.state.collectAsState(Dispatchers.Main.immediate).value,
+        signInManually = loginViewModel::signInManually,
+        initiateGoogleSignIn = loginViewModel::signInWithGoogle,
+        retryLogin = loginViewModel::resetLoginScreenState,
+        navigateToHomeScreen = loginViewModel::navigateToRegisterScreen,
+        navigateToRegisterScreen = loginViewModel::navigateToRegisterScreen,
+    )
 }
+
+
 
 
 @Composable
@@ -132,7 +138,7 @@ fun LoginContent(
     signInManually: (userName: String, password: String) -> Unit = { _, _ -> },
     initiateGoogleSignIn: () -> Unit,
     navigateToHomeScreen: () -> Unit = {},
-    navigateToRegisterScreen: () -> Unit = {}
+    navigateToRegisterScreen: () -> Unit = {},
 ) {
     Box(
         modifier = Modifier.background(Color.Black)
