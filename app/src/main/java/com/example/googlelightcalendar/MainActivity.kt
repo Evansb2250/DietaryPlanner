@@ -20,7 +20,7 @@ import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import com.example.googlelightcalendar.navigation.components.NavigationDestinations
 import com.example.googlelightcalendar.navigation.components.NavigationManger
-import com.example.googlelightcalendar.screens.loginScreen.LoginScreen
+import com.example.googlelightcalendar.screens.loginScreen.InitialScreen
 import com.example.googlelightcalendar.screens.register.PhysicalDetailScreen
 import com.example.googlelightcalendar.screens.register.RegisterGoalsScreen
 import com.example.googlelightcalendar.screens.register.RegistrationScreen
@@ -86,7 +86,7 @@ fun root(
             composable(
                 route = NavigationDestinations.loginScreen.destination
             ) {
-                LoginScreen()
+                InitialScreen()
             }
             RegisterUserPath()
         }
