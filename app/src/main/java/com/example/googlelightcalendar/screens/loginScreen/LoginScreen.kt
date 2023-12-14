@@ -52,6 +52,7 @@ fun InitialScreen() {
     val tabIndex by remember {
         derivedStateOf { mutableStateOf(0) }
     }
+
     val tabs = listOf("Login", "Sign Up")
 
     Column(
@@ -93,11 +94,8 @@ fun InitialScreen() {
             else -> {
                 RegistrationScreen()
             }
-
         }
     }
-
-
 }
 
 @Composable

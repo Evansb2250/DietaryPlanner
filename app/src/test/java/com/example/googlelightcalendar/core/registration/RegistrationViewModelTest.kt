@@ -3,7 +3,6 @@ package com.example.googlelightcalendar.core.registration
 import app.cash.turbine.test
 import assertk.assertThat
 import assertk.assertions.isEqualTo
-import assertk.assertions.isInstanceOf
 import com.example.googlelightcalendar.navigation.components.NavigationDestinations
 import com.example.googlelightcalendar.navigation.components.NavigationManger
 import kotlinx.coroutines.CoroutineScope
