@@ -1,9 +1,10 @@
 package com.example.googlelightcalendar.screens.register
 
+import android.content.Intent
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -30,10 +31,27 @@ fun RegistrationScreen(
     registrationViewModel: RegistrationViewModel = hiltViewModel(),
 ) {
 
+    val googleSignInLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult(),
+        onResult = { result ->
+            val googleSignInIntent = result.data as Intent
+
+            if (googleSignInIntent != null) {
+                registrationViewModel.handleAuthorizationResponse(googleSignInIntent)
+            }
+        }
+    )
+
+    registrationViewModel.registerLauncher(
+        googleSignInLauncher
+    )
+
+
     RegistrationScreenContent(
         registrationState = registrationViewModel.state.collectAsState(Dispatchers.Main.immediate).value,
         onNext = registrationViewModel::onStoreCredentials,
-        onReset = registrationViewModel::reset
+        onReset = registrationViewModel::reset,
+        signUpWithGoogle = registrationViewModel::signInWithGoogle
     )
 }
 
@@ -42,6 +60,7 @@ private fun RegistrationScreenContent(
     registrationState: InitialRegistrationState.PersonalInformationState,
     onNext: (state: InitialRegistrationState.PersonalInformationState) -> Unit = {},
     onReset: () -> Unit = {},
+    signUpWithGoogle: () -> Unit = {},
 ) {
 
     AppColumnContainer(
@@ -58,7 +77,8 @@ private fun RegistrationScreenContent(
         }
         InitialRegistrationScreen(
             registrationState,
-            onNext = onNext
+            onNext = onNext,
+            signUpWithGoogle = signUpWithGoogle
         )
     }
 }
@@ -66,7 +86,8 @@ private fun RegistrationScreenContent(
 @Composable
 private fun InitialRegistrationScreen(
     state: InitialRegistrationState.PersonalInformationState,
-    onNext: (state: InitialRegistrationState.PersonalInformationState) -> Unit = {}
+    onNext: (state: InitialRegistrationState.PersonalInformationState) -> Unit = {},
+    signUpWithGoogle: () -> Unit = {},
 ) {
     CustomOutlineTextField(
         leadingIcon = imageHolder(
@@ -115,13 +136,12 @@ private fun InitialRegistrationScreen(
     StandardButton(
         text = "Next",
         onClick = { onNext(state) },
-        enabled = !state.registrationComplete()
     )
 
     CustomDividerText()
 
     GoogleButton(
-        onClick = { TODO() }
+        onClick = signUpWithGoogle
     )
     Spacer(modifier = Modifier.size(20.dp))
 }

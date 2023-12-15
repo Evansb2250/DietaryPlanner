@@ -12,7 +12,6 @@ class PhysicalDetailsViewModel @Inject constructor(
    private val navigationManger: NavigationManger,
    private val cache: UserRegistrationCache,
 ) : ViewModel() {
-
     fun navToRegisterGoals(){
         navigationManger.navigate(
             registerGoalsScreen

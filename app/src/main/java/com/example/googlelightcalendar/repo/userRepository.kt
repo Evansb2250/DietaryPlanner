@@ -46,7 +46,8 @@ sealed class AuthorizationResponseStates {
     ) : AuthorizationResponseStates()
 
     data class FirstTimeUserState(
-        val email: String
+        val email: String,
+        val name: String = "",
     ) : AuthorizationResponseStates()
 
     data class FailedResponsState(
@@ -134,8 +135,9 @@ class UserRepositoryImpl @Inject constructor(
                         // Have user register account.
                         authorizationResponseCallback(
                             AuthorizationResponseStates.FirstTimeUserState(
-                                "You need to register this account"
-                            )
+                                asyncResponse.data!!.userName,
+                                asyncResponse.data!!.name,
+                                )
                         )
                     }
                 }

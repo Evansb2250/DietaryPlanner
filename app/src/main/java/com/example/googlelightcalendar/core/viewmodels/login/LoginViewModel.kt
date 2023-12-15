@@ -29,7 +29,7 @@ class LoginViewModel @Inject constructor(
     private val navigationManager: NavigationManger,
     private val userRepository: UserRepository,
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
-) : ViewModel(), AppAuthClient {
+) : ViewModel() {
 
     private val googleScopes = arrayOf(
         Constants.SCOPE_PROFILE,
@@ -112,11 +112,11 @@ class LoginViewModel @Inject constructor(
         _state.value = LoginScreenStates.LoginScreenState()
     }
 
-    override fun registerAuthLauncher(launcher: ActivityResultLauncher<Intent>) {
+    fun registerAuthLauncher(launcher: ActivityResultLauncher<Intent>) {
         userRepository.registerAuthLauncher(launcher)
     }
 
-    override fun handleAuthorizationResponse(intent: Intent) {
+    fun handleAuthorizationResponse(intent: Intent) {
         viewModelScope.launch(dispatcher) {
             userRepository.handleAuthorizationResponse(intent) { serverResponse ->
 

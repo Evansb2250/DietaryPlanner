@@ -26,7 +26,6 @@ data class OAuthClientFake(
         } else {
             throw ActivityNotFoundException("Launcher is not registered")
         }
-
     }
 
     override suspend fun handleAuthorizationResponse(
