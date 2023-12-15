@@ -7,8 +7,8 @@ sealed class RegistrationScreenStates {
 }
 
 
-enum class Genders {
-    MALE,
-    FEMALE,
-    OTHER,
+sealed class Genders(val gender:String) {
+    object Male: Genders(gender = "Male")
+    object FEMALE: Genders(gender = "Female")
+    object OTHER: Genders(gender = "Other")
 }

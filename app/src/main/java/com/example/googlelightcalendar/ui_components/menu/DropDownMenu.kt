@@ -6,11 +6,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentWidth
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuBoxScope
@@ -33,6 +30,7 @@ import androidx.compose.ui.unit.dp
 fun CustomDropDownMenu(
     modifier: Modifier = Modifier,
     options: List<String>,
+    onOptionChange: (String) -> Unit = {}
 ) {
     var expanded by remember {
         mutableStateOf(false)
@@ -79,7 +77,11 @@ fun CustomDropDownMenu(
                 .menuAnchor(),
             expanded = expanded,
             options = options,
-            selectedOptionText = { select -> selectedOptionText = select },
+            selectedOptionText = { select ->
+                selectedOptionText = select
+
+                onOptionChange(selectedOptionText)
+            },
             onExpand = { expanded = false }
         )
     }

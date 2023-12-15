@@ -17,8 +17,13 @@ enum class RegistrationKeys(
     FirstName("firstName"),
     LASTNAME("lastName"),
     EMAIL("email"),
-    PASSWORD("password")
-
+    PASSWORD("password"),
+    GENDER("gender"),
+    BIRTHDATE("birthday"),
+    HEIGHT("height"),
+    HEIGHTUNIT("heightUnit"),
+    WEIGHT("weight"),
+    WEIGHTUNIT("weightUnit"),
 }
 
 

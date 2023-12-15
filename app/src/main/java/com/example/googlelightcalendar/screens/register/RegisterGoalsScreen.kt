@@ -47,8 +47,6 @@ fun RegisterGoalsScreen() {
             value = "Gain Muscle"
         )
 
-
-
         Button(
             modifier = Modifier.fillMaxWidth(),
             onClick = { /*TODO*/ }) {

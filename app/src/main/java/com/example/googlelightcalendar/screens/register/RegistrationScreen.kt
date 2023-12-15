@@ -93,7 +93,7 @@ private fun InitialRegistrationScreen(
         leadingIcon = imageHolder(
             leadingIcon = R.drawable.avatar_icon, description = "first name avatar"
         ),
-        label = "first name",
+        label = "First name",
         value = state.firstName.value,
         onValueChange = {
             state.firstName.value = it
@@ -105,7 +105,7 @@ private fun InitialRegistrationScreen(
             leadingIcon = R.drawable.avatar_icon,
             description = "last name avatar",
         ),
-        label = "lastName",
+        label = "Last name",
         value = state.lastName.value,
         onValueChange = {
             state.lastName.value = it
@@ -117,7 +117,7 @@ private fun InitialRegistrationScreen(
         leadingIcon = imageHolder(
             leadingIcon = R.drawable.email_envelope, description = "envelope"
         ),
-        label = "email",
+        label = "Email",
         value = state.email.value,
         onValueChange = {
             state.email.value = it
