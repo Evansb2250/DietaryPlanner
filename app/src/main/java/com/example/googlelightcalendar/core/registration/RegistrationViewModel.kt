@@ -51,7 +51,7 @@ class RegistrationViewModel @Inject constructor(
         state: InitialRegistrationState.PersonalInformationState
     ) {
         //Change back to state.registrationComplete()
-        if (true) {
+        if (state.registrationComplete()) {
             registrationCache.storeKey(RegistrationKeys.FirstName, state.firstName.value)
             registrationCache.storeKey(RegistrationKeys.LASTNAME, state.lastName.value)
             registrationCache.storeKey(RegistrationKeys.EMAIL, state.email.value)
