@@ -105,14 +105,14 @@ class PhysicalDetailsViewModel @Inject constructor(
         data: PhysicalDetailState.PhysicalDetails
     ) {
         if (
-            data.completedForm()
+            true
         ) {
-            cache.storeKey(RegistrationKeys.GENDER, data.gender.value!!.gender)
-            cache.storeKey(RegistrationKeys.BIRTHDATE, data.birthDate.value!!)
-            cache.storeKey(RegistrationKeys.HEIGHT, data.height.value!!)
-            cache.storeKey(RegistrationKeys.HEIGHTUNIT, data.heightUnit.value!!)
-            cache.storeKey(RegistrationKeys.WEIGHT, data.weight.value!!)
-            cache.storeKey(RegistrationKeys.WEIGHTUNIT, data.weightUnit.value!!)
+//            cache.storeKey(RegistrationKeys.GENDER, data.gender.value!!.gender)
+//            cache.storeKey(RegistrationKeys.BIRTHDATE, data.birthDate.value!!)
+//            cache.storeKey(RegistrationKeys.HEIGHT, data.height.value!!)
+//            cache.storeKey(RegistrationKeys.HEIGHTUNIT, data.heightUnit.value!!)
+//            cache.storeKey(RegistrationKeys.WEIGHT, data.weight.value!!)
+//            cache.storeKey(RegistrationKeys.WEIGHTUNIT, data.weightUnit.value!!)
 
             navToRegisterGoals()
 

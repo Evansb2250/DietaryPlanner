@@ -5,11 +5,13 @@ import assertk.assertThat
 import assertk.assertions.isEqualTo
 import com.example.googlelightcalendar.navigation.components.NavigationDestinations
 import com.example.googlelightcalendar.navigation.components.NavigationManger
+import com.example.googlelightcalendar.repo.UserRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.spy
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
@@ -19,6 +21,7 @@ class RegistrationViewModelTest {
     private lateinit var registrationCache: UserRegistrationCache
     private lateinit var navigationManger: NavigationManger
     private lateinit var viewModel: RegistrationViewModel
+    private lateinit var userRepository: UserRepository
     private val testDispatcher = StandardTestDispatcher()
     private val externalScope = CoroutineScope(testDispatcher)
 
@@ -28,11 +31,12 @@ class RegistrationViewModelTest {
         navigationManger = spy(
             NavigationManger(externalScope = externalScope)
         )
-
+        userRepository = mock()
         viewModel = spy(
             RegistrationViewModel(
                 registrationCache = registrationCache,
                 navigationManger = navigationManger,
+                userRepository = userRepository,
             )
         )
     }
@@ -50,6 +54,7 @@ class RegistrationViewModelTest {
             RegistrationViewModel(
                 registrationCache = registrationCache,
                 navigationManger = navigationManger,
+                userRepository = userRepository,
             )
         )
 

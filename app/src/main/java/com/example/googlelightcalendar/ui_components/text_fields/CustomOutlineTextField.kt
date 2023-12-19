@@ -40,7 +40,8 @@ fun CustomOutlineTextField(
     colors: TextFieldColors = OutlinedTextFieldDefaults.colors(
         focusedBorderColor = Color.White,
         unfocusedBorderColor = Color.White,
-    )
+    ),
+    backgroundColor: Color = Color.White,
 ) {
     OutlinedTextField(
         modifier = modifier
@@ -48,7 +49,7 @@ fun CustomOutlineTextField(
             .height(
                 60.dp
             ).background(
-                Color.White,
+                backgroundColor,
                 shape,
             ),
         value = value,
