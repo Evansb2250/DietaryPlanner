@@ -15,25 +15,38 @@ import java.util.Date
 import java.util.Locale
 import javax.inject.Inject
 
+sealed class HeightUnits(val unit: String) {
+    object Feet : HeightUnits("ft")
+    object Centermeters : HeightUnits("cm")
+}
+
+sealed class UnitsInWeight(val unit: String) {
+    object Pounds : UnitsInWeight("lb")
+    object Kilo : UnitsInWeight("kg")
+}
+
 sealed class PhysicalDetailState : RegistrationScreenStates() {
     data class PhysicalDetails(
-        val containsError: Boolean = false
+        val containsError: Boolean = false,
+        private val initialHeightUnit: HeightUnits = HeightUnits.Feet,
+        private val initialWeightUnit: UnitsInWeight = UnitsInWeight.Pounds,
     ) : PhysicalDetailState() {
 
-        var selectedGender = mutableStateOf(-1)
-        var gender: MutableState<Genders?> = mutableStateOf(null)
+        val selectedGender: MutableState<Genders> = mutableStateOf(Genders.UNSPECIFIED)
         var birthDate: MutableState<String?> = mutableStateOf(null)
+
         var height: MutableState<String?> = mutableStateOf(null)
-        var heightUnit: MutableState<String?> = mutableStateOf("ft")
+        var heightUnit: MutableState<HeightUnits> = mutableStateOf(initialHeightUnit)
+
+
         var weight: MutableState<String?> = mutableStateOf(null)
-        var weightUnit: MutableState<String?> = mutableStateOf("kg")
+        var weightUnit: MutableState<UnitsInWeight> = mutableStateOf(initialWeightUnit)
 
 
         fun completedForm(): Boolean = containsValidBirthday()
                 && containsValidHeight()
                 && containsValidWeight()
                 && selectedAGender()
-
 
         fun containsValidBirthday(): Boolean {
             val dateFormat = SimpleDateFormat("MM/dd/yyyy", Locale.US)
@@ -45,8 +58,8 @@ sealed class PhysicalDetailState : RegistrationScreenStates() {
                     val calendar = Calendar.getInstance()
                     val today = calendar.time
 
-                    // Subtract 12 years from the current date
-                    calendar.add(Calendar.YEAR, -12)
+                    // Subtract 18 years from the current date
+                    calendar.add(Calendar.YEAR, -18)
                     val minValidDate = calendar.time
                     // Ensure the birthdate is on or before the minimum valid date (12 years ago)
                     date <= minValidDate
@@ -58,12 +71,34 @@ sealed class PhysicalDetailState : RegistrationScreenStates() {
             }
         }
 
-        fun selectedAGender(): Boolean = gender.value != null
+
+        fun updateHeightMetrics(
+            unit: String
+        ) {
+            heightUnit.value =
+                if (unit.equals(HeightUnits.Feet.unit))
+                    HeightUnits.Feet
+                else
+                    HeightUnits.Centermeters
+        }
+
+
+        fun updateWeightMetrics(
+            unit: String
+        ) {
+            weightUnit.value =
+                if (unit.equals(UnitsInWeight.Pounds.unit))
+                    UnitsInWeight.Pounds
+                else
+                    UnitsInWeight.Kilo
+        }
+
+        fun selectedAGender(): Boolean = selectedGender.value != Genders.UNSPECIFIED
 
         fun containsValidHeight(): Boolean {
             return try {
                 val currentHeight = height.value?.trim()?.toDouble() ?: 0.0
-                if (heightUnit.value == "ft") {
+                if (heightUnit.value == HeightUnits.Feet) {
                     currentHeight > 0.0 && currentHeight <= 9.0
                 } else {
                     // Convert height from inches to feet for comparison
@@ -78,7 +113,7 @@ sealed class PhysicalDetailState : RegistrationScreenStates() {
         fun containsValidWeight(): Boolean {
             return try {
                 val currentWeight = weight.value?.trim()?.toDouble() ?: 0.0
-                if (weightUnit.value == "kg") {
+                if (weightUnit.value == UnitsInWeight.Kilo) {
                     currentWeight > 0.0 && currentWeight < 635
                 } else {
                     currentWeight > 0 && currentWeight < 1400

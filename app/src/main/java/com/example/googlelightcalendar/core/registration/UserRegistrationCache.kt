@@ -26,7 +26,6 @@ enum class RegistrationKeys(
     WEIGHTUNIT("weightUnit"),
 }
 
-
 @Singleton
 class UserRegistrationCacheImpl @Inject constructor() : UserRegistrationCache {
     private val registrationCache = hashMapOf<String, Any>()

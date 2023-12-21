@@ -7,8 +7,9 @@ sealed class RegistrationScreenStates {
 }
 
 
-sealed class Genders(val gender:String) {
-    object Male: Genders(gender = "Male")
-    object FEMALE: Genders(gender = "Female")
-    object OTHER: Genders(gender = "Other")
+sealed class Genders(val gender: String) {
+    object Male : Genders(gender = "Male")
+    object FEMALE : Genders(gender = "Female")
+    object OTHER : Genders(gender = "Other")
+    object UNSPECIFIED : Genders(gender = "Default")
 }
