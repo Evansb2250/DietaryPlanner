@@ -75,29 +75,32 @@ sealed class PhysicalDetailState : RegistrationScreenStates() {
         fun updateHeightMetrics(
             unit: String
         ) {
-            heightUnit.value =
-                if (unit.equals(HeightUnits.Feet.unit))
-                    HeightUnits.Feet
-                else
-                    HeightUnits.Centermeters
+            heightUnit.value = when (unit) {
+                HeightUnits.Feet.unit -> HeightUnits.Feet
+                HeightUnits.Centermeters.unit -> HeightUnits.Centermeters
+                else -> HeightUnits.Feet
+            }
         }
 
 
         fun updateWeightMetrics(
             unit: String
         ) {
-            weightUnit.value =
-                if (unit.equals(UnitsInWeight.Pounds.unit))
-                    UnitsInWeight.Pounds
-                else
-                    UnitsInWeight.Kilo
+            weightUnit.value = when (unit) {
+                UnitsInWeight.Kilo.unit -> UnitsInWeight.Kilo
+                UnitsInWeight.Pounds.unit -> UnitsInWeight.Pounds
+                else -> UnitsInWeight.Kilo
+            }
         }
 
         fun selectedAGender(): Boolean = selectedGender.value != Genders.UNSPECIFIED
 
         fun containsValidHeight(): Boolean {
             return try {
-                val currentHeight = height.value?.trim()?.toDouble() ?: 0.0
+                val currentHeight = height.value?.trim()?.let {
+                    it.toDouble()
+                } ?: 0.0
+
                 if (heightUnit.value == HeightUnits.Feet) {
                     currentHeight > 0.0 && currentHeight <= 9.0
                 } else {
@@ -114,9 +117,9 @@ sealed class PhysicalDetailState : RegistrationScreenStates() {
             return try {
                 val currentWeight = weight.value?.trim()?.toDouble() ?: 0.0
                 if (weightUnit.value == UnitsInWeight.Kilo) {
-                    currentWeight > 0.0 && currentWeight < 635
+                    currentWeight > 30 && currentWeight < 635
                 } else {
-                    currentWeight > 0 && currentWeight < 1400
+                    currentWeight > 70 && currentWeight < 1400
                 }
             } catch (
                 e: NumberFormatException
