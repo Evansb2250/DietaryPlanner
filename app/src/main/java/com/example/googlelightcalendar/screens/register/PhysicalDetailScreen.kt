@@ -27,10 +27,10 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.googlelightcalendar.R
 import com.example.googlelightcalendar.core.registration.Genders
-import com.example.googlelightcalendar.core.registration.HeightUnits
-import com.example.googlelightcalendar.core.registration.PhysicalDetailState
 import com.example.googlelightcalendar.core.registration.PhysicalDetailsViewModel
-import com.example.googlelightcalendar.core.registration.UnitsInWeight
+import com.example.googlelightcalendar.core.registration.state.HeightUnits
+import com.example.googlelightcalendar.core.registration.state.PhysicalDetailState
+import com.example.googlelightcalendar.core.registration.state.UnitsInWeight
 import com.example.googlelightcalendar.screens.register.previews.PhysicalDetailPreview
 import com.example.googlelightcalendar.ui_components.buttons.StandardButton
 import com.example.googlelightcalendar.ui_components.calendar.DateSelector
