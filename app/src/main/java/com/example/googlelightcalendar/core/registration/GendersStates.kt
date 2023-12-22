@@ -1,11 +1,5 @@
 package com.example.googlelightcalendar.core.registration
 
-sealed class RegistrationScreenStates {
-    object GoalSelectionState : RegistrationScreenStates()
-    object ConfirmationState : RegistrationScreenStates()
-
-}
-
 
 sealed class Genders(val gender: String) {
     object Male : Genders(gender = "Male")

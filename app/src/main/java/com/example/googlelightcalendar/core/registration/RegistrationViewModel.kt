@@ -123,7 +123,7 @@ class RegistrationViewModel @Inject constructor(
 }
 
 
-sealed class InitialRegistrationState : RegistrationScreenStates() {
+sealed class InitialRegistrationState {
     data class PersonalInformationState(
         private val initialFirstName: String = "",
         private val initialLastName: String = "",

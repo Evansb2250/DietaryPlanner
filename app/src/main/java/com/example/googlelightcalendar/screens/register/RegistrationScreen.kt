@@ -10,12 +10,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.googlelightcalendar.R
 import com.example.googlelightcalendar.common.imageHolder
 import com.example.googlelightcalendar.core.registration.InitialRegistrationState
 import com.example.googlelightcalendar.core.registration.RegistrationViewModel
+import com.example.googlelightcalendar.screens.register.previews.RegistrationScreenPreview
 import com.example.googlelightcalendar.ui_components.buttons.GoogleButton
 import com.example.googlelightcalendar.ui_components.buttons.StandardButton
 import com.example.googlelightcalendar.ui_components.custom_column.AppColumnContainer
@@ -36,9 +39,7 @@ fun RegistrationScreen(
         onResult = { result ->
             val googleSignInIntent = result.data as Intent
 
-            if (googleSignInIntent != null) {
-                registrationViewModel.handleAuthorizationResponse(googleSignInIntent)
-            }
+            registrationViewModel.handleAuthorizationResponse(googleSignInIntent)
         }
     )
 
@@ -55,8 +56,12 @@ fun RegistrationScreen(
     )
 }
 
+@Preview(
+    showBackground = true,
+)
 @Composable
 private fun RegistrationScreenContent(
+    @PreviewParameter(RegistrationScreenPreview::class)
     registrationState: InitialRegistrationState.PersonalInformationState,
     onNext: (state: InitialRegistrationState.PersonalInformationState) -> Unit = {},
     onReset: () -> Unit = {},
@@ -68,7 +73,7 @@ private fun RegistrationScreenContent(
         verticalArrangement = Arrangement.spacedBy(15.dp),
     ) {
 
-        if(registrationState.failedSignUp.value.isError){
+        if (registrationState.failedSignUp.value.isError) {
             ErrorAlertDialog(
                 title = "Error",
                 error = registrationState.failedSignUp.value.errorMessage ?: "unkown",
