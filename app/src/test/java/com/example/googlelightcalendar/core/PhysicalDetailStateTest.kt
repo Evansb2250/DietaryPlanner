@@ -6,6 +6,8 @@ import com.example.googlelightcalendar.core.registration.Genders
 import com.example.googlelightcalendar.core.registration.HeightUnits
 import com.example.googlelightcalendar.core.registration.PhysicalDetailState
 import com.example.googlelightcalendar.core.registration.UnitsInWeight
+import com.example.googlelightcalendar.core.registration.UserHeight
+import com.example.googlelightcalendar.core.registration.UserWeight
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
@@ -30,10 +32,8 @@ class PhysicalDetailStateTest {
         testArg: HeightUnitState
     ) {
         val state = PhysicalDetailState.PhysicalDetails()
-
         state.updateHeightMetrics(testArg.unit)
-
-        assertThat(state.heightUnit.value).isEqualTo(testArg.expectedUnits)
+        assertThat(state.userHeight.value.heightType).isEqualTo(testArg.expectedUnits)
     }
 
 
@@ -46,7 +46,7 @@ class PhysicalDetailStateTest {
 
         state.updateWeightMetrics(testArg.unit)
 
-        assertThat(state.weightUnit.value).isEqualTo(testArg.expectedUnits)
+        assertThat(state.userWeight.value.weightType).isEqualTo(testArg.expectedWeightType)
     }
 
     @Test
@@ -65,10 +65,13 @@ class PhysicalDetailStateTest {
 
     @Test
     fun `contains valid height throws NumberFormatException`() {
-        val state = PhysicalDetailState.PhysicalDetails()
-        state.height.value = "dsadsadsa"
+        val state = PhysicalDetailState.PhysicalDetails(
+            initialUserHeight = UserHeight(
+                height = "dsadsadsa"
+            )
+        )
         assertThat(state.containsValidHeight()).isEqualTo(false)
-        assertThat(state.height.value).isEqualTo("dsadsadsa")
+        assertThat(state.userHeight.value.height).isEqualTo("dsadsadsa")
     }
 
     @MethodSource("providesHeightTestArgs")
@@ -76,11 +79,10 @@ class PhysicalDetailStateTest {
     fun `contains valid height paramTest`(
         args: HeightTestArgs
     ) {
-        val state = PhysicalDetailState.PhysicalDetails().apply {
-            this.height.value = args.height
-        }
+        val state = PhysicalDetailState.PhysicalDetails()
 
-        state.updateHeightMetrics(args.unit.unit)
+        state.updateHeightMetrics(args.heightType.type)
+        state.updateHeight(args.height)
 
         assertThat(state.containsValidHeight()).isEqualTo(args.expectedResult)
     }
@@ -90,23 +92,37 @@ class PhysicalDetailStateTest {
     fun `contains valid weight paramTest`(
         args: WeightTestArgs
     ) {
-        val state = PhysicalDetailState.PhysicalDetails().apply {
-            this.weight.value = args.weight
-        }
-
-        state.updateWeightMetrics(args.weightType.unit)
-
+        val state = PhysicalDetailState.PhysicalDetails()
+        state.updateWeightMetrics(args.weightType.type)
+        state.updateWeight(args.weight)
         assertThat(state.containsValidWeight()).isEqualTo(args.expectedResult)
     }
 
     @MethodSource("providesPhysicalDetails")
     @ParameterizedTest
     fun `complete Form test`(args: PhysicalDetailsArgs) {
-        assertThat(args.state.completedForm()).assertThat(args.expectedResult)
+        assertThat(args.state.completedForm()).assertThat(args.failsRequirements)
     }
 
 
     companion object {
+        val validHeightFeet = UserHeight(
+            height = "6",
+            heightType = HeightUnits.Feet,
+        )
+
+        val validHeightCentimeters = UserHeight(
+            height = "11",
+            heightType = HeightUnits.Centimeter,
+        )
+
+        val validWeightPounds = UserWeight(
+            weight = "160",
+            weightType = UnitsInWeight.Pounds,
+        )
+        val validWeightKilo = UserWeight(
+
+        )
 
         data class BirthdayTestState(
             val date: String,
@@ -120,14 +136,14 @@ class PhysicalDetailStateTest {
                 true,
             ),
             BirthdayTestState(
-                date = provideDateByString(
+                date = provideDateToString(
                     minusYears = 10L
                 ),
                 expectedPassState = false
             ),
             //Makes sure that the first day of turnning 18 works
             BirthdayTestState(
-                date = provideDateByString(
+                date = provideDateToString(
                     minusYears = 18L,
                     minusDay = 1L,
                 ),
@@ -135,7 +151,7 @@ class PhysicalDetailStateTest {
             ),
             //Should fail not yet 18
             BirthdayTestState(
-                date = provideDateByString(
+                date = provideDateToString(
                     minusYears = 17L,
                 ),
                 expectedPassState = false
@@ -154,19 +170,19 @@ class PhysicalDetailStateTest {
                 HeightUnits.Feet,
             ),
             HeightUnitState(
-                HeightUnits.Feet.unit,
+                HeightUnits.Feet.type,
                 HeightUnits.Feet,
             ),
 
             HeightUnitState(
-                HeightUnits.Centermeters.unit,
-                HeightUnits.Centermeters,
+                HeightUnits.Centimeter.type,
+                HeightUnits.Centimeter,
             ),
         )
 
         data class WeightUnitState(
             val unit: String,
-            val expectedUnits: UnitsInWeight,
+            val expectedWeightType: UnitsInWeight,
         )
 
         @JvmStatic
@@ -174,22 +190,22 @@ class PhysicalDetailStateTest {
             //Default weight
             WeightUnitState(
                 unit = "",
-                expectedUnits = UnitsInWeight.Kilo
+                expectedWeightType = UnitsInWeight.Kilo
             ),
             WeightUnitState(
-                unit = UnitsInWeight.Kilo.unit,
-                expectedUnits = UnitsInWeight.Kilo
+                unit = UnitsInWeight.Kilo.type,
+                expectedWeightType = UnitsInWeight.Kilo
             ),
             WeightUnitState(
-                unit = UnitsInWeight.Pounds.unit,
-                expectedUnits = UnitsInWeight.Pounds
+                unit = UnitsInWeight.Pounds.type,
+                expectedWeightType = UnitsInWeight.Pounds
             ),
         )
 
 
         data class HeightTestArgs(
             val height: String,
-            val unit: HeightUnits,
+            val heightType: HeightUnits,
             val expectedResult: Boolean,
         )
 
@@ -197,52 +213,52 @@ class PhysicalDetailStateTest {
         fun providesHeightTestArgs(): Stream<HeightTestArgs> = Stream.of(
             HeightTestArgs(
                 height = "5.9",
-                unit = HeightUnits.Feet,
+                heightType = HeightUnits.Feet,
                 expectedResult = true
             ),
             HeightTestArgs(
                 height = "-2.9",
-                unit = HeightUnits.Feet,
+                heightType = HeightUnits.Feet,
                 expectedResult = false
             ),
             HeightTestArgs(
                 height = "20.9",
-                unit = HeightUnits.Feet,
+                heightType = HeightUnits.Feet,
                 expectedResult = false
             ),
             HeightTestArgs(
                 height = "10.9",
-                unit = HeightUnits.Feet,
+                heightType = HeightUnits.Feet,
                 expectedResult = false
             ),
             HeightTestArgs(
                 height = "10.9",
-                unit = HeightUnits.Centermeters,
+                heightType = HeightUnits.Centimeter,
                 expectedResult = true
             ),
             HeightTestArgs(
                 height = "12",
-                unit = HeightUnits.Centermeters,
+                heightType = HeightUnits.Centimeter,
                 expectedResult = true
             ),
             HeightTestArgs(
                 height = "13",
-                unit = HeightUnits.Centermeters,
+                heightType = HeightUnits.Centimeter,
                 expectedResult = true,
             ),
             HeightTestArgs(
                 height = "-1.9",
-                unit = HeightUnits.Centermeters,
+                heightType = HeightUnits.Centimeter,
                 expectedResult = false
             ),
             HeightTestArgs(
                 height = "0.9",
-                unit = HeightUnits.Centermeters,
+                heightType = HeightUnits.Centimeter,
                 expectedResult = true
             ),
             HeightTestArgs(
                 height = "-0.9",
-                unit = HeightUnits.Centermeters,
+                heightType = HeightUnits.Centimeter,
                 expectedResult = false
             ),
         )
@@ -300,14 +316,38 @@ class PhysicalDetailStateTest {
 
         data class PhysicalDetailsArgs(
             val state: PhysicalDetailState.PhysicalDetails,
-            val expectedResult: Boolean,
+            val failsRequirements: Boolean,
         )
 
         @JvmStatic
         fun providesPhysicalDetails(): Stream<PhysicalDetailsArgs> = Stream.of(
+            //Contains all values needed
             PhysicalDetailsArgs(
-                state = PhysicalDetailState.PhysicalDetails(),
-                expectedResult = false,
+                state = PhysicalDetailState.physicalDetailsTestUser.copy(
+                    initialUserHeight = validHeightCentimeters,
+                    initialUserWeight = validWeightKilo,
+                    initialGenders = Genders.Male,
+                    initialBirthdate = provideDateToString(
+                        minusYears = 12,
+                        minusDay = 2,
+                    )
+                ),
+                failsRequirements = false
+            ),
+            //Contains invalid height value
+            PhysicalDetailsArgs(
+                state = PhysicalDetailState.physicalDetailsTestUser.copy(
+                    initialUserHeight = validHeightCentimeters.copy(
+                        height = "60"
+                    ),
+                    initialUserWeight = validWeightKilo,
+                    initialGenders = Genders.Male,
+                    initialBirthdate = provideDateToString(
+                        minusYears = 12,
+                        minusDay = 2,
+                    )
+                ),
+                failsRequirements = true
             ),
         )
     }
@@ -315,7 +355,7 @@ class PhysicalDetailStateTest {
 
 
 //Uses relevant dates to always make sure the test is working correctly
-fun provideDateByString(
+fun provideDateToString(
     minusYears: Long = 0,
     minusMonths: Long = 0,
     minusDay: Long = 0,

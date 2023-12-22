@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CustomDropDownMenu(
+    selectedOptionText: String,
     modifier: Modifier = Modifier,
     options: List<String>,
     onOptionChange: (String) -> Unit = {}
@@ -35,8 +36,6 @@ fun CustomDropDownMenu(
     var expanded by remember {
         mutableStateOf(false)
     }
-
-    var selectedOptionText by remember { mutableStateOf(if (options.isNotEmpty()) options[0] else "") }
 
     ExposedDropdownMenuBox(
         modifier = modifier
@@ -48,7 +47,7 @@ fun CustomDropDownMenu(
                 height = 56.dp,
             ),
         expanded = expanded,
-        onExpandedChange = { it -> expanded = it },
+        onExpandedChange = { expanded = it },
 
 
         ) {
@@ -71,16 +70,14 @@ fun CustomDropDownMenu(
         dropDown(
             modifier = modifier
                 .size(
-                    width = 63.dp,
+                    width = 100.dp,
                     height = 56.dp,
                 )
                 .menuAnchor(),
             expanded = expanded,
             options = options,
-            selectedOptionText = { select ->
-                selectedOptionText = select
-
-                onOptionChange(selectedOptionText)
+            selectedOptionText = { selectedOption ->
+                onOptionChange(selectedOption)
             },
             onExpand = { expanded = false }
         )
@@ -105,22 +102,19 @@ private fun ExposedDropdownMenuBoxScope.dropDown(
     ) {
         options.forEach { selectedOption ->
             Row(
-                modifier = Modifier
-                    .fillMaxSize(),
+                modifier = Modifier.fillMaxSize(),
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Spacer(modifier = Modifier.size(10.dp))
                 Text(
-                    modifier = Modifier
-                        .clickable {
+                    modifier = Modifier.clickable {
                             selectedOptionText(selectedOption)
                             onExpand()
                         }
                         .padding(ExposedDropdownMenuDefaults.ItemContentPadding),
                     text = selectedOption)
             }
-
         }
     }
 }

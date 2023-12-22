@@ -51,7 +51,9 @@ class RegistrationViewModel @Inject constructor(
         state: InitialRegistrationState.PersonalInformationState
     ) {
         //Change back to state.registrationComplete()
-        if (state.registrationComplete()) {
+        if (                   //state.registrationComplete()
+            state.registrationComplete()
+        ) {
             registrationCache.storeKey(RegistrationKeys.FirstName, state.firstName.value)
             registrationCache.storeKey(RegistrationKeys.LASTNAME, state.lastName.value)
             registrationCache.storeKey(RegistrationKeys.EMAIL, state.email.value)
@@ -71,7 +73,7 @@ class RegistrationViewModel @Inject constructor(
 
     fun registerLauncher(
         launcher: ActivityResultLauncher<Intent>
-    ){
+    ) {
         userRepository.registerAuthLauncher(
             launcher = launcher
         )
@@ -83,7 +85,7 @@ class RegistrationViewModel @Inject constructor(
 
                 when (serverResponse) {
                     is AuthorizationResponseStates.FailedResponsState -> {
-                        _state.value = InitialRegistrationState.PersonalInformationState (
+                        _state.value = InitialRegistrationState.PersonalInformationState(
                             initialFailedLoginState = InitialRegistrationState.Failed(
                                 isError = true,
                                 errorMessage = "Failed to login into google",
@@ -92,18 +94,18 @@ class RegistrationViewModel @Inject constructor(
                     }
 
                     is AuthorizationResponseStates.FirstTimeUserState -> {
-                        _state.value = InitialRegistrationState.PersonalInformationState (
-                            initialFirstName =  serverResponse.name,
+                        _state.value = InitialRegistrationState.PersonalInformationState(
+                            initialFirstName = serverResponse.name,
                             initialEmail = serverResponse.email
-                        )                    }
+                        )
+                    }
 
                     is AuthorizationResponseStates.SuccessResponseState -> {
-                      _state.value = InitialRegistrationState.PersonalInformationState (
-                                initialFirstName = serverResponse.name ,
-                                initialEmail = serverResponse.email
-                            )
+                        _state.value = InitialRegistrationState.PersonalInformationState(
+                            initialFirstName = serverResponse.name,
+                            initialEmail = serverResponse.email
+                        )
                     }
-                    else -> {}
                 }
             }
         }

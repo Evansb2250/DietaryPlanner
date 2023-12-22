@@ -1,6 +1,5 @@
 package com.example.googlelightcalendar.ui_components.calendar
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -41,11 +40,6 @@ import java.util.TimeZone
  *
  *  To enable date validation, you’ll need to provide your own implementation of the SelectableDates interface.
  */
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun MyContent() {
-
-}
 
 private fun convertMillisToDate(millis: Long): String {
     val dateFormat = SimpleDateFormat("MM/dd/yyyy", Locale.US)
@@ -94,14 +88,11 @@ fun DateSelector(
 
 @Composable
 fun DateSelector(
-    initialDate: MutableState<String?>,
+    initialDate: MutableState<String>,
     modifier: Modifier,
-    onDateChange: (String?) -> Unit = {},
+    onDateChange: (String) -> Unit = {},
 ) {
-    Log.d("Inside DateSelector", " ${initialDate}")
     var date = initialDate.value
-
-    Log.d("Inside DateSelector", "date  ${date }")
 
     var showDatePicker by remember {
         mutableStateOf(false)
@@ -131,7 +122,7 @@ fun DateSelector(
             horizontalArrangement = Arrangement.Center
         ) {
             Text(
-                text = date ?: "Enter here.."
+                text = date.ifEmpty { "Enter here.." }
             )
         }
         Row(

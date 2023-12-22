@@ -12,7 +12,6 @@ import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -48,7 +47,7 @@ fun PhysicalDetailScreen() {
 
     PhysicalDetailContent(
         state = viewModel.state.collectAsState(Dispatchers.Main.immediate).value,
-        navToRegisterGoals = viewModel::storePhysicalDetailsInCahce,
+        navToRegisterGoals = viewModel::storePhysicalDetailsInCache,
         retry = viewModel::reset
     )
 }
@@ -69,11 +68,11 @@ fun PhysicalDetailContent(
         )
     ) {
         if (
-            state.containsError
+            state.errorState.isError
         ) {
             ErrorAlertDialog(
                 title = "Error",
-                error = "Failed login in",
+                error = state.errorState.message ?: "Error detected",
                 onDismiss = retry
             )
         }
@@ -118,9 +117,11 @@ fun PhysicalDetailContent(
 
             CustomOutlineTextField(
                 modifier = Modifier.weight(5f),
-                value = state.weight.value ?: "",
+                value = state.userWeight.value.weight,
                 onValueChange = { weight ->
-                    state.weight.value = weight
+                    state.updateWeight(
+                        weight
+                    )
                 },
                 label = "weight",
                 keyboardOptions = KeyboardOptions(
@@ -130,14 +131,17 @@ fun PhysicalDetailContent(
             )
 
             CustomDropDownMenu(
+                selectedOptionText = state.userWeight.value.weightType.type,
                 modifier = Modifier
                     .padding(
                         horizontal = 10.dp,
                     )
                     .weight(2f),
-                options = listOf(UnitsInWeight.Kilo.unit, UnitsInWeight.Pounds.unit),
-                onOptionChange = { weightUnit ->
-                    state.updateWeightMetrics(weightUnit)
+                options = listOf(UnitsInWeight.Kilo.type, UnitsInWeight.Pounds.type),
+                onOptionChange = { weightUnit: String ->
+                    state.updateWeightMetrics(
+                        weightUnit
+                    )
                 }
             )
         }
@@ -160,9 +164,9 @@ fun PhysicalDetailContent(
         ) {
             CustomOutlineTextField(
                 modifier = Modifier.weight(5f),
-                value = state.height.value ?: "",
+                value = state.userHeight.value.height,
                 onValueChange = { height ->
-                    state.height.value = height
+                    state.updateHeight(height)
                 },
                 label = "Height",
                 keyboardOptions = KeyboardOptions(
@@ -172,14 +176,17 @@ fun PhysicalDetailContent(
             )
 
             CustomDropDownMenu(
+                selectedOptionText = state.userHeight.value.heightType.type,
                 modifier = Modifier
                     .padding(
                         horizontal = 10.dp,
                     )
                     .weight(2f),
-                options = listOf(HeightUnits.Feet.unit, HeightUnits.Centermeters.unit),
+                options = listOf(HeightUnits.Feet.type, HeightUnits.Centimeter.type),
                 onOptionChange = { unit ->
-                    state.updateHeightMetrics(unit)
+                    state.updateHeightMetrics(
+                        unit
+                    )
                 }
             )
         }
