@@ -43,6 +43,8 @@ class PhysicalDetailsViewModelTest {
         val state = provideCompletedDetailsState()
         viewModel.storePhysicalDetailsInCache(state)
         verify(navigationManager, times(1)).navigate(NavigationDestinations.registerGoalsScreen)
+        verify(userRegistrationCache, times(1)).storeKey(RegistrationKeys.BIRTHDATE, state.birthDate.value)
+        assertThat(userRegistrationCache.getKey(RegistrationKeys.BIRTHDATE)).isEqualTo(state.birthDate.value)
     }
 
     @Test

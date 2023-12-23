@@ -122,7 +122,6 @@ private fun LoginScreen() {
             }
         }
     )
-
     loginViewModel.registerAuthLauncher(
         googleSignInLauncher
     )
@@ -196,10 +195,7 @@ fun LoginContent(
 private fun LoginContent(
     loginState: LoginScreenStates.LoginScreenState,
     signInManually: (userName: String, password: String) -> Unit = { _, _ -> },
-    retryLogin: () -> Unit = {},
     initiateGoogleSignIn: () -> Unit = {},
-    navigateToHomeScreen: () -> Unit = {},
-    navigateToRegisterScreen: () -> Unit = {}
 ) {
     var containsIncompleteCredentials by remember {
         mutableStateOf(false)
