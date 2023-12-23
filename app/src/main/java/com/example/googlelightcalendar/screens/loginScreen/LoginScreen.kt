@@ -29,12 +29,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.AsyncImage
+import coil.compose.rememberAsyncImagePainter
 import com.example.googlelightcalendar.R
 import com.example.googlelightcalendar.common.imageHolder
 import com.example.googlelightcalendar.core.viewmodels.login.LoginScreenStates
 import com.example.googlelightcalendar.core.viewmodels.login.LoginViewModel
+import com.example.googlelightcalendar.screens.loginScreen.preview.LoginScreenPreviewProvider
 import com.example.googlelightcalendar.screens.register.RegistrationScreen
 import com.example.googlelightcalendar.ui_components.buttons.GoogleButton
 import com.example.googlelightcalendar.ui_components.buttons.StandardButton
@@ -59,16 +63,15 @@ fun InitialScreen() {
 
     val tabs = listOf("Login", "Sign Up")
 
+    val painter = rememberAsyncImagePainter(R.drawable.chooseuloginlogo)
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .background(Color.Black),
-
-        ) {
+    ) {
         Image(
-            painter = painterResource(
-                id = R.drawable.chooseuloginlogo
-            ),
+            painter = painter,
             contentDescription = "",
             modifier = Modifier.fillMaxWidth()
         )
@@ -102,8 +105,11 @@ fun InitialScreen() {
     }
 }
 
+@Preview(
+    showBackground = true,
+)
 @Composable
-private fun LoginScreen(){
+private fun LoginScreen() {
     val loginViewModel = hiltViewModel<LoginViewModel>()
 
     val googleSignInLauncher = rememberLauncherForActivityResult(
@@ -132,11 +138,12 @@ private fun LoginScreen(){
     )
 }
 
-
-
-
+@Preview(
+    showBackground = true,
+)
 @Composable
 fun LoginContent(
+    @PreviewParameter(LoginScreenPreviewProvider::class)
     loginState: LoginScreenStates,
     retryLogin: () -> Unit = {},
     signInManually: (userName: String, password: String) -> Unit = { _, _ -> },
