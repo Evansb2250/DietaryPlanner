@@ -170,7 +170,7 @@ fun LoginContent(
             )
         }
 
-        LoginBottomSheet(
+        LoginContent(
             loginState = if (loginState is LoginScreenStates.LoginScreenState) loginState else LoginScreenStates.LoginScreenState(),
             signInManually = signInManually,
             retryLogin = retryLogin,
@@ -182,7 +182,7 @@ fun LoginContent(
 }
 
 @Composable
-fun LoginBottomSheet(
+private fun LoginContent(
     loginState: LoginScreenStates.LoginScreenState,
     signInManually: (userName: String, password: String) -> Unit = { _, _ -> },
     retryLogin: () -> Unit = {},

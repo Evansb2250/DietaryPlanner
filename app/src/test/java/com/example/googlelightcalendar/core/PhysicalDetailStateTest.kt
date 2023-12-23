@@ -3,11 +3,11 @@ package com.example.googlelightcalendar.core
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import com.example.googlelightcalendar.core.registration.Genders
-import com.example.googlelightcalendar.core.registration.HeightUnits
-import com.example.googlelightcalendar.core.registration.PhysicalDetailState
-import com.example.googlelightcalendar.core.registration.UnitsInWeight
-import com.example.googlelightcalendar.core.registration.UserHeight
-import com.example.googlelightcalendar.core.registration.UserWeight
+import com.example.googlelightcalendar.core.registration.state.HeightUnits
+import com.example.googlelightcalendar.core.registration.state.PhysicalDetailState
+import com.example.googlelightcalendar.core.registration.state.UnitsInWeight
+import com.example.googlelightcalendar.core.registration.state.UserHeight
+import com.example.googlelightcalendar.core.registration.state.UserWeight
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
@@ -323,7 +323,7 @@ class PhysicalDetailStateTest {
         fun providesPhysicalDetails(): Stream<PhysicalDetailsArgs> = Stream.of(
             //Contains all values needed
             PhysicalDetailsArgs(
-                state = PhysicalDetailState.physicalDetailsTestUser.copy(
+                state = PhysicalDetailState.PhysicalDetails(
                     initialUserHeight = validHeightCentimeters,
                     initialUserWeight = validWeightKilo,
                     initialGenders = Genders.Male,
@@ -336,7 +336,7 @@ class PhysicalDetailStateTest {
             ),
             //Contains invalid height value
             PhysicalDetailsArgs(
-                state = PhysicalDetailState.physicalDetailsTestUser.copy(
+                state = PhysicalDetailState.PhysicalDetails(
                     initialUserHeight = validHeightCentimeters.copy(
                         height = "60"
                     ),

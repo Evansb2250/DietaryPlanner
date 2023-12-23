@@ -120,7 +120,6 @@ sealed class PhysicalDetailState {
 
         }
 
-
         fun selectedAGender(): Boolean = selectedGender.value != Genders.UNSPECIFIED
 
         fun containsValidHeight(): Boolean {
