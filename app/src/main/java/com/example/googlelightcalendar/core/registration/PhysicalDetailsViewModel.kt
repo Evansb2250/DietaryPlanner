@@ -23,9 +23,7 @@ class PhysicalDetailsViewModel @Inject constructor(
     fun storePhysicalDetailsInCache(
         data: PhysicalDetailState.PhysicalDetails
     ) {
-        if (
-            data.completedForm()
-        ) {
+        if (data.completedForm()) {
             cache.storeKey(RegistrationKeys.GENDER, data.selectedGender.value.gender)
             cache.storeKey(RegistrationKeys.BIRTHDATE, data.birthDate.value)
             cache.storeKey(RegistrationKeys.HEIGHT, data.userHeight.value.height)

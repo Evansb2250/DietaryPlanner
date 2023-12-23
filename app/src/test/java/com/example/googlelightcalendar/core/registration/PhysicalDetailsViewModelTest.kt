@@ -53,8 +53,8 @@ class PhysicalDetailsViewModelTest {
         viewModel.storePhysicalDetailsInCache(state)
         verify(navigationManager, times(0)).navigate(NavigationDestinations.registerGoalsScreen)
         viewModel.state.test {
-            val state = awaitItem()
-            assertThat(state.errorState.isError).isEqualTo(true)
+            val stateAfterStoringCache = awaitItem()
+            assertThat(stateAfterStoringCache.errorState.isError).isEqualTo(true)
         }
     }
 
@@ -67,12 +67,13 @@ class PhysicalDetailsViewModelTest {
         viewModel.storePhysicalDetailsInCache(state)
         verify(navigationManager, times(0)).navigate(NavigationDestinations.registerGoalsScreen)
         viewModel.state.test {
-            val state = awaitItem()
-            assertThat(state.errorState.isError).isEqualTo(true)
+
+            val stateAfterStoringCache = awaitItem()
+            assertThat(stateAfterStoringCache.errorState.isError).isEqualTo(true)
+
             viewModel.reset()
 
             val stateAfterReset = awaitItem()
-
             assertThat(stateAfterReset.errorState.isError).isEqualTo(false)
         }
     }

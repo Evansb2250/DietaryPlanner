@@ -98,7 +98,6 @@ sealed class PhysicalDetailState {
 
         }
 
-
         fun updateWeight(
             weight: String
         ) {

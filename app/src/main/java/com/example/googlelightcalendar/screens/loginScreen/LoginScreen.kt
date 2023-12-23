@@ -28,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.googlelightcalendar.R
@@ -46,6 +47,9 @@ import kotlinx.coroutines.Dispatchers
 
 val sidePadding = 16.dp
 
+@Preview(
+    showBackground = true,
+)
 @RequiresApi(Build.VERSION_CODES.P)
 @Composable
 fun InitialScreen() {
@@ -136,7 +140,7 @@ fun LoginContent(
     loginState: LoginScreenStates,
     retryLogin: () -> Unit = {},
     signInManually: (userName: String, password: String) -> Unit = { _, _ -> },
-    initiateGoogleSignIn: () -> Unit,
+    initiateGoogleSignIn: () -> Unit = {},
     navigateToHomeScreen: () -> Unit = {},
     navigateToRegisterScreen: () -> Unit = {},
 ) {

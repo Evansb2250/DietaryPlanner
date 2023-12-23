@@ -120,7 +120,6 @@ class UserRepositoryImpl @Inject constructor(
                 }
 
                 is AsyncResponse.Success<User?> -> {
-
                     val user =
                         userDao.getUserFromGmailSignIn(asyncResponse.data?.name ?: "")?.toUser()
 
@@ -136,7 +135,7 @@ class UserRepositoryImpl @Inject constructor(
                         authorizationResponseCallback(
                             AuthorizationResponseStates.FirstTimeUserState(
                                 asyncResponse.data!!.userName,
-                                asyncResponse.data!!.name,
+                                asyncResponse.data.name,
                                 )
                         )
                     }
