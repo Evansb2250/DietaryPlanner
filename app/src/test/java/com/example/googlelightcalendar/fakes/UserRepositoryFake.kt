@@ -45,7 +45,7 @@ class UserRepositoryFake(
         authorizationResponseCallback: (AuthorizationResponseStates) -> Unit
     ) {
 
-        if ((oauthClient as OAuthClientFake).isRegistered && (oauthClient as OAuthClientFake).attemptToAuthorize) {
+        if ((oauthClient as OAuthClientFake).isRegistered && (oauthClient).attemptToAuthorize) {
 
             val userExist = userDaoFake.getUserFromGmailSignIn(oauthClient.emailAddress ?: "Unkown")
 

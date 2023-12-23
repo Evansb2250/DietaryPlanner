@@ -36,6 +36,7 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 
+@OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
 class LoginViewModelTest {
 
     private lateinit var externalScope: CoroutineScope

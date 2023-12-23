@@ -59,7 +59,7 @@ fun root(
 ) {
 
     val navControl = rememberNavController()
-    val destination = navControl.currentBackStackEntryAsState().value
+
     LaunchedEffect(
         key1 = navigationManger.navigationState,
     ) {
@@ -67,8 +67,6 @@ fun root(
             navControl.navigate(navDirection.destination) {
                 this.launchSingleTop
             }
-
-            Log.d("NavController Destin", "going to ${navDirection.destination}")
         }
     }
 
