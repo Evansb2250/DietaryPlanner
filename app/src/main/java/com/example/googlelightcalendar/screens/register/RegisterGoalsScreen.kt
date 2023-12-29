@@ -19,7 +19,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -37,9 +36,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.example.googlelightcalendar.R
-import com.example.googlelightcalendar.core.registration.GoalIntensity
 import com.example.googlelightcalendar.core.registration.RegisterGoalStates.*
 import com.example.googlelightcalendar.core.registration.RegisterGoalViewModel
+import com.example.googlelightcalendar.core.registration.state.WeeklyGoalIntensity
 import com.example.googlelightcalendar.core.registration.state.weightUnits
 import com.example.googlelightcalendar.ui.theme.appColor
 import com.example.googlelightcalendar.ui_components.calendar.DateSelector
@@ -156,7 +155,6 @@ private fun RegisterGoalsContent(
             GoalsDialog(
                 state = state,
                 prompt = state.selectedGoal.value.toString(),
-                header = state.selectedGoal.value!!.goalPrompt,
                 weightOfUnit = state.initialWeight?.type ?: "",
                 containsWeightRequirement = state.selectedGoal.value!!.containsWeightRequirement,
                 onDismiss = {
@@ -173,22 +171,20 @@ private fun RegisterGoalsContent(
 }
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GoalsDialog(
     state: GoalSelectionState,
     prompt: String,
-    header: String,
     weightOfUnit: String,
-    intensityLevels: List<GoalIntensity>,
+    intensityLevels: List<WeeklyGoalIntensity>,
     containsWeightRequirement: Boolean,
     onDismiss: () -> Unit,
     onSubmitGoals: (String?, String) -> Unit,
 ) {
     val context = LocalContext.current
 
-    if (state.error.value.isError) {
-        Toast.makeText(context, state.error.value.message, Toast.LENGTH_LONG).show()
+    if (state.errorStateInGoalScreen.value.isError) {
+        Toast.makeText(context, state.errorStateInGoalScreen.value.message, Toast.LENGTH_LONG).show()
     }
 
     Dialog(
@@ -234,13 +230,13 @@ fun GoalsDialog(
                     modifier = Modifier
                         .height(60.dp)
                         .fillMaxWidth(),
-                    selectedOptionText = state.selectedIntensity.value,
+                    selectedOptionText = state.goalIntensityText.value,
                     options = intensityLevels.map { "$prompt ${it.targetPerWeekInPounds}  $weightOfUnit per week" },
                     onOptionChange = {
-                        state.selectedIntensity.value = it
+                        state.goalIntensityText.value = it
                     },
                     onIndexChange = { index ->
-                        state.initialGoalState.value = intensityLevels[index]
+                        state.weeklyGoalIntensity.value = intensityLevels[index]
                     }
                 )
 
@@ -252,7 +248,7 @@ fun GoalsDialog(
                         modifier = Modifier.padding(
                             horizontal = 16.dp,
                         ),
-                        text = header,
+                        text = state.selectedGoal.value?.goalPrompt ?:"error",
                         color = Color.White,
                         textAlign = TextAlign.Left,
                     )
@@ -264,9 +260,9 @@ fun GoalsDialog(
                     ) {
                         CustomOutlineTextField(
                             modifier = Modifier.weight(5f),
-                            value = state.desiredWeight.value.weight,
+                            value = state.targetWeight.value.weight,
                             onValueChange = { weight ->
-                                state.desiredWeight.value = state.desiredWeight.value.copy(
+                                state.targetWeight.value = state.targetWeight.value.copy(
                                     weight = weight,
                                 )
                             },
@@ -280,7 +276,7 @@ fun GoalsDialog(
                         Spacer(modifier = Modifier.size(20.dp))
 
                         CustomDropDownMenu(
-                            selectedOptionText = state.desiredWeight.value.weightType.type,
+                            selectedOptionText = state.targetWeight.value.weightType.type,
                             modifier = Modifier
                                 .padding(
                                     horizontal = 10.dp,
@@ -292,7 +288,7 @@ fun GoalsDialog(
                             options = weightUnits.map { it.type },
                             enable = state.missingUnitsOfWeight,
                             onIndexChange = { index ->
-                                state.desiredWeight.value.copy(
+                                state.targetWeight.value.copy(
                                     weightType = weightUnits[index]
                                 )
                             }
@@ -303,17 +299,17 @@ fun GoalsDialog(
                 Spacer(modifier = Modifier.size(20.dp))
 
                 Text(
-                    text = if (containsWeightRequirement) "By when?" else header,
+                    text = if (containsWeightRequirement) "By when?" else state.selectedGoal.value!!.goalPrompt,
                     color = Color.White,
                     textAlign = TextAlign.Left,
                 )
                 Spacer(modifier = Modifier.size(20.dp))
 
                 DateSelector(
-                    initialDate = state.date,
+                    initialDate = state.dateToAccomplishGoalBy,
                     modifier = Modifier.fillMaxWidth(),
                     onDateChange = {
-                        state.date.value = it
+                        state.dateToAccomplishGoalBy.value = it
                         state.validateDate(it)
                     }
                 )
@@ -327,7 +323,7 @@ fun GoalsDialog(
                 ) {
                     Button(
                         onClick = {
-                            onSubmitGoals(state.goal.value, state.date.value)
+
                         },
                     ) {
                         Text(text = "Submit")
