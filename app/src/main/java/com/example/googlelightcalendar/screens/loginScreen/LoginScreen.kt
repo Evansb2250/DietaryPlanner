@@ -63,7 +63,6 @@ fun InitialScreen() {
 
     val tabs = listOf("Login", "Sign Up")
 
-    val painter = rememberAsyncImagePainter(R.drawable.chooseuloginlogo)
 
     Column(
         modifier = Modifier
@@ -71,7 +70,7 @@ fun InitialScreen() {
             .background(Color.Black),
     ) {
         Image(
-            painter = painter,
+            painter = painterResource(id = R.drawable.chooseuloginlogo),
             contentDescription = "",
             modifier = Modifier.fillMaxWidth()
         )
@@ -180,19 +179,16 @@ fun LoginContent(
             )
         }
 
-        LoginContent(
+        LoginScreenStateContent(
             loginState = if (loginState is LoginScreenStates.LoginScreenState) loginState else LoginScreenStates.LoginScreenState(),
             signInManually = signInManually,
-            retryLogin = retryLogin,
             initiateGoogleSignIn = initiateGoogleSignIn,
-            navigateToHomeScreen = navigateToHomeScreen,
-            navigateToRegisterScreen = navigateToRegisterScreen,
         )
     }
 }
 
 @Composable
-private fun LoginContent(
+private fun LoginScreenStateContent(
     loginState: LoginScreenStates.LoginScreenState,
     signInManually: (userName: String, password: String) -> Unit = { _, _ -> },
     initiateGoogleSignIn: () -> Unit = {},

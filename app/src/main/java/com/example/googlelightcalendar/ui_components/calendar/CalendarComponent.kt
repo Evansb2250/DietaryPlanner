@@ -73,9 +73,11 @@ fun DateSelector(
             }
         },
         dismissButton = {
-            Button(onClick = {
-                onDismiss()
-            }) {
+            Button(
+                onClick = {
+                    onDismiss()
+                },
+            ) {
                 Text(text = "Cancel")
             }
         }

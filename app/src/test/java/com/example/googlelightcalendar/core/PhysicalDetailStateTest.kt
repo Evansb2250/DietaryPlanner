@@ -5,7 +5,7 @@ import assertk.assertions.isEqualTo
 import com.example.googlelightcalendar.core.registration.Genders
 import com.example.googlelightcalendar.core.registration.state.HeightUnits
 import com.example.googlelightcalendar.core.registration.state.PhysicalDetailState
-import com.example.googlelightcalendar.core.registration.state.UnitsInWeight
+import com.example.googlelightcalendar.core.registration.state.UnitsOfWeight
 import com.example.googlelightcalendar.core.registration.state.UserHeight
 import com.example.googlelightcalendar.core.registration.state.UserWeight
 import org.junit.jupiter.api.Test
@@ -118,7 +118,7 @@ class PhysicalDetailStateTest {
 
         val validWeightPounds = UserWeight(
             weight = "160",
-            weightType = UnitsInWeight.Pounds,
+            weightType = UnitsOfWeight.Pounds,
         )
         val validWeightKilo = UserWeight(
 
@@ -182,7 +182,7 @@ class PhysicalDetailStateTest {
 
         data class WeightUnitState(
             val unit: String,
-            val expectedWeightType: UnitsInWeight,
+            val expectedWeightType: UnitsOfWeight,
         )
 
         @JvmStatic
@@ -190,15 +190,15 @@ class PhysicalDetailStateTest {
             //Default weight
             WeightUnitState(
                 unit = "",
-                expectedWeightType = UnitsInWeight.Kilo
+                expectedWeightType = UnitsOfWeight.Kilo
             ),
             WeightUnitState(
-                unit = UnitsInWeight.Kilo.type,
-                expectedWeightType = UnitsInWeight.Kilo
+                unit = UnitsOfWeight.Kilo.type,
+                expectedWeightType = UnitsOfWeight.Kilo
             ),
             WeightUnitState(
-                unit = UnitsInWeight.Pounds.type,
-                expectedWeightType = UnitsInWeight.Pounds
+                unit = UnitsOfWeight.Pounds.type,
+                expectedWeightType = UnitsOfWeight.Pounds
             ),
         )
 
@@ -266,7 +266,7 @@ class PhysicalDetailStateTest {
 
         data class WeightTestArgs(
             val weight: String,
-            val weightType: UnitsInWeight,
+            val weightType: UnitsOfWeight,
             val expectedResult: Boolean
         )
 
@@ -274,42 +274,42 @@ class PhysicalDetailStateTest {
         fun providesWeightTestArgs(): Stream<WeightTestArgs> = Stream.of(
             WeightTestArgs(
                 weight = "130",
-                weightType = UnitsInWeight.Pounds,
+                weightType = UnitsOfWeight.Pounds,
                 expectedResult = true
             ),
             WeightTestArgs(
                 weight = "530",
-                weightType = UnitsInWeight.Pounds,
+                weightType = UnitsOfWeight.Pounds,
                 expectedResult = true
             ),
             WeightTestArgs(
                 weight = "636",
-                weightType = UnitsInWeight.Pounds,
+                weightType = UnitsOfWeight.Pounds,
                 expectedResult = true
             ),
             WeightTestArgs(
                 weight = "0",
-                weightType = UnitsInWeight.Pounds,
+                weightType = UnitsOfWeight.Pounds,
                 expectedResult = false
             ),
             WeightTestArgs(
                 weight = "60",
-                weightType = UnitsInWeight.Pounds,
+                weightType = UnitsOfWeight.Pounds,
                 expectedResult = false
             ),
             WeightTestArgs(
                 weight = "60",
-                weightType = UnitsInWeight.Kilo,
+                weightType = UnitsOfWeight.Kilo,
                 expectedResult = true
             ),
             WeightTestArgs(
                 weight = "20",
-                weightType = UnitsInWeight.Kilo,
+                weightType = UnitsOfWeight.Kilo,
                 expectedResult = false
             ),
             WeightTestArgs(
                 weight = "639",
-                weightType = UnitsInWeight.Kilo,
+                weightType = UnitsOfWeight.Kilo,
                 expectedResult = false
             ),
         )

@@ -13,6 +13,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.googlelightcalendar.screens.loginScreen.sidePadding
 import com.example.googlelightcalendar.ui.theme.appColor
@@ -20,13 +21,14 @@ import com.example.googlelightcalendar.ui.theme.appColor
 @Composable
 fun AppColumnContainer(
     modifier: Modifier = Modifier,
+    containerColor: Color = appColor,
     horizontalAlignment: Alignment.Horizontal = Alignment.CenterHorizontally,
     verticalArrangement: Arrangement.Vertical = Arrangement.Top,
     content: @Composable ColumnScope.() -> Unit
 ) {
     Scaffold(
         modifier = Modifier.fillMaxWidth(),
-        containerColor = appColor,
+        containerColor = containerColor,
     ) { it ->
         Spacer(
             modifier = Modifier.size(20.dp)
@@ -39,7 +41,7 @@ fun AppColumnContainer(
                     horizontal = sidePadding
                 )
                 .background(
-                    color = appColor,
+                    color = containerColor,
                 ),
             horizontalAlignment = horizontalAlignment,
             verticalArrangement = verticalArrangement,

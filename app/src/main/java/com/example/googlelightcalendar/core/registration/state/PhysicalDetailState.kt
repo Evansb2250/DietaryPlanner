@@ -8,6 +8,8 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
+val heightUnits = listOf(HeightUnits.Feet, HeightUnits.Centimeter)
+
 sealed class HeightUnits(val type: String) {
     data object Feet : HeightUnits("ft")
     data object Centimeter : HeightUnits("cm")
@@ -20,24 +22,24 @@ data class UserHeight(
 
 data class UserWeight(
     val weight: String = "",
-    val weightType: UnitsInWeight = UnitsInWeight.Kilo
+    val weightType: UnitsOfWeight = UnitsOfWeight.Kilo
 )
 
-sealed class UnitsInWeight(val type: String) {
-    data object Pounds : UnitsInWeight("lb")
-    data object Kilo : UnitsInWeight("kg")
+val weightUnits = listOf(UnitsOfWeight.Kilo, UnitsOfWeight.Pounds)
+sealed class UnitsOfWeight(val type: String) {
+    data object Pounds : UnitsOfWeight("lb")
+    data object Kilo : UnitsOfWeight("kg")
 }
 
-data class ErrorHolder(
-    val isError: Boolean = false,
+data class ErrorState(
+    var isError: Boolean = false,
     val message: String? = null,
 )
 
 
-
 sealed class PhysicalDetailState {
     data class PhysicalDetails(
-        val errorState: ErrorHolder = ErrorHolder(),
+        val errorState: ErrorState = ErrorState(),
         private val initialGenders: Genders = Genders.UNSPECIFIED,
         private val initialBirthdate: String = "",
         private val initialUserWeight: UserWeight = UserWeight(),
@@ -108,9 +110,9 @@ sealed class PhysicalDetailState {
             weightUnit: String
         ) {
             val updatedMetric = when (weightUnit) {
-                UnitsInWeight.Kilo.type -> UnitsInWeight.Kilo
-                UnitsInWeight.Pounds.type -> UnitsInWeight.Pounds
-                else -> UnitsInWeight.Kilo
+                UnitsOfWeight.Kilo.type -> UnitsOfWeight.Kilo
+                UnitsOfWeight.Pounds.type -> UnitsOfWeight.Pounds
+                else -> UnitsOfWeight.Kilo
             }
             userWeight.value = UserWeight(
                 weight = "",
@@ -139,7 +141,7 @@ sealed class PhysicalDetailState {
         fun containsValidWeight(): Boolean {
             return try {
                 val currentWeight = userWeight.value.weight.trim().toDouble()
-                if (userWeight.value.weightType == UnitsInWeight.Kilo) {
+                if (userWeight.value.weightType == UnitsOfWeight.Kilo) {
                     currentWeight > 30 && currentWeight < 635
                 } else {
                     currentWeight > 70 && currentWeight < 1400

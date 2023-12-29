@@ -1,5 +1,6 @@
 package com.example.googlelightcalendar.di
 
+import com.example.googlelightcalendar.core.registration.RegisterGoalViewModel
 import com.example.googlelightcalendar.core.registration.RegistrationViewModel
 import com.example.googlelightcalendar.core.registration.UserRegistrationCache
 import com.example.googlelightcalendar.repo.UserRepository
@@ -30,11 +31,19 @@ object ViewModelModule {
         registrationCache: UserRegistrationCache,
         userRepository: UserRepository,
         navigationManger: NavigationManger,
-    ):RegistrationViewModel{
+    ): RegistrationViewModel {
         return RegistrationViewModel(
             registrationCache = registrationCache,
             userRepository = userRepository,
             navigationManger = navigationManger,
         )
     }
+
+    @Provides
+    fun providesRegisterGoalViewModel(
+        userRegistrationCache: UserRegistrationCache
+    ): RegisterGoalViewModel
+    = RegisterGoalViewModel(
+        userRegistrationCache = userRegistrationCache,
+        )
 }

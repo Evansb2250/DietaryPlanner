@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -30,7 +31,9 @@ import com.example.googlelightcalendar.core.registration.Genders
 import com.example.googlelightcalendar.core.registration.PhysicalDetailsViewModel
 import com.example.googlelightcalendar.core.registration.state.HeightUnits
 import com.example.googlelightcalendar.core.registration.state.PhysicalDetailState
-import com.example.googlelightcalendar.core.registration.state.UnitsInWeight
+import com.example.googlelightcalendar.core.registration.state.UnitsOfWeight
+import com.example.googlelightcalendar.core.registration.state.heightUnits
+import com.example.googlelightcalendar.core.registration.state.weightUnits
 import com.example.googlelightcalendar.screens.register.previews.PhysicalDetailPreview
 import com.example.googlelightcalendar.ui_components.buttons.StandardButton
 import com.example.googlelightcalendar.ui_components.calendar.DateSelector
@@ -61,11 +64,10 @@ fun PhysicalDetailContent(
     navToRegisterGoals: (PhysicalDetailState.PhysicalDetails) -> Unit = {},
     retry: () -> Unit = {},
 ) {
-
     AppColumnContainer(
-        modifier = Modifier.padding(
-            20.dp,
-        )
+        modifier = Modifier
+            .padding(20.dp)
+            .fillMaxSize()
     ) {
         if (
             state.errorState.isError
@@ -136,8 +138,12 @@ fun PhysicalDetailContent(
                     .padding(
                         horizontal = 10.dp,
                     )
+                    .size(
+                        width = 63.dp,
+                        height = 56.dp,
+                    )
                     .weight(2f),
-                options = listOf(UnitsInWeight.Kilo.type, UnitsInWeight.Pounds.type),
+                options = weightUnits.map { it.type },
                 onOptionChange = { weightUnit: String ->
                     state.updateWeightMetrics(
                         weightUnit
@@ -162,6 +168,7 @@ fun PhysicalDetailContent(
         Row(
             modifier = Modifier.padding(top = 8.dp)
         ) {
+
             CustomOutlineTextField(
                 modifier = Modifier.weight(5f),
                 value = state.userHeight.value.height,
@@ -181,8 +188,12 @@ fun PhysicalDetailContent(
                     .padding(
                         horizontal = 10.dp,
                     )
+                    .size(
+                        width = 63.dp,
+                        height = 56.dp,
+                    )
                     .weight(2f),
-                options = listOf(HeightUnits.Feet.type, HeightUnits.Centimeter.type),
+                options = heightUnits.map { it.type },
                 onOptionChange = { unit ->
                     state.updateHeightMetrics(
                         unit
@@ -276,6 +287,7 @@ fun PhysicalDetailContent(
             },
         )
     }
+
 }
 
 

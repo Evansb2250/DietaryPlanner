@@ -47,12 +47,13 @@ class RegistrationViewModel @Inject constructor(
     fun signInWithGoogle() {
         userRepository.attemptAuthorization(googleScopes)
     }
+
     fun onStoreCredentials(
         state: InitialRegistrationState.PersonalInformationState
     ) {
         //Change back to state.registrationComplete()
         if (                   //state.registrationComplete()
-            state.registrationComplete()
+            true
         ) {
             registrationCache.storeKey(RegistrationKeys.FirstName, state.firstName.value)
             registrationCache.storeKey(RegistrationKeys.LASTNAME, state.lastName.value)
