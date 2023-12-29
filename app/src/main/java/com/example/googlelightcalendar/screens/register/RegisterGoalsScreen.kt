@@ -155,7 +155,6 @@ private fun RegisterGoalsContent(
             GoalsDialog(
                 state = state,
                 prompt = state.selectedGoal.value.toString(),
-                weightOfUnit = state.initialWeight?.type ?: "",
                 containsWeightRequirement = state.selectedGoal.value!!.containsWeightRequirement,
                 onDismiss = {
                     state.selectedGoal.value = null
@@ -175,7 +174,6 @@ private fun RegisterGoalsContent(
 fun GoalsDialog(
     state: GoalSelectionState,
     prompt: String,
-    weightOfUnit: String,
     intensityLevels: List<WeeklyGoalIntensity>,
     containsWeightRequirement: Boolean,
     onDismiss: () -> Unit,
@@ -231,7 +229,7 @@ fun GoalsDialog(
                         .height(60.dp)
                         .fillMaxWidth(),
                     selectedOptionText = state.goalIntensityText.value,
-                    options = intensityLevels.map { "$prompt ${it.targetPerWeekInPounds}  $weightOfUnit per week" },
+                    options = intensityLevels.map { "$prompt ${it.targetPerWeekInPounds}  ${state.initialWeight} per week" },
                     onOptionChange = {
                         state.goalIntensityText.value = it
                     },

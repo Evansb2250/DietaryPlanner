@@ -83,7 +83,7 @@ sealed class RegisterGoalStates {
             initialWeight.let { weightUnit ->
                 UserWeight(
                     weight = "",
-                    weightType = weightUnit ?: UnitsOfWeight.Kilo,
+                    weightType = weightUnit ?: UnitsOfWeight.NotSelected,
                 )
             }
         )

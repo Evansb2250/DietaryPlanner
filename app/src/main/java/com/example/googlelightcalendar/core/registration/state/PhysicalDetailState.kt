@@ -29,6 +29,8 @@ val weightUnits = listOf(UnitsOfWeight.Kilo, UnitsOfWeight.Pounds)
 sealed class UnitsOfWeight(val type: String) {
     data object Pounds : UnitsOfWeight("lb")
     data object Kilo : UnitsOfWeight("kg")
+
+    data object NotSelected : UnitsOfWeight("")
 }
 
 data class ErrorState(
