@@ -1,6 +1,8 @@
 package com.example.googlelightcalendar.core.registration
 
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.example.googlelightcalendar.core.registration.state.ErrorState
@@ -13,6 +15,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import java.lang.NumberFormatException
 import java.time.LocalDate
 import java.time.ZoneId
 import java.time.temporal.ChronoUnit
@@ -70,13 +73,15 @@ sealed class RegisterGoalStates {
         val initialTargetWeight: String? = null,
         val accomplishGoalByDate: String? = null,
     ) : RegisterGoalStates() {
+
         //The previous UnitsOfWeight [kg, lb] is brought over from the cache if it turns out to be null,
         //because of a configuration change, this allows the user to set it in the goalDialog. if it is already there, they can't change the unitsOfWeight
-        var missingUnitsOfWeight: Boolean =  initialWeight == null
+        var missingUnitsOfWeight: Boolean = initialWeight == null
 
         var errorStateInGoalScreen = mutableStateOf(ErrorState())
-        var errorStateInGoalDialog = mutableStateOf(ErrorState())
 
+
+        val errorStateInGoalDialog = mutableStateOf(ErrorState())
 
         //Weight to loose or to gain, it does include the total weight.
         var targetWeight = mutableStateOf(
@@ -99,52 +104,91 @@ sealed class RegisterGoalStates {
 
         val selectedGoal: MutableState<GoalStates?> = mutableStateOf(null)
 
-
+        //Intensity levels for the goal selected
+        val goalIntensityOptions: List<WeeklyGoalIntensity> by derivedStateOf {
+            selectedGoal.value?.goalIntensityOptions?.sortedBy { it.targetPerWeekInPounds }
+                ?: emptyList()
+        }
 
         fun validateDate(
             dateAsString: String
         ) {
-            DateUtil.convertStringToDate(dateAsString)?.let { futureDate ->
 
-                val currentDate = LocalDate.now()
-
-                // Replace this with your future date
-
-                // Calculate the difference between the future date and the current date
-                val daysLeft = ChronoUnit.DAYS.between(
-                    currentDate,
-                    futureDate.toInstant()
-                        .atZone(ZoneId.systemDefault())
-                        .toLocalDate()
-                )
-
-                val weightGoal = targetWeight.value.weight.toDouble()
-                val weekly = weeklyGoalIntensity.value?.targetPerWeekInPounds ?: 0.1
-                errorStateInGoalScreen.value = if ((weightGoal / weekly) <= (daysLeft / 4)) {
-                    errorStateInGoalScreen.value.copy(
-                        isError = true,
-                        message = "You added a realistic goal"
-                    )
-                } else
-                    errorStateInGoalScreen.value.copy(
-                        isError = true,
-                        message = "You added a unrealistic goal"
-                    )
-
-
-            } ?: errorStateInGoalScreen.value.copy(
-                isError = true,
-                message = "Bad date",
+           val futureDate = DateUtil.convertStringToDate(
+                dateAsString = dateAsString
             )
+
+
+            val currentDate = LocalDate.now()
+
+            // Replace this with your future date
+
+            // Calculate the difference between the future date and the current date
+            val daysLeft = ChronoUnit.WEEKS.between(
+                currentDate,
+                futureDate?.toInstant()
+                    ?.atZone(ZoneId.systemDefault())
+                    ?.toLocalDate()
+            )
+
+            when (selectedGoal.value) {
+                GoalStates.TrackCalories -> {
+
+                }
+                else -> {
+                    errorStateInGoalDialog.value =   try {
+
+                        val currentDate = LocalDate.now()
+
+                        // Replace this with your future date
+
+                        // Calculate the difference between the future date and the current date
+                        val weeksToCompleteGoal = ChronoUnit.WEEKS.between(
+                            currentDate,
+                            futureDate?.toInstant()
+                                ?.atZone(ZoneId.systemDefault())
+                                ?.toLocalDate()
+                        )
+
+                        val totalWeightGoal = targetWeight.value.weight.toDouble()
+
+                        val weeklyWeightGoal = weeklyGoalIntensity.value?.targetPerWeekInPounds ?: 0.1
+
+
+                        if ((totalWeightGoal % weeklyWeightGoal) == 0.0 && weeksToCompleteGoal >=  (totalWeightGoal / weeklyWeightGoal)  ) {
+                            ErrorState(
+                                isError = true,
+                                message = "You added a realistic goal"
+                            )
+                        } else
+                            ErrorState(
+                                isError = true,
+                                message = "You added a unrealistic goal"
+                            )
+
+                    } catch (e: NumberFormatException) {
+                        ErrorState(
+                            isError = true,
+                            message = "You must add target weight!!"
+                        )
+                    }
+                }
+            }
         }
 
+        fun getCustomDropDownIntensityTextOption(): List<String> =
+            goalIntensityOptions.map { "${selectedGoal.value!!.purpose} ${it.targetPerWeekInPounds}  $initialWeight per week" }
+
         fun clear() {
-            errorStateInGoalScreen.value.isError = false
-            targetWeight.value = targetWeight.value
+            errorStateInGoalDialog.value.isError = false
+            targetWeight.value = targetWeight.value.copy(
+                weight = "",
+            )
             weeklyGoalIntensity.value = null
             dateToAccomplishGoalBy.value = ""
             goalIntensityText.value = "Select a goal"
         }
+
 
         val goals = listOf(
             GoalStates.WeightLoss,

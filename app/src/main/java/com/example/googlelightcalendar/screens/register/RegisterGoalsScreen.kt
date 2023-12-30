@@ -22,6 +22,7 @@ import androidx.compose.material3.Checkbox
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -38,7 +39,6 @@ import coil.compose.AsyncImage
 import com.example.googlelightcalendar.R
 import com.example.googlelightcalendar.core.registration.RegisterGoalStates.*
 import com.example.googlelightcalendar.core.registration.RegisterGoalViewModel
-import com.example.googlelightcalendar.core.registration.state.WeeklyGoalIntensity
 import com.example.googlelightcalendar.core.registration.state.weightUnits
 import com.example.googlelightcalendar.ui.theme.appColor
 import com.example.googlelightcalendar.ui_components.calendar.DateSelector
@@ -154,8 +154,6 @@ private fun RegisterGoalsContent(
         if (state.selectedGoal.value != null) {
             GoalsDialog(
                 state = state,
-                prompt = state.selectedGoal.value.toString(),
-                containsWeightRequirement = state.selectedGoal.value!!.containsWeightRequirement,
                 onDismiss = {
                     state.selectedGoal.value = null
                     state.clear()
@@ -163,7 +161,6 @@ private fun RegisterGoalsContent(
                 onSubmitGoals = { _, _ ->
 
                 },
-                intensityLevels = state.selectedGoal.value!!.goalIntensityOptions.sortedBy { it.targetPerWeekInPounds }
             )
         }
     }
@@ -173,16 +170,13 @@ private fun RegisterGoalsContent(
 @Composable
 fun GoalsDialog(
     state: GoalSelectionState,
-    prompt: String,
-    intensityLevels: List<WeeklyGoalIntensity>,
-    containsWeightRequirement: Boolean,
     onDismiss: () -> Unit,
     onSubmitGoals: (String?, String) -> Unit,
 ) {
     val context = LocalContext.current
 
-    if (state.errorStateInGoalScreen.value.isError) {
-        Toast.makeText(context, state.errorStateInGoalScreen.value.message, Toast.LENGTH_LONG).show()
+    if (state.errorStateInGoalDialog.value.isError) {
+        Toast.makeText(context, state.errorStateInGoalDialog.value.message, Toast.LENGTH_LONG).show()
     }
 
     Dialog(
@@ -215,38 +209,44 @@ fun GoalsDialog(
                         contentDescription = "Goals",
                     )
                 }
-                Text(
-                    modifier = Modifier.padding(
-                        all = 16.dp,
-                    ),
-                    text = "Choose your weekly goal.",
-                    color = Color.White,
-                    textAlign = TextAlign.Left,
-                )
+                if(
+                    state.goalIntensityOptions.isNotEmpty()
+                ){
 
-                CustomDropDownMenu(
-                    modifier = Modifier
-                        .height(60.dp)
-                        .fillMaxWidth(),
-                    selectedOptionText = state.goalIntensityText.value,
-                    options = intensityLevels.map { "$prompt ${it.targetPerWeekInPounds}  ${state.initialWeight} per week" },
-                    onOptionChange = {
-                        state.goalIntensityText.value = it
-                    },
-                    onIndexChange = { index ->
-                        state.weeklyGoalIntensity.value = intensityLevels[index]
-                    }
-                )
+                    Text(
+                        modifier = Modifier.padding(
+                            all = 16.dp,
+                        ),
+                        text = "Choose your weekly goal.",
+                        color = Color.White,
+                        textAlign = TextAlign.Left,
+                    )
+
+                    CustomDropDownMenu(
+                        modifier = Modifier
+                            .height(60.dp)
+                            .fillMaxWidth(),
+                        selectedOptionText = state.goalIntensityText.value,
+                        options = state.getCustomDropDownIntensityTextOption(),
+                        onOptionChange = {
+                            state.goalIntensityText.value = it
+                        },
+                        onIndexChange = { index ->
+                            state.weeklyGoalIntensity.value = state.goalIntensityOptions[index]
+                        }
+                    )
+
+                }
 
                 Spacer(modifier = Modifier.size(20.dp))
 
-                if (containsWeightRequirement) {
+                if (state.selectedGoal.value!!.containsWeightRequirement) {
 
                     Text(
                         modifier = Modifier.padding(
                             horizontal = 16.dp,
                         ),
-                        text = state.selectedGoal.value?.goalPrompt ?:"error",
+                        text = state.selectedGoal.value?.goalPrompt ?: "error",
                         color = Color.White,
                         textAlign = TextAlign.Left,
                     )
@@ -297,7 +297,7 @@ fun GoalsDialog(
                 Spacer(modifier = Modifier.size(20.dp))
 
                 Text(
-                    text = if (containsWeightRequirement) "By when?" else state.selectedGoal.value!!.goalPrompt,
+                    text = if (state.selectedGoal.value!!.containsWeightRequirement) "By when?" else state.selectedGoal.value!!.goalPrompt,
                     color = Color.White,
                     textAlign = TextAlign.Left,
                 )
@@ -335,7 +335,6 @@ fun GoalsDialog(
                         Text(text = "Cancel")
                     }
                 }
-
                 Spacer(modifier = Modifier.size(20.dp))
             }
         }
