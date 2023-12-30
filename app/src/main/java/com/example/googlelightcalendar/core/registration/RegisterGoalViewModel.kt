@@ -1,5 +1,6 @@
 package com.example.googlelightcalendar.core.registration
 
+import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -65,7 +66,6 @@ class RegisterGoalViewModel @Inject constructor(
 
 }
 
-
 sealed class RegisterGoalStates {
     data class GoalSelectionState(
         val initialWeight: UnitsOfWeight?,
@@ -80,8 +80,7 @@ sealed class RegisterGoalStates {
 
         var errorStateInGoalScreen = mutableStateOf(ErrorState())
 
-
-        val errorStateInGoalDialog = mutableStateOf(ErrorState())
+        var errorStateInGoalDialog = mutableStateOf(ErrorState())
 
         //Weight to loose or to gain, it does include the total weight.
         var targetWeight = mutableStateOf(
@@ -110,70 +109,91 @@ sealed class RegisterGoalStates {
                 ?: emptyList()
         }
 
-        fun validateDate(
-            dateAsString: String
-        ) {
+        fun validateSetGoal(): Boolean {
 
-           val futureDate = DateUtil.convertStringToDate(
-                dateAsString = dateAsString
+            val futureDate = DateUtil.convertStringToDate(
+                dateAsString = dateToAccomplishGoalBy.value
             )
 
+            if (futureDate == null) {
+                errorStateInGoalDialog.value = logError("No Date entered")
+            } else {
+                val currentDate = LocalDate.now()
 
-            val currentDate = LocalDate.now()
+                val weeksToCompleteGoal = ChronoUnit.WEEKS.between(
+                    currentDate,
+                    futureDate.toInstant()
+                        ?.atZone(ZoneId.systemDefault())
+                        ?.toLocalDate()
+                )
 
-            // Replace this with your future date
+                when (selectedGoal.value) {
+                    GoalStates.TrackCalories -> {
+                        when {
+                            (weeksToCompleteGoal > 0) -> {
+                                return true
+                            }
 
-            // Calculate the difference between the future date and the current date
-            val daysLeft = ChronoUnit.WEEKS.between(
-                currentDate,
-                futureDate?.toInstant()
-                    ?.atZone(ZoneId.systemDefault())
-                    ?.toLocalDate()
-            )
+                            (weeksToCompleteGoal == 0L) -> {
+                                errorStateInGoalDialog.value =
+                                    logError("You must add a date a week or more in the future")
+                                return false
+                            }
 
-            when (selectedGoal.value) {
-                GoalStates.TrackCalories -> {
+                            (weeksToCompleteGoal < 0) -> {
+                                errorStateInGoalDialog.value =
+                                    logError("You can't add a date that's already passed")
+                                return false
+                            }
+                        }
+                    }
 
-                }
-                else -> {
-                    errorStateInGoalDialog.value =   try {
+                    else -> {
+                        try {
+                            // Calculate the difference between the future date and the current date
+                            val totalWeightGoal = targetWeight.value.weight.toDouble()
 
-                        val currentDate = LocalDate.now()
+                            val weeklyWeightGoal = weeklyGoalIntensity.value?.targetPerWeekInPounds
+                                ?: throw Exception()
 
-                        // Replace this with your future date
+                            if (weeksToCompleteGoal < 0) {
+                                errorStateInGoalDialog.value =
+                                    logError("You can't add a date that's already passed")
+                                return false
+                            }
 
-                        // Calculate the difference between the future date and the current date
-                        val weeksToCompleteGoal = ChronoUnit.WEEKS.between(
-                            currentDate,
-                            futureDate?.toInstant()
-                                ?.atZone(ZoneId.systemDefault())
-                                ?.toLocalDate()
-                        )
+                            if (weeksToCompleteGoal >= (totalWeightGoal / weeklyWeightGoal)
+                            ) {
+                                return true
+                            } else {
+                                errorStateInGoalDialog.value =
+                                    logError("You added a unrealistic goal")
+                                return false
+                            }
 
-                        val totalWeightGoal = targetWeight.value.weight.toDouble()
+                        } catch (e: NumberFormatException) {
+                            errorStateInGoalDialog.value = logError("You must add target weight!!")
+                            return false
 
-                        val weeklyWeightGoal = weeklyGoalIntensity.value?.targetPerWeekInPounds ?: 0.1
-
-
-                        if ((totalWeightGoal % weeklyWeightGoal) == 0.0 && weeksToCompleteGoal >=  (totalWeightGoal / weeklyWeightGoal)  ) {
-                            ErrorState(
-                                isError = true,
-                                message = "You added a realistic goal"
-                            )
-                        } else
-                            ErrorState(
-                                isError = true,
-                                message = "You added a unrealistic goal"
-                            )
-
-                    } catch (e: NumberFormatException) {
-                        ErrorState(
-                            isError = true,
-                            message = "You must add target weight!!"
-                        )
+                        } catch (
+                            e: Exception
+                        ) {
+                            errorStateInGoalDialog.value = logError("You must add target weight!!")
+                            return false
+                        }
                     }
                 }
             }
+            return false
+        }
+
+        private fun logError(
+            reason: String
+        ): ErrorState {
+            return ErrorState(
+                isError = true,
+                message = reason
+            )
         }
 
         fun getCustomDropDownIntensityTextOption(): List<String> =

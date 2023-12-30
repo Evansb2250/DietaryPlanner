@@ -22,7 +22,6 @@ import androidx.compose.material3.Checkbox
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -158,7 +157,7 @@ private fun RegisterGoalsContent(
                     state.selectedGoal.value = null
                     state.clear()
                 },
-                onSubmitGoals = { _, _ ->
+                onSubmitGoals = { ->
 
                 },
             )
@@ -171,13 +170,9 @@ private fun RegisterGoalsContent(
 fun GoalsDialog(
     state: GoalSelectionState,
     onDismiss: () -> Unit,
-    onSubmitGoals: (String?, String) -> Unit,
+    onSubmitGoals: () -> Unit,
 ) {
     val context = LocalContext.current
-
-    if (state.errorStateInGoalDialog.value.isError) {
-        Toast.makeText(context, state.errorStateInGoalDialog.value.message, Toast.LENGTH_LONG).show()
-    }
 
     Dialog(
         onDismissRequest = onDismiss,
@@ -209,9 +204,9 @@ fun GoalsDialog(
                         contentDescription = "Goals",
                     )
                 }
-                if(
+                if (
                     state.goalIntensityOptions.isNotEmpty()
-                ){
+                ) {
 
                     Text(
                         modifier = Modifier.padding(
@@ -308,7 +303,6 @@ fun GoalsDialog(
                     modifier = Modifier.fillMaxWidth(),
                     onDateChange = {
                         state.dateToAccomplishGoalBy.value = it
-                        state.validateDate(it)
                     }
                 )
 
@@ -321,7 +315,15 @@ fun GoalsDialog(
                 ) {
                     Button(
                         onClick = {
-
+                            if (state.validateSetGoal()) {
+                                Toast.makeText(context, "Creating Goal", Toast.LENGTH_LONG)
+                                    .show()
+                            }else{
+                                if (state.errorStateInGoalDialog.value.isError) {
+                                    Toast.makeText(context, state.errorStateInGoalDialog.value.message, Toast.LENGTH_LONG)
+                                        .show()
+                                }
+                            }
                         },
                     ) {
                         Text(text = "Submit")
