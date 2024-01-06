@@ -36,10 +36,13 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.example.googlelightcalendar.R
-import com.example.googlelightcalendar.core.registration.RegisterGoalStates.*
 import com.example.googlelightcalendar.core.registration.RegisterGoalViewModel
+import com.example.googlelightcalendar.core.registration.state.RegisterGoalStates.AccountComfirmationState
+import com.example.googlelightcalendar.core.registration.state.RegisterGoalStates.GoalSelectionState
 import com.example.googlelightcalendar.core.registration.state.weightUnits
+import com.example.googlelightcalendar.screens.loginScreen.sidePadding
 import com.example.googlelightcalendar.ui.theme.appColor
+import com.example.googlelightcalendar.ui_components.buttons.StandardButton
 import com.example.googlelightcalendar.ui_components.calendar.DateSelector
 import com.example.googlelightcalendar.ui_components.custom_column.AppColumnContainer
 import com.example.googlelightcalendar.ui_components.menu.CustomDropDownMenu
@@ -50,26 +53,101 @@ import com.example.googlelightcalendar.ui_components.text_fields.CustomOutlineTe
 @Composable
 fun RegisterGoalsScreen() {
 
-    val vm = hiltViewModel<RegisterGoalViewModel>()
-    val state = vm.state.collectAsStateWithLifecycle().value
+    val viewModel = hiltViewModel<RegisterGoalViewModel>()
+    val state = viewModel.state.collectAsStateWithLifecycle().value
 
     when (
         state
     ) {
-        AccountComfirmationState -> TODO()
+        is AccountComfirmationState -> {
+            confirmationPage(
+                userData = state.registrationInfoList,
+            )
+        }
+
         is GoalSelectionState -> {
             RegisterGoalsContent(
                 state = state,
+                onCreateAccount = viewModel::initiateAccountCreation
             )
         }
     }
 
+}
 
+@Preview(
+    showBackground = true,
+)
+@Composable
+fun confirmationPage(
+    userData: List<String> = emptyList()
+) {
+    Box(
+        modifier = Modifier
+            .background(
+                color = appColor,
+            )
+            .fillMaxSize(),
+        contentAlignment = Alignment.TopCenter,
+    ) {
+        Image(
+            modifier = Modifier.padding(
+                all = sidePadding
+            ),
+            painter = painterResource(
+                id = R.drawable.confirmation_circle,
+            ),
+            contentDescription = ""
+        )
+        Box(
+            modifier = Modifier
+                .background(
+                    color = Color.Transparent,
+                )
+                .fillMaxSize(),
+            contentAlignment = Alignment.CenterStart,
+        ) {
+            LazyColumn(
+            ) {
+                items(
+                    userData.size
+                ) { index ->
+                    Text(
+                        modifier = Modifier
+                            .padding(
+                                horizontal = sidePadding,
+                            )
+                            .fillMaxWidth(),
+                        text = userData[index],
+                        textAlign = TextAlign.Left,
+                        color = Color.White,
+                    )
+                }
+            }
+        }
+        Box(
+            modifier = Modifier
+                .background(
+                    color = Color.Transparent,
+                )
+                .fillMaxSize(),
+            contentAlignment = Alignment.BottomCenter,
+        ) {
+            StandardButton(
+                modifier = Modifier.padding(
+                    all = sidePadding
+                ),
+                text = "Create Account",
+                onClick = { },
+            )
+        }
+    }
 }
 
 @Composable
 private fun RegisterGoalsContent(
     state: GoalSelectionState,
+    onCreateAccount: (GoalSelectionState) -> Unit = {},
 ) {
 
     AppColumnContainer(
@@ -157,9 +235,7 @@ private fun RegisterGoalsContent(
                     state.selectedGoal.value = null
                     state.clear()
                 },
-                onSubmitGoals = { ->
-
-                },
+                onCreateAccount = onCreateAccount,
             )
         }
     }
@@ -170,7 +246,7 @@ private fun RegisterGoalsContent(
 fun GoalsDialog(
     state: GoalSelectionState,
     onDismiss: () -> Unit,
-    onSubmitGoals: () -> Unit,
+    onCreateAccount: (GoalSelectionState) -> Unit,
 ) {
     val context = LocalContext.current
 
@@ -316,11 +392,15 @@ fun GoalsDialog(
                     Button(
                         onClick = {
                             if (state.validateSetGoal()) {
-                                Toast.makeText(context, "Creating Goal", Toast.LENGTH_LONG)
-                                    .show()
-                            }else{
+                                Toast.makeText(context, "Creating Goal", Toast.LENGTH_LONG).show()
+                                onCreateAccount(state)
+                            } else {
                                 if (state.errorStateInGoalDialog.value.isError) {
-                                    Toast.makeText(context, state.errorStateInGoalDialog.value.message, Toast.LENGTH_LONG)
+                                    Toast.makeText(
+                                        context,
+                                        state.errorStateInGoalDialog.value.message,
+                                        Toast.LENGTH_LONG
+                                    )
                                         .show()
                                 }
                             }
