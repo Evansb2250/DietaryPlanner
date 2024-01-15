@@ -41,9 +41,10 @@ object ViewModelModule {
 
     @Provides
     fun providesRegisterGoalViewModel(
-        userRegistrationCache: UserRegistrationCache
-    ): RegisterGoalViewModel
-    = RegisterGoalViewModel(
+        userRegistrationCache: UserRegistrationCache,
+        userRepository: UserRepository,
+    ): RegisterGoalViewModel = RegisterGoalViewModel(
         userRegistrationCache = userRegistrationCache,
-        )
+        userRepository = userRepository,
+    )
 }
