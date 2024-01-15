@@ -5,6 +5,7 @@ import androidx.activity.result.ActivityResultLauncher
 import com.example.googlelightcalendar.auth.OauthClient
 import com.example.googlelightcalendar.core.TokenManager
 import com.example.googlelightcalendar.data.room.database.dao.UserDao
+import com.example.googlelightcalendar.data.room.database.models.UserEntity
 import com.example.googlelightcalendar.data.room.database.models.toUser
 import com.example.googlelightcalendar.domain.User
 import com.example.googlelightcalendar.utils.AsyncResponse
@@ -37,6 +38,22 @@ interface UserRepository {
             AuthorizationResponseStates,
         ) -> Unit = {},
     )
+
+     suspend fun handleSignUpResponse(
+        intent: Intent,
+        authorizationResponse: AuthorizationResponse?,
+        error: AuthorizationException?,
+        authorizationResponseCallback: (
+            AuthorizationResponseStates
+        ) -> Unit
+    )
+
+     suspend fun createUser(
+         email: String,
+         firstName: String,
+         lastName: String,
+         password: String,
+     )
 }
 
 sealed class AuthorizationResponseStates {
@@ -109,6 +126,7 @@ class UserRepositoryImpl @Inject constructor(
             authorizationResponse = authorizationResponse,
             error = error,
         )
+
         withContext(Dispatchers.IO) {
             when (asyncResponse) {
                 is AsyncResponse.Failed<User?> -> {
@@ -120,8 +138,7 @@ class UserRepositoryImpl @Inject constructor(
                 }
 
                 is AsyncResponse.Success<User?> -> {
-                    val user =
-                        userDao.getUserFromGmailSignIn(asyncResponse.data?.name ?: "")?.toUser()
+                    val user = userDao.getUserFromGmailSignIn(asyncResponse.data?.name ?: "")?.toUser()
 
                     if (user != null) {
                         authorizationResponseCallback(
@@ -142,5 +159,30 @@ class UserRepositoryImpl @Inject constructor(
                 }
             }
         }
+    }
+
+    override suspend fun handleSignUpResponse(
+        intent: Intent,
+        authorizationResponse: AuthorizationResponse?,
+        error: AuthorizationException?,
+        authorizationResponseCallback: (AuthorizationResponseStates) -> Unit
+    ) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun createUser(
+        email: String,
+        firstName: String,
+        lastName: String,
+        password: String
+    ) {
+        userDao.insertUser(
+            UserEntity(
+                userName = email,
+                name = firstName,
+                lastName = lastName,
+                password = password
+            )
+        )
     }
 }

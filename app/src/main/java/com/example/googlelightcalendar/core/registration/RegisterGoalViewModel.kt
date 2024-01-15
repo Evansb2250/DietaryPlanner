@@ -2,13 +2,17 @@ package com.example.googlelightcalendar.core.registration
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.googlelightcalendar.core.registration.state.ErrorState
 import com.example.googlelightcalendar.core.registration.state.RegisterGoalStates
 import com.example.googlelightcalendar.core.registration.state.UnitsOfWeight
+import com.example.googlelightcalendar.repo.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import java.lang.NullPointerException
 import javax.inject.Inject
 
@@ -16,6 +20,7 @@ import javax.inject.Inject
 @HiltViewModel
 class RegisterGoalViewModel @Inject constructor(
     val userRegistrationCache: UserRegistrationCache,
+    val userRepository: UserRepository,
 ) : ViewModel() {
 
 
@@ -53,6 +58,19 @@ class RegisterGoalViewModel @Inject constructor(
         }
 
         state = _state.asStateFlow()
+    }
+
+    fun createAccount(
+
+    ){
+        viewModelScope.launch(Dispatchers.IO) {
+            userRepository.createUser(
+                userRegistrationCache.getKey(RegistrationKeys.EMAIL) ?: "",
+                userRegistrationCache.getKey(RegistrationKeys.FirstName) ?: "",
+                userRegistrationCache.getKey(RegistrationKeys.LASTNAME) ?: "",
+                userRegistrationCache.getKey(RegistrationKeys.PASSWORD) ?: "",
+                )
+        }
     }
 
     fun initiateAccountCreation(

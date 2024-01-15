@@ -72,4 +72,22 @@ class UserRepositoryFake(
         }
 
     }
+
+    override suspend fun handleSignUpResponse(
+        intent: Intent,
+        authorizationResponse: AuthorizationResponse?,
+        error: AuthorizationException?,
+        authorizationResponseCallback: (AuthorizationResponseStates) -> Unit
+    ) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun createUser(
+        email: String,
+        firstName: String,
+        lastName: String,
+        password: String
+    ) {
+        TODO("Not yet implemented")
+    }
 }

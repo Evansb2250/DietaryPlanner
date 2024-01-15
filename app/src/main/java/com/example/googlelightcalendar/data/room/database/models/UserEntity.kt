@@ -9,6 +9,7 @@ data class UserEntity(
     @PrimaryKey
     val userName: String,
     val name: String,
+    val lastName: String,
     val password: String
 )
 
