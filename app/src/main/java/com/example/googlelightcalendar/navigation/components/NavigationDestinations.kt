@@ -10,20 +10,21 @@ object NavigationDestinations {
 
     }
 
-    object  RegistrationPath : Navigation{
+    object RegistrationPath : Navigation {
         override val destination: String
             get() = "registerPaths/{email}"
         override val arguments: List<String>
             get() = emptyList()
     }
-    val registerScreen = object : Navigation{
+
+    val registerScreen = object : Navigation {
         override val destination: String
             get() = "registration/{email}"
         override val arguments: List<String>
             get() = emptyList()
 
     }
-    val registerPhysicalScreen = object : Navigation{
+    val registerPhysicalScreen = object : Navigation {
         override val destination: String
             get() = "registerPhysicalScreen/"
         override val arguments: List<String>
@@ -31,7 +32,7 @@ object NavigationDestinations {
 
     }
 
-    val registerGoalsScreen = object : Navigation{
+    val registerGoalsScreen = object : Navigation {
         override val destination: String
             get() = "registerGoalScreen/"
         override val arguments: List<String>
@@ -39,7 +40,7 @@ object NavigationDestinations {
 
     }
 
-    val registerConfirmationScreen = object : Navigation{
+    val registerConfirmationScreen = object : Navigation {
         override val destination: String
             get() = "registerConfirmationScreen/"
         override val arguments: List<String>
@@ -48,9 +49,7 @@ object NavigationDestinations {
     }
 
 
-
-
-    val experiment = object : Navigation{
+    val experiment = object : Navigation {
         override val destination: String
             get() = "experiment/{email}/{id}/{name}"
         override val arguments: List<String>
@@ -61,16 +60,22 @@ object NavigationDestinations {
 
 
 object NavigationBuilder {
-    fun buildDestination(navigation: Navigation, replacements: Map<String, String>): Navigation {
+    fun buildDestination(
+        navigation: Navigation,
+        parameters: Map<String, String>,
+    ): Navigation {
+        //Makes the path mutable
         var destination = navigation.destination
-        replacements.forEach { (key, value) ->
+
+        //checks the list of paramters
+        parameters.forEach { (key, value) ->
             destination = destination.replace("{$key}", value)
         }
-        return object : Navigation{
+        return object : Navigation {
             override val destination: String
                 get() = destination
             override val arguments: List<String>
-                get() = replacements.map { it.value }
+                get() = parameters.map { it.value }
 
         }
     }

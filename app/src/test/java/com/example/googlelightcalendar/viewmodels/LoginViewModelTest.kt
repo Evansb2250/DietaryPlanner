@@ -191,7 +191,7 @@ class LoginViewModelTest {
             awaitItem()
 
             userDaoFake.insertUser(
-                UserEntity("Sam", "", password = "132")
+                UserEntity("Sam", "", lastName = "", password = "132")
             )
 
             loginViewModel.signInManually("Sam", "1232")
@@ -222,7 +222,7 @@ class LoginViewModelTest {
             awaitItem()
 
             userDaoFake.insertUser(
-                UserEntity("Sam", "", password = "1232")
+                UserEntity("Sam", "", lastName = "", password = "1232")
             )
 
             loginViewModel.signInManually("Sam", "1232")

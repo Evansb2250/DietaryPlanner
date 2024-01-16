@@ -125,7 +125,6 @@ private fun LoginScreen() {
         googleSignInLauncher
     )
 
-
     LoginContent(
         loginState = loginViewModel.state.collectAsState(Dispatchers.Main.immediate).value,
         signInManually = loginViewModel::signInManually,
@@ -171,7 +170,7 @@ fun LoginContent(
         } else if (
             loginState is LoginScreenStates.UserSignedInState
         ) {
-
+            //TODO(step 1 create a call back to navigate to the home screen, pass user ID)
             ErrorAlertDialog(
                 title = "Feature In Progress",
                 error = "feature isn't implemnented",

@@ -54,6 +54,7 @@ class LoginViewModel @Inject constructor(
             message = exception.message ?: "Unexpected Error"
         )
     }
+    //TODO(Step 2 add function to navigate to HomeScreen)
 
     fun navigateToRegisterScreen(
         email: String = ""
