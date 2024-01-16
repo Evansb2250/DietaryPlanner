@@ -1,9 +1,7 @@
 package com.example.googlelightcalendar
 
-import androidx.navigation.NavGraph
 import assertk.assertThat
 import assertk.assertions.isEqualTo
-import com.example.googlelightcalendar.navigation.components.NavigationBuilder
 import com.example.googlelightcalendar.navigation.components.NavigationDestinations
 import org.junit.jupiter.api.Test
 
@@ -18,7 +16,7 @@ class NavigationDestinationTest {
 
     @Test
     fun registerScreenDestinationTest(){
-    val result = NavigationBuilder.buildDestination(
+    val result = NavigationDestinations.buildDestination(
             NavigationDestinations.registerScreen,
             mapOf("email" to "samuel")
         )
@@ -28,7 +26,7 @@ class NavigationDestinationTest {
 
     @Test
     fun experimentTest(){
-        val result = NavigationBuilder.buildDestination(
+        val result = NavigationDestinations.buildDestination(
             NavigationDestinations.experiment,
             mapOf(
                 "email" to "samuel@gmail.com",

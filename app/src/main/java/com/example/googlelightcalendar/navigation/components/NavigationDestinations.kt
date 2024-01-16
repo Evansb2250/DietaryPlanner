@@ -48,7 +48,7 @@ object NavigationDestinations {
 
     }
 
-    val HomeScreen = object : Navigation{
+    val HomeScreen = object : Navigation {
         override val destination: String
             get() = "homeScreen/{userId}"
         override val arguments: List<String>
@@ -63,10 +63,7 @@ object NavigationDestinations {
             get() = emptyList()
 
     }
-}
 
-
-object NavigationBuilder {
     fun buildDestination(
         navigation: Navigation,
         parameters: Map<String, String>,
