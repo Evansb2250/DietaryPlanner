@@ -2,12 +2,14 @@ package com.example.googlelightcalendar
 
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
@@ -15,7 +17,6 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import com.example.googlelightcalendar.navigation.components.NavigationDestinations
@@ -86,10 +87,26 @@ fun root(
             ) {
                 InitialScreen()
             }
+
             RegisterUserPath()
+
+            //TODO(Step 3 add composable for the homeScreen)
+            composable(
+                route = NavigationDestinations.HomeScreen.destination
+            ) {
+
+                val email = it.arguments?.getString("userId")
+                Column(
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    Text(
+                        text = "Welcome back ${email}"
+                    )
+                }
+
+            }
         }
     }
-
 
 }
 
@@ -107,7 +124,8 @@ fun NavGraphBuilder.RegisterUserPath() {
         composable(
             route = NavigationDestinations.registerPhysicalScreen.destination
         ) {
-            PhysicalDetailScreen()        }
+            PhysicalDetailScreen()
+        }
         composable(
             route = NavigationDestinations.registerGoalsScreen.destination
         ) {

@@ -32,8 +32,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import coil.compose.AsyncImage
-import coil.compose.rememberAsyncImagePainter
 import com.example.googlelightcalendar.R
 import com.example.googlelightcalendar.common.imageHolder
 import com.example.googlelightcalendar.core.viewmodels.login.LoginScreenStates
@@ -127,7 +125,7 @@ private fun LoginScreen() {
         signInManually = loginViewModel::signInManually,
         initiateGoogleSignIn = loginViewModel::signInWithGoogle,
         retryLogin = loginViewModel::resetLoginScreenState,
-        navigateToHomeScreen = loginViewModel::navigateToRegisterScreen,
+        navigateToHomeScreen = loginViewModel::navigateToHomeScreen,
         navigateToRegisterScreen = loginViewModel::navigateToRegisterScreen,
     )
 }
@@ -142,7 +140,7 @@ fun LoginContent(
     retryLogin: () -> Unit = {},
     signInManually: (userName: String, password: String) -> Unit = { _, _ -> },
     initiateGoogleSignIn: () -> Unit = {},
-    navigateToHomeScreen: () -> Unit = {},
+    navigateToHomeScreen: (String) -> Unit = {},
     navigateToRegisterScreen: () -> Unit = {},
 ) {
     Box(
@@ -167,12 +165,7 @@ fun LoginContent(
         } else if (
             loginState is LoginScreenStates.UserSignedInState
         ) {
-            //TODO(step 1 create a call back to navigate to the home screen, pass user ID)
-            ErrorAlertDialog(
-                title = "Feature In Progress",
-                error = "feature isn't implemnented",
-                onDismiss = retryLogin
-            )
+            navigateToHomeScreen(loginState.email)
         }
 
         LoginScreenStateContent(

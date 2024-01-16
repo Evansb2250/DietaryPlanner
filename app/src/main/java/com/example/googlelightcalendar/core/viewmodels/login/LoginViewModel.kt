@@ -17,6 +17,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -52,7 +53,18 @@ class LoginViewModel @Inject constructor(
             message = exception.message ?: "Unexpected Error"
         )
     }
-    //TODO(Step 2 add function to navigate to HomeScreen)
+
+    fun navigateToHomeScreen(
+        email: String
+    ) {
+        navigationManager.navigate(
+            navigation = NavigationDestinations.HomeScreen,
+            parameters = mapOf(
+                "userId" to email
+            ),
+        )
+        resetLoginScreenState()
+    }
 
     fun navigateToRegisterScreen(
         email: String = ""
@@ -105,7 +117,9 @@ class LoginViewModel @Inject constructor(
     }
 
     fun resetLoginScreenState() {
-        _state.value = LoginScreenStates.LoginScreenState()
+        _state.update {
+            LoginScreenStates.LoginScreenState()
+        }
     }
 
     fun registerAuthLauncher(launcher: ActivityResultLauncher<Intent>) {
@@ -118,22 +132,29 @@ class LoginViewModel @Inject constructor(
 
                 when (serverResponse) {
                     is AuthorizationResponseStates.FailedResponsState -> {
-                        _state.value = LoginScreenStates.LoginError(
-                            message = serverResponse.message,
-                        )
+
+                        _state.update {
+                            LoginScreenStates.LoginError(
+                                message = serverResponse.message,
+                            )
+                        }
                     }
 
                     is AuthorizationResponseStates.FirstTimeUserState -> {
-                        _state.value = LoginScreenStates.RegistrationRequiredState(
-                            email = serverResponse.email,
-                        )
+                        _state.update {
+                            LoginScreenStates.RegistrationRequiredState(
+                                email = serverResponse.email,
+                            )
+                        }
                     }
 
                     is AuthorizationResponseStates.SuccessResponseState -> {
-                        _state.value = LoginScreenStates.UserSignedInState(
-                            serverResponse.email,
-                            serverResponse.name,
-                        )
+                        _state.update {
+                            LoginScreenStates.UserSignedInState(
+                                serverResponse.email,
+                                serverResponse.name,
+                            )
+                        }
                     }
                 }
             }
