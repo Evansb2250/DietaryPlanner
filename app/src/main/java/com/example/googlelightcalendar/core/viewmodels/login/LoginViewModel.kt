@@ -58,18 +58,17 @@ class LoginViewModel @Inject constructor(
         email: String = ""
     ) {
 
-        val map = if (email.isEmpty()) {
+        val parameters = if (email.isEmpty()) {
             emptyMap()
         } else {
             mapOf(
                 "email" to email
             )
         }
+
         navigationManager.navigate(
-            NavigationDestinations.buildDestination(
-                NavigationDestinations.RegistrationPath,
-                map
-            )
+            navigation = NavigationDestinations.RegistrationPath,
+            parameters = parameters,
         )
     }
 

@@ -115,10 +115,7 @@ private fun LoginScreen() {
         contract = ActivityResultContracts.StartActivityForResult(),
         onResult = { result ->
             val googleSignInIntent = result.data as Intent
-
-            if (googleSignInIntent != null) {
-                loginViewModel.handleAuthorizationResponse(googleSignInIntent)
-            }
+            loginViewModel.handleAuthorizationResponse(googleSignInIntent)
         }
     )
     loginViewModel.registerAuthLauncher(

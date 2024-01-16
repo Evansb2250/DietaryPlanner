@@ -16,7 +16,6 @@ import com.example.googlelightcalendar.domain.toUserEntity
 import com.example.googlelightcalendar.fakes.OAuthClientFake
 import com.example.googlelightcalendar.fakes.UserDaoFake
 import com.example.googlelightcalendar.fakes.UserRepositoryFake
-import com.example.googlelightcalendar.navigation.components.NavigationBuilder
 import com.example.googlelightcalendar.navigation.components.NavigationDestinations
 import com.example.googlelightcalendar.navigation.components.NavigationManger
 import com.example.googlelightcalendar.repo.UserRepository
@@ -30,7 +29,6 @@ import org.junit.After
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import org.mockito.Mockito
 import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.times

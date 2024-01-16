@@ -10,14 +10,18 @@ class NavigationManger @Inject constructor(
 ) {
     val navigationState = MutableSharedFlow<Navigation>()
     val onBackSpace = MutableSharedFlow<Int>()
-    private var num = 0
 
     fun navigate(
         navigation: Navigation,
-    ){
+        parameters: Map<String, String> = emptyMap(),
+        ){
         externalScope.launch {
-            navigationState.emit(navigation)
+            navigationState.emit(
+                NavigationDestinations.buildDestination(
+                    navigation,
+                    parameters
+                )
+            )
         }
     }
-
 }
