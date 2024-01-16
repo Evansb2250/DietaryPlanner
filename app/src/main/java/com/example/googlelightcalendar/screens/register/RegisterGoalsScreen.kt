@@ -61,6 +61,7 @@ fun RegisterGoalsScreen() {
     ) {
         is AccountComfirmationState -> {
             confirmationPage(
+                createAccount = viewModel::createAccount,
                 userData = state.registrationInfoList,
             )
         }
@@ -80,6 +81,7 @@ fun RegisterGoalsScreen() {
 )
 @Composable
 fun confirmationPage(
+    createAccount: () -> Unit = {},
     userData: List<String> = emptyList()
 ) {
     Box(
@@ -138,7 +140,7 @@ fun confirmationPage(
                     all = sidePadding
                 ),
                 text = "Create Account",
-                onClick = { },
+                onClick = createAccount  ,
             )
         }
     }

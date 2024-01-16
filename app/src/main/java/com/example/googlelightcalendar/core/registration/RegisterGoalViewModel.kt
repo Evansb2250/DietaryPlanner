@@ -60,9 +60,7 @@ class RegisterGoalViewModel @Inject constructor(
         state = _state.asStateFlow()
     }
 
-    fun createAccount(
-
-    ){
+    fun createAccount(){
         viewModelScope.launch(Dispatchers.IO) {
             userRepository.createUser(
                 userRegistrationCache.getKey(RegistrationKeys.EMAIL) ?: "",

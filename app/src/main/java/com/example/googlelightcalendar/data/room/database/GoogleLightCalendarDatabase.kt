@@ -9,22 +9,24 @@ import com.example.googlelightcalendar.data.room.database.models.UserEntity
 
 @Database(
     entities = arrayOf(UserEntity::class),
-    version = 1
+    version = 2
 )
-abstract class GoogleLightCalenderDatabase: RoomDatabase() {
+abstract class GoogleLightCalenderDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao
 
-    companion object{
+    companion object {
         private lateinit var instance: GoogleLightCalenderDatabase
         fun getDatabase(
             context: Context,
         ): GoogleLightCalenderDatabase {
-            if(!::instance.isInitialized){
+            if (!::instance.isInitialized) {
                 val database = Room.databaseBuilder(
                     context,
                     GoogleLightCalenderDatabase::class.java,
                     "GoogleLightCalendarDatabase"
-                ).build()
+                )
+                    .fallbackToDestructiveMigration()
+                    .build()
 
                 instance = database
             }

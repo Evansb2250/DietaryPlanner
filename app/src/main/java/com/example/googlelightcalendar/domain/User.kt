@@ -13,5 +13,6 @@ fun User.toUserEntity(): UserEntity {
         userName = this.userName,
         password = "",
         name = this.name,
+        lastName = ""
     )
 }
