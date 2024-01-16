@@ -48,6 +48,13 @@ object NavigationDestinations {
 
     }
 
+    val HomeScreen = object : Navigation{
+        override val destination: String
+            get() = "homeScreen/{userId}"
+        override val arguments: List<String>
+            get() = emptyList()
+
+    }
 
     val experiment = object : Navigation {
         override val destination: String
