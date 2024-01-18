@@ -132,7 +132,6 @@ class LoginViewModel @Inject constructor(
 
                 when (serverResponse) {
                     is AuthorizationResponseStates.FailedResponsState -> {
-
                         _state.update {
                             LoginScreenStates.LoginError(
                                 message = serverResponse.message,

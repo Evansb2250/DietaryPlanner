@@ -71,12 +71,7 @@ fun root(
         }
     }
 
-    Scaffold(
-        topBar = {
-
-
-        }
-    ) {
+    Scaffold {
         NavHost(
             modifier = Modifier.padding(it),
             navController = navControl,
