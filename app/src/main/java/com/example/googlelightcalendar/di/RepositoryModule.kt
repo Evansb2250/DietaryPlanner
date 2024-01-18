@@ -10,6 +10,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import javax.inject.Singleton
 
 @Module
@@ -22,13 +23,12 @@ object RepositoryModule {
         googleOauthClient: OauthClientImp,
         tokenManager: GoogleTokenManagerImpl,
         database: GoogleLightCalenderDatabase,
-        dispatcher: CoroutineDispatcher,
     ): UserRepository {
         return UserRepositoryImpl(
             googleOauthClient = lazy { googleOauthClient },
             userDao = database.userDao(),
             tokenManager = tokenManager,
-            dispatcher = dispatcher,
+            dispatcher = Dispatchers.IO,
         )
     }
 }
