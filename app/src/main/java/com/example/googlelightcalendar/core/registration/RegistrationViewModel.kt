@@ -15,6 +15,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -86,12 +87,14 @@ class RegistrationViewModel @Inject constructor(
 
                 when (serverResponse) {
                     is AuthorizationResponseStates.FailedResponsState -> {
-                        _state.value = InitialRegistrationState.PersonalInformationState(
-                            initialFailedLoginState = InitialRegistrationState.Failed(
-                                isError = true,
-                                errorMessage = "Failed to login into google",
-                            )
-                        )
+                        _state.update {
+                          InitialRegistrationState.PersonalInformationState(
+                              initialFailedLoginState = InitialRegistrationState.Failed(
+                                  isError = true,
+                                  errorMessage = "Failed to login into google",
+                              )
+                          )
+                        }
                     }
 
                     is AuthorizationResponseStates.FirstTimeUserState -> {

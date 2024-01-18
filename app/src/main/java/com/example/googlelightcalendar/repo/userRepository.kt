@@ -9,6 +9,7 @@ import com.example.googlelightcalendar.data.room.database.models.UserEntity
 import com.example.googlelightcalendar.data.room.database.models.toUser
 import com.example.googlelightcalendar.domain.User
 import com.example.googlelightcalendar.utils.AsyncResponse
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import net.openid.appauth.AuthorizationException
@@ -77,6 +78,7 @@ class UserRepositoryImpl @Inject constructor(
     private val googleOauthClient: Lazy<OauthClient>,
     private val userDao: UserDao,
     private val tokenManager: TokenManager,
+    private val dispatcher : CoroutineDispatcher = Dispatchers.IO,
 ) : UserRepository {
 
     // Aysnc response is received in the ActivityResultLauncher in the loginScreen
@@ -127,7 +129,7 @@ class UserRepositoryImpl @Inject constructor(
             error = error,
         )
 
-        withContext(Dispatchers.IO) {
+        withContext(dispatcher) {
             when (asyncResponse) {
                 is AsyncResponse.Failed<User?> -> {
                     authorizationResponseCallback(

@@ -14,7 +14,6 @@ import dagger.hilt.android.components.ViewModelComponent
 @Module
 @InstallIn(ViewModelComponent::class)
 object ViewModelModule {
-
     @Provides
     fun providesLoginViewModel(
         userRepository: UserRepository,
@@ -32,7 +31,7 @@ object ViewModelModule {
         userRepository: UserRepository,
         navigationManger: NavigationManger,
     ): RegistrationViewModel {
-        return RegistrationViewModel(
+        return RegistrationViewModel (
             registrationCache = registrationCache,
             userRepository = userRepository,
             navigationManger = navigationManger,
