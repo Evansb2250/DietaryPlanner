@@ -44,13 +44,6 @@ abstract class MainScreenNavigation(
     val icon: Int
     abstract val iconDescription: String
 
-    val screens = listOf(
-        Home,
-        Diary,
-        Calender,
-        Profile,
-    )
-
     object Home : MainScreenNavigation(
         destination = "homeScreen/",
     ) {

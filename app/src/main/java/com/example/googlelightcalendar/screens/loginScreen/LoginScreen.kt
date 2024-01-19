@@ -61,7 +61,6 @@ fun InitialScreen() {
 
     val tabs = listOf("Login", "Sign Up")
 
-
     Column(
         modifier = Modifier
             .fillMaxWidth()

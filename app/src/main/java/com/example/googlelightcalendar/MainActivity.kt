@@ -6,13 +6,19 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,6 +28,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.NavHost
@@ -31,14 +38,15 @@ import androidx.navigation.compose.rememberNavController
 import com.example.googlelightcalendar.navigation.components.AuthNavManager
 import com.example.googlelightcalendar.navigation.components.MainScreenNavManager
 import com.example.googlelightcalendar.navigation.components.MainScreenNavigation
-import com.example.googlelightcalendar.navigation.components.MainScreenNavigation.Calender.screens
 import com.example.googlelightcalendar.navigation.components.NavigationDestinations
 import com.example.googlelightcalendar.screens.loginScreen.InitialScreen
+import com.example.googlelightcalendar.screens.loginScreen.sidePadding
 import com.example.googlelightcalendar.screens.register.PhysicalDetailScreen
 import com.example.googlelightcalendar.screens.register.RegisterGoalsScreen
 import com.example.googlelightcalendar.screens.register.RegistrationScreen
 import com.example.googlelightcalendar.ui.theme.GoogleLightCalendarTheme
 import com.example.googlelightcalendar.ui.theme.appColor
+import com.example.googlelightcalendar.ui.theme.yellowMain
 import com.example.googlelightcalendar.ui_components.buttons.StandardButton
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -120,7 +128,7 @@ fun root(
                 MainScreen(
                     userId = email,
                     navigationManager = mainScreenNavManager
-                ){
+                ) {
                     navControl.popBackStack()
                 }
             }
@@ -143,7 +151,6 @@ private fun MainScreen(
         mutableStateOf(0)
     }
 
-
     navigationManager.onBackPressCallback = {
         navController.popBackStack(
             route = MainScreenNavigation.Home.destination,
@@ -163,6 +170,13 @@ private fun MainScreen(
         }
     }
 
+    val screens = listOf(
+        MainScreenNavigation.Home,
+        MainScreenNavigation.Diary,
+        MainScreenNavigation.Calender,
+        MainScreenNavigation.Profile,
+    )
+
     LaunchedEffect(
         key1 = navigationManager.navigationState,
     ) {
@@ -178,6 +192,16 @@ private fun MainScreen(
             .background(
                 color = appColor,
             ),
+        topBar = {
+            Image(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(
+                        color = appColor
+                    ),
+                painter = painterResource(id = R.drawable.logo3), contentDescription = ""
+            )
+        },
         bottomBar = {
             NavigationBar(
                 containerColor = Color.White
@@ -200,6 +224,10 @@ private fun MainScreen(
                                 ), contentDescription = null
                             )
                         },
+                        colors = NavigationBarItemDefaults.colors(
+                            selectedIconColor = yellowMain,
+                            indicatorColor = Color.White
+                        )
                     )
                 }
             }
@@ -278,7 +306,7 @@ fun NavGraphBuilder.MainScreenRoutes(
                 .background(
                     color = appColor,
                 ),
-            text = "You are in the calendar"
+            text = ""
         )
     }
 
@@ -290,20 +318,26 @@ fun NavGraphBuilder.MainScreenRoutes(
             navigationManager.onBackPress()
         }
         Column(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(sidePadding),
+            verticalArrangement = Arrangement.Bottom
         ) {
-            Text(
+            OutlinedButton(
                 modifier = Modifier
                     .background(
-                        color = appColor,
-                    ),
-                text = "You are in the profile"
-            )
+                        color = Color.Transparent,
+                        shape = RoundedCornerShape(40.dp)
+                    )
+                    .fillMaxWidth(),
+                onClick = Logout,
+            ) {
 
-            StandardButton(
-                text = "Logout",
-                onClick = Logout
-            )
+                Text(
+                    color = Color.White,
+                    text = "Logout"
+                )
+            }
         }
     }
 }
