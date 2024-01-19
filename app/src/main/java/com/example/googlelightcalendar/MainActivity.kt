@@ -14,6 +14,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Divider
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -21,6 +23,9 @@ import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarColors
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
@@ -71,8 +76,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             GoogleLightCalendarTheme {
                 root(
-                    navAuthManager = navAuthManager,
-                    mainScreenNavManager = mainScreenNavManager
+                    navAuthManager = navAuthManager, mainScreenNavManager = mainScreenNavManager
                 )
             }
         }
@@ -82,8 +86,7 @@ class MainActivity : ComponentActivity() {
 @RequiresApi(Build.VERSION_CODES.P)
 @Composable
 fun root(
-    navAuthManager: AuthNavManager,
-    mainScreenNavManager: MainScreenNavManager
+    navAuthManager: AuthNavManager, mainScreenNavManager: MainScreenNavManager
 ) {
     val navControl = rememberNavController()
 
@@ -108,9 +111,7 @@ fun root(
                 .background(
                     // to prevent flicker while transitioning
                     color = appColor
-                ),
-            navController = navControl,
-            startDestination = "LoginScreen"
+                ), navController = navControl, startDestination = "LoginScreen"
         ) {
 
             composable(
@@ -126,8 +127,7 @@ fun root(
                 val email = it.arguments?.getString("userId") ?: " "
 
                 MainScreen(
-                    userId = email,
-                    navigationManager = mainScreenNavManager
+                    userId = email, navigationManager = mainScreenNavManager
                 ) {
                     navControl.popBackStack()
                 }
@@ -138,6 +138,7 @@ fun root(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun MainScreen(
     navigationManager: MainScreenNavManager,
@@ -157,9 +158,7 @@ private fun MainScreen(
             inclusive = false,
         )
         //Needed to update the navigation Item when user hits the back button
-        selectedOption.value = when (
-            navController.currentBackStackEntry?.destination?.route
-        ) {
+        selectedOption.value = when (navController.currentBackStackEntry?.destination?.route) {
             MainScreenNavigation.Home.destination -> 0
             MainScreenNavigation.Diary.destination -> 1
             MainScreenNavigation.Calender.destination -> 2
@@ -188,51 +187,66 @@ private fun MainScreen(
     }
 
     Scaffold(
-        modifier = Modifier
-            .background(
-                color = appColor,
-            ),
-        topBar = {
-            Image(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(
-                        color = appColor
+        modifier = Modifier.background(
+        color = appColor,
+    ), topBar = {
+            Column(
+                modifier = Modifier.background(
+                    color = appColor,
+                ),
+            ){
+                TopAppBar(
+                    modifier = Modifier.padding(
+                       horizontal =  12.dp,
                     ),
-                painter = painterResource(id = R.drawable.logo3), contentDescription = ""
-            )
-        },
-        bottomBar = {
-            NavigationBar(
-                containerColor = Color.White
-            ) {
-                screens.forEachIndexed { index, item ->
-                    NavigationBarItem(
-                        selected = selectedOption.value == index,
-                        onClick = {
-                            selectedOption.value = index
-                            navController.navigate(
-                                item.destination.replace("{userID}", userId)
-                            ) {
-                                this.launchSingleTop = true
-                            }
-                        },
-                        icon = {
-                            Icon(
-                                painterResource(
-                                    id = item.icon,
-                                ), contentDescription = null
-                            )
-                        },
-                        colors = NavigationBarItemDefaults.colors(
-                            selectedIconColor = yellowMain,
-                            indicatorColor = Color.White
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = appColor,
+                    ),
+                    navigationIcon = {
+                        Image(
+                            painter = painterResource(
+                                id = R.drawable.logo3,
+                            ),
+                            contentDescription = ""
                         )
+                    },
+                    title = { /*TODO*/ },
+                    actions = {
+                        Image(
+                            modifier = Modifier,
+                            painter = painterResource(
+                                id = R.drawable.notification_bell,
+                            ),
+                            contentDescription = ""
+                        )
+                    }
+                )
+            }
+    }, bottomBar = {
+        NavigationBar(
+            containerColor = Color.White
+        ) {
+            screens.forEachIndexed { index, item ->
+                NavigationBarItem(selected = selectedOption.value == index, onClick = {
+                    selectedOption.value = index
+                    navController.navigate(
+                        item.destination.replace("{userID}", userId)
+                    ) {
+                        this.launchSingleTop = true
+                    }
+                }, icon = {
+                    Icon(
+                        painterResource(
+                            id = item.icon,
+                        ), contentDescription = null
                     )
-                }
+                }, colors = NavigationBarItemDefaults.colors(
+                    selectedIconColor = yellowMain, indicatorColor = Color.White
+                )
+                )
             }
         }
-    ) { innerPadding ->
+    }) { innerPadding ->
         NavHost(
             modifier = Modifier
                 .padding(innerPadding)
@@ -258,8 +272,7 @@ private fun MainScreen(
 }
 
 fun NavGraphBuilder.MainScreenRoutes(
-    navigationManager: MainScreenNavManager,
-    Logout: () -> Unit = {}
+    navigationManager: MainScreenNavManager, Logout: () -> Unit = {}
 ) {
     composable(
         route = MainScreenNavigation.Home.destination
@@ -273,8 +286,7 @@ fun NavGraphBuilder.MainScreenRoutes(
                 .fillMaxSize()
                 .background(
                     color = appColor,
-                ),
-            text = "You are in the home"
+                ), text = "You are in the home"
         )
     }
 
@@ -289,8 +301,7 @@ fun NavGraphBuilder.MainScreenRoutes(
                 .fillMaxSize()
                 .background(
                     color = appColor,
-                ),
-            text = "You are in the food"
+                ), text = "You are in the food"
         )
     }
 
@@ -305,8 +316,7 @@ fun NavGraphBuilder.MainScreenRoutes(
                 .fillMaxSize()
                 .background(
                     color = appColor,
-                ),
-            text = ""
+                ), text = ""
         )
     }
 
@@ -326,16 +336,14 @@ fun NavGraphBuilder.MainScreenRoutes(
             OutlinedButton(
                 modifier = Modifier
                     .background(
-                        color = Color.Transparent,
-                        shape = RoundedCornerShape(40.dp)
+                        color = Color.Transparent, shape = RoundedCornerShape(40.dp)
                     )
                     .fillMaxWidth(),
                 onClick = Logout,
             ) {
 
                 Text(
-                    color = Color.White,
-                    text = "Logout"
+                    color = Color.White, text = "Logout"
                 )
             }
         }
