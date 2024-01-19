@@ -1,5 +1,6 @@
 package com.example.googlelightcalendar.screens.register
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -47,6 +48,9 @@ import kotlinx.coroutines.Dispatchers
 @Composable
 fun PhysicalDetailScreen() {
     val viewModel: PhysicalDetailsViewModel = hiltViewModel()
+    BackHandler {
+        viewModel.navigationManger.onBackPress()
+    }
 
     PhysicalDetailContent(
         state = viewModel.state.collectAsState(Dispatchers.Main.immediate).value,

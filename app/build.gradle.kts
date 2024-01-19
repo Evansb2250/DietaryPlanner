@@ -78,6 +78,7 @@ android {
 }
 
 dependencies {
+    implementation("com.google.firebase:firebase-inappmessaging-ktx:20.4.0")
     val lifecycle_version = "2.6.2"
     implementation("io.coil-kt:coil-compose:2.2.2")
 

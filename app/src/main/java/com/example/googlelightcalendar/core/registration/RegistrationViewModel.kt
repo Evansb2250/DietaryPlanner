@@ -6,8 +6,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.googlelightcalendar.common.Constants
-import com.example.googlelightcalendar.navigation.components.NavigationDestinations.registerPhysicalScreen
-import com.example.googlelightcalendar.navigation.components.NavigationManger
+import com.example.googlelightcalendar.navigation.components.AuthNavManager
+import com.example.googlelightcalendar.navigation.components.NavigationDestinations
 import com.example.googlelightcalendar.repo.AuthorizationResponseStates
 import com.example.googlelightcalendar.repo.UserRepository
 import com.example.googlelightcalendar.utils.TextFieldUtils
@@ -23,7 +23,7 @@ import javax.inject.Inject
 class RegistrationViewModel @Inject constructor(
     val registrationCache: UserRegistrationCache,
     val userRepository: UserRepository,
-    val navigationManger: NavigationManger,
+    val navigationManger: AuthNavManager,
 ) : ViewModel() {
 
     private val googleScopes = arrayOf(
@@ -117,7 +117,7 @@ class RegistrationViewModel @Inject constructor(
 
 
     private fun navigateNextPage() {
-        navigationManger.navigate(registerPhysicalScreen)
+        navigationManger.navigate(NavigationDestinations.RegisterPhysicalScreen)
     }
 
     fun reset() {

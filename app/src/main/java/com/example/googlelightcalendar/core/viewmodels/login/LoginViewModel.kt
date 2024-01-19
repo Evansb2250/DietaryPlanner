@@ -5,8 +5,8 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.googlelightcalendar.common.Constants
+import com.example.googlelightcalendar.navigation.components.AuthNavManager
 import com.example.googlelightcalendar.navigation.components.NavigationDestinations
-import com.example.googlelightcalendar.navigation.components.NavigationManger
 import com.example.googlelightcalendar.repo.AuthorizationResponseStates
 import com.example.googlelightcalendar.repo.UserRepository
 import com.example.googlelightcalendar.utils.AsyncResponse
@@ -21,11 +21,9 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-const val TAG = "LoginViewModel"
-
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val navigationManager: NavigationManger,
+    private val navigationManager: AuthNavManager,
     private val userRepository: UserRepository,
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : ViewModel() {
@@ -58,7 +56,7 @@ class LoginViewModel @Inject constructor(
         email: String
     ) {
         navigationManager.navigate(
-            navigation = NavigationDestinations.HomeScreen,
+            navigation = NavigationDestinations.MainScreen,
             parameters = mapOf(
                 "userId" to email
             ),

@@ -5,7 +5,7 @@ import assertk.assertThat
 import assertk.assertions.isEqualTo
 import com.example.googlelightcalendar.core.registration.InitialRegistrationState.*
 import com.example.googlelightcalendar.navigation.components.NavigationDestinations
-import com.example.googlelightcalendar.navigation.components.NavigationManger
+import com.example.googlelightcalendar.navigation.components.AuthNavManager
 import com.example.googlelightcalendar.repo.UserRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.test.StandardTestDispatcher
@@ -23,7 +23,7 @@ import java.util.stream.Stream
 class RegistrationViewModelTest {
 
     private lateinit var registrationCache: UserRegistrationCache
-    private lateinit var navigationManger: NavigationManger
+    private lateinit var navigationManger: AuthNavManager
     private lateinit var viewModel: RegistrationViewModel
     private lateinit var userRepository: UserRepository
     private val testDispatcher = StandardTestDispatcher()
@@ -33,7 +33,7 @@ class RegistrationViewModelTest {
     fun setUp() {
         registrationCache = UserRegistrationCacheImpl()
         navigationManger = spy(
-            NavigationManger(externalScope = externalScope)
+            AuthNavManager(externalScope = externalScope)
         )
         userRepository = mock()
         viewModel = spy(
@@ -64,7 +64,7 @@ class RegistrationViewModelTest {
 
         viewModel.onStoreCredentials(state)
 
-        verify(navigationManger, times(1)).navigate(NavigationDestinations.registerPhysicalScreen)
+        verify(navigationManger, times(1)).navigate(NavigationDestinations.RegisterPhysicalScreen)
     }
 
 
@@ -74,7 +74,7 @@ class RegistrationViewModelTest {
 
         viewModel.onStoreCredentials(state)
 
-        verify(navigationManger, times(0)).navigate(NavigationDestinations.registerPhysicalScreen)
+        verify(navigationManger, times(0)).navigate(NavigationDestinations.RegisterPhysicalScreen)
 
         viewModel.state.test {
             val stateAfterOnStoreCredentials = awaitItem()

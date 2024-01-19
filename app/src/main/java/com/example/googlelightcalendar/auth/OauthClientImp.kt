@@ -151,7 +151,10 @@ class OauthClientImp @Inject constructor(
             if (response != null) {
                 storeTokenResponse(response)
 
+                //TODO check if this withContext is needed
                 val (googleEmail, name) = withContext(Dispatchers.IO) {
+                    //This function needs to be ran off the main thread, so I am using withContext to
+                    // return it back to IO thread after the operation is done.
                     validateGoogleToken(
                         tokenId = response.idToken ?: "",
                     )

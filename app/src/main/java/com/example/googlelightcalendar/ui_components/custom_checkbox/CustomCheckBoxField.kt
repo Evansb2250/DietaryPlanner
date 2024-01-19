@@ -25,7 +25,7 @@ fun CustomCheckBoxField(
 ) {
     when (checkBoxOrientation) {
         CheckBoxOrientation.ColumnCheckBox -> {
-            columnLandscape(
+            ColumnLandscape(
                 enabled = enabled,
                 readOnly = readOnly,
                 value = value,
@@ -70,7 +70,7 @@ private fun horizontalLandscape(
 }
 
 @Composable
-private fun columnLandscape(
+private fun ColumnLandscape(
     enabled: Boolean,
     readOnly: Boolean,
     value: String,

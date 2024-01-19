@@ -7,7 +7,7 @@ import com.example.googlelightcalendar.core.PhysicalDetailStateTest
 import com.example.googlelightcalendar.core.provideDateToString
 import com.example.googlelightcalendar.core.registration.state.PhysicalDetailState
 import com.example.googlelightcalendar.navigation.components.NavigationDestinations
-import com.example.googlelightcalendar.navigation.components.NavigationManger
+import com.example.googlelightcalendar.navigation.components.AuthNavManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.runTest
@@ -18,7 +18,7 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 
 class PhysicalDetailsViewModelTest {
-    private lateinit var navigationManager: NavigationManger
+    private lateinit var navigationManager: AuthNavManager
     private lateinit var userRegistrationCache: UserRegistrationCache
     private lateinit var viewModel: PhysicalDetailsViewModel
     private val testDispatcher = StandardTestDispatcher()
@@ -28,7 +28,7 @@ class PhysicalDetailsViewModelTest {
     @BeforeEach
     fun setUp() {
         scope = CoroutineScope(testDispatcher)
-        navigationManager = spy(NavigationManger(scope))
+        navigationManager = spy(AuthNavManager(scope))
         userRegistrationCache = spy(UserRegistrationCacheImpl())
 
         viewModel = PhysicalDetailsViewModel(
@@ -42,7 +42,7 @@ class PhysicalDetailsViewModelTest {
     fun storePhysicalDetailsInCacheTestPass() {
         val state = provideCompletedDetailsState()
         viewModel.storePhysicalDetailsInCache(state)
-        verify(navigationManager, times(1)).navigate(NavigationDestinations.registerGoalsScreen)
+        verify(navigationManager, times(1)).navigate(NavigationDestinations.RegisterGoalsScreen)
         verify(userRegistrationCache, times(1)).storeKey(RegistrationKeys.BIRTHDATE, state.birthDate.value)
         assertThat(userRegistrationCache.getKey(RegistrationKeys.BIRTHDATE)).isEqualTo(state.birthDate.value)
     }
@@ -53,7 +53,7 @@ class PhysicalDetailsViewModelTest {
             this.birthDate.value = ""
         }
         viewModel.storePhysicalDetailsInCache(state)
-        verify(navigationManager, times(0)).navigate(NavigationDestinations.registerGoalsScreen)
+        verify(navigationManager, times(0)).navigate(NavigationDestinations.RegisterGoalsScreen)
         viewModel.state.test {
             val stateAfterStoringCache = awaitItem()
             assertThat(stateAfterStoringCache.errorState.isError).isEqualTo(true)
@@ -67,7 +67,7 @@ class PhysicalDetailsViewModelTest {
             this.birthDate.value = ""
         }
         viewModel.storePhysicalDetailsInCache(state)
-        verify(navigationManager, times(0)).navigate(NavigationDestinations.registerGoalsScreen)
+        verify(navigationManager, times(0)).navigate(NavigationDestinations.RegisterGoalsScreen)
         viewModel.state.test {
 
             val stateAfterStoringCache = awaitItem()

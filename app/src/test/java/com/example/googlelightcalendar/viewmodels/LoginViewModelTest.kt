@@ -16,8 +16,8 @@ import com.example.googlelightcalendar.domain.toUserEntity
 import com.example.googlelightcalendar.fakes.OAuthClientFake
 import com.example.googlelightcalendar.fakes.UserDaoFake
 import com.example.googlelightcalendar.fakes.UserRepositoryFake
+import com.example.googlelightcalendar.navigation.components.AuthNavManager
 import com.example.googlelightcalendar.navigation.components.NavigationDestinations
-import com.example.googlelightcalendar.navigation.components.NavigationManger
 import com.example.googlelightcalendar.repo.UserRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -29,7 +29,6 @@ import org.junit.After
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
@@ -39,7 +38,7 @@ class LoginViewModelTest {
 
     private lateinit var externalScope: CoroutineScope
     private lateinit var userRespositoryFake: UserRepository
-    private lateinit var navigationManager: NavigationManger
+    private lateinit var navigationManager: AuthNavManager
     private lateinit var oauthClientFake: OAuthClientFake
     private lateinit var loginViewModel: LoginViewModel
     private lateinit var userDaoFake: UserDao
@@ -203,13 +202,13 @@ class LoginViewModelTest {
     @Test
     fun navigateHomeScreenTest(){
         verify(navigationManager, times(0)).navigate(
-            NavigationDestinations.HomeScreen
+            NavigationDestinations.MainScreen
         )
 
         loginViewModel.navigateToHomeScreen("exampleEmail@.com")
 
         verify(navigationManager, times(1)).navigate(
-            NavigationDestinations.HomeScreen,
+            NavigationDestinations.MainScreen,
             mapOf(
                 "userId" to "exampleEmail@.com"
             )
@@ -220,7 +219,7 @@ class LoginViewModelTest {
     fun navigateToRegisterScreen() {
 
         verify(navigationManager, times(0)).navigate(
-            NavigationDestinations.registerScreen
+            NavigationDestinations.RegisterScreen
         )
 
         loginViewModel.navigateToRegisterScreen()

@@ -1,86 +1,81 @@
 package com.example.googlelightcalendar.navigation.components
 
-object NavigationDestinations {
+import androidx.annotation.DrawableRes
+import com.example.googlelightcalendar.R
 
-    val loginScreen = object : Navigation {
-        override val destination: String
-            get() = "loginScreen"
-        override val arguments: List<String>
-            get() = emptyList()
+sealed class NavigationDestinations(
+    override val destination: String,
+    override val arguments: List<String> = emptyList()
+) : Navigation {
+    object loginScreen : NavigationDestinations(
+        destination = "loginScreen",
+    )
 
+    object RegistrationPath : NavigationDestinations(
+        destination = "registerPaths/{email}",
+    )
+
+    object RegisterScreen : NavigationDestinations(
+        destination = "registration/{email}",
+    )
+
+    object RegisterPhysicalScreen : NavigationDestinations(
+        destination = "registerPhysicalScreen/",
+    )
+
+    object RegisterGoalsScreen : NavigationDestinations(
+        destination = "registerGoalScreen/",
+    )
+    object MainScreen : NavigationDestinations(
+        destination = "mainScreen/{userId}",
+    )
+}
+
+
+abstract class MainScreenNavigation(
+
+    override val destination: String,
+    override val arguments: List<String> = emptyList()
+) : NavigationDestinations(
+    destination = destination,
+    arguments = arguments,
+) {
+    abstract @get:DrawableRes
+    val icon: Int
+    abstract val iconDescription: String
+
+    val screens = listOf(
+        Home,
+        Diary,
+        Calender,
+        Profile,
+    )
+
+    object Home : MainScreenNavigation(
+        destination = "homeScreen/",
+    ) {
+        override val icon: Int = R.drawable.home_icon
+        override val iconDescription: String = ""
     }
 
-    object RegistrationPath : Navigation {
-        override val destination: String
-            get() = "registerPaths/{email}"
-        override val arguments: List<String>
-            get() = emptyList()
+    object Diary : MainScreenNavigation(
+        destination = "Diary/",
+    ) {
+        override val icon: Int = R.drawable.food_icon
+        override val iconDescription: String = ""
     }
 
-    val registerScreen = object : Navigation {
-        override val destination: String
-            get() = "registration/{email}"
-        override val arguments: List<String>
-            get() = emptyList()
-
-    }
-    val registerPhysicalScreen = object : Navigation {
-        override val destination: String
-            get() = "registerPhysicalScreen/"
-        override val arguments: List<String>
-            get() = emptyList()
-
+    object Calender : MainScreenNavigation(
+        destination = "calendar/",
+    ) {
+        override val icon: Int = R.drawable.calendar_icon
+        override val iconDescription: String = ""
     }
 
-    val registerGoalsScreen = object : Navigation {
-        override val destination: String
-            get() = "registerGoalScreen/"
-        override val arguments: List<String>
-            get() = emptyList()
-
-    }
-
-    val registerConfirmationScreen = object : Navigation {
-        override val destination: String
-            get() = "registerConfirmationScreen/"
-        override val arguments: List<String>
-            get() = emptyList()
-
-    }
-
-    val HomeScreen = object : Navigation {
-        override val destination: String
-            get() = "homeScreen/{userId}"
-        override val arguments: List<String>
-            get() = emptyList()
-
-    }
-
-    val experiment = object : Navigation {
-        override val destination: String
-            get() = "experiment/{email}/{id}/{name}"
-        override val arguments: List<String>
-            get() = emptyList()
-
-    }
-
-    fun buildDestination(
-        navigation: Navigation,
-        parameters: Map<String, String>,
-    ): Navigation {
-        //Makes the path mutable
-        var destination = navigation.destination
-
-        //checks the list of paramters
-        parameters.forEach { (key, value) ->
-            destination = destination.replace("{$key}", value)
-        }
-        return object : Navigation {
-            override val destination: String
-                get() = destination
-            override val arguments: List<String>
-                get() = parameters.map { it.value }
-
-        }
+    object Profile : MainScreenNavigation(
+        destination = "profile/",
+    ) {
+        override val icon: Int = R.drawable.profile_icon
+        override val iconDescription: String = ""
     }
 }

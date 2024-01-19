@@ -3,9 +3,9 @@ package com.example.googlelightcalendar.di
 import com.example.googlelightcalendar.core.registration.RegisterGoalViewModel
 import com.example.googlelightcalendar.core.registration.RegistrationViewModel
 import com.example.googlelightcalendar.core.registration.UserRegistrationCache
-import com.example.googlelightcalendar.repo.UserRepository
 import com.example.googlelightcalendar.core.viewmodels.login.LoginViewModel
-import com.example.googlelightcalendar.navigation.components.NavigationManger
+import com.example.googlelightcalendar.navigation.components.AuthNavManager
+import com.example.googlelightcalendar.repo.UserRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -17,7 +17,7 @@ object ViewModelModule {
     @Provides
     fun providesLoginViewModel(
         userRepository: UserRepository,
-        navigationManger: NavigationManger,
+        navigationManger: AuthNavManager,
     ): LoginViewModel {
         return LoginViewModel(
             navigationManager = navigationManger,
@@ -29,7 +29,7 @@ object ViewModelModule {
     fun providesRegistrationViewMode(
         registrationCache: UserRegistrationCache,
         userRepository: UserRepository,
-        navigationManger: NavigationManger,
+        navigationManger: AuthNavManager,
     ): RegistrationViewModel {
         return RegistrationViewModel (
             registrationCache = registrationCache,
