@@ -40,6 +40,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.googlelightcalendar.navigation.components.AuthNavManager
 import com.example.googlelightcalendar.navigation.components.MainScreenNavManager
 import com.example.googlelightcalendar.navigation.components.MainScreenNavigation
+import com.example.googlelightcalendar.navigation.components.MainScreenNavigation.Companion.screens
 import com.example.googlelightcalendar.navigation.components.NavigationDestinations
 import com.example.googlelightcalendar.navigation.components.ProfileRoutes
 import com.example.googlelightcalendar.screens.loginScreen.InitialScreen
@@ -139,6 +140,7 @@ fun root(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun MainScreen(
+    
     navigationManager: MainScreenNavManager,
     userId: String,
     logout: () -> Unit = {},
@@ -150,6 +152,7 @@ private fun MainScreen(
         mutableStateOf(0)
     }
 
+    //updates the bottomNavigationBar when user hits the back space bar.
     navigationManager.onBackPressCallback = {
         navController.popBackStack(
             route = MainScreenNavigation.Home.destination,
@@ -167,12 +170,13 @@ private fun MainScreen(
         }
     }
 
-    val screens = listOf(
-        MainScreenNavigation.Home,
-        MainScreenNavigation.Diary,
-        MainScreenNavigation.Calendar,
-        ProfileRoutes.Profile,
-    )
+    //clear stack and logout
+    navigationManager.setLogCallBack {
+        navController.clearBackStack(
+            MainScreenNavigation.Home.destination,
+        )
+        logout()
+    }
 
     LaunchedEffect(
         key1 = navigationManager.navigationState,
@@ -208,7 +212,7 @@ private fun MainScreen(
                             contentDescription = ""
                         )
                     },
-                    title = { /*TODO*/ },
+                    title = { },
                     actions = {
                         Image(
                             modifier = Modifier,
@@ -222,28 +226,31 @@ private fun MainScreen(
             }
         }, bottomBar = {
 
-            if(screens.map { it.destination }.contains(navController.currentBackStackEntryAsState().value?.destination?.route)){
+            if (screens.map { it.destination }
+                    .contains(navController.currentBackStackEntryAsState().value?.destination?.route)) {
                 NavigationBar(
                     containerColor = Color.White
                 ) {
 
                     screens.forEachIndexed { index, item ->
-                        NavigationBarItem(selected = selectedOption.value == index, onClick = {
-                            selectedOption.value = index
-                            navController.navigate(
-                                item.destination.replace("{userID}", userId)
-                            ) {
-                                this.launchSingleTop = true
-                            }
-                        }, icon = {
-                            Icon(
-                                painterResource(
-                                    id = item.icon,
-                                ), contentDescription = null
+                        NavigationBarItem(
+                            selected = selectedOption.value == index,
+                            onClick = {
+                                selectedOption.value = index
+                                navController.navigate(
+                                    item.destination.replace("{userID}", userId)
+                                ) {
+                                    this.launchSingleTop = true
+                                }
+                            }, icon = {
+                                Icon(
+                                    painterResource(
+                                        id = item.icon,
+                                    ), contentDescription = null
+                                )
+                            }, colors = NavigationBarItemDefaults.colors(
+                                selectedIconColor = yellowMain, indicatorColor = Color.White
                             )
-                        }, colors = NavigationBarItemDefaults.colors(
-                            selectedIconColor = yellowMain, indicatorColor = Color.White
-                        )
                         )
                     }
                 }
@@ -261,23 +268,14 @@ private fun MainScreen(
         ) {
             MainScreenRoutes(
                 navigationManager
-            ) {
-                navController.clearBackStack(
-                    MainScreenNavigation.Home.destination,
-                )
-                logout()
-            }
+            )
         }
 
     }
 
 }
 
-fun NavGraphBuilder.ProfileRoutes(
-    logout: () -> Unit,
-) {
-
-
+fun NavGraphBuilder.ProfileRoutes() {
     composable(
         route = ProfileRoutes.Account.destination
     ) {
@@ -304,7 +302,7 @@ fun NavGraphBuilder.ProfileRoutes(
 }
 
 fun NavGraphBuilder.MainScreenRoutes(
-    navigationManager: MainScreenNavManager, logout: () -> Unit = {}
+    navigationManager: MainScreenNavManager,
 ) {
     composable(
         route = MainScreenNavigation.Home.destination
@@ -355,14 +353,10 @@ fun NavGraphBuilder.MainScreenRoutes(
     composable(
         route = ProfileRoutes.Profile.destination
     ) {
-        ProfileScreen(
-            logout = logout,
-        )
+        ProfileScreen()
     }
-    ProfileRoutes(
-        logout = {},
-    )
 
+    ProfileRoutes()
 }
 
 fun NavGraphBuilder.RegisterUserPath() {

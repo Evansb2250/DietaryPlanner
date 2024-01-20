@@ -47,4 +47,14 @@ class MainScreenNavManager @Inject constructor(
     externalScope: CoroutineScope,
 ) : NavigationManger(externalScope) {
     override var onBackPressCallback: () -> Unit = {}
+    protected var logoutCallback: () -> Unit = {}
+
+    fun setLogCallBack(
+        callBack: () -> Unit
+    ){
+        logoutCallback = callBack
+    }
+    fun returnToTopOfStack(){
+        logoutCallback()
+    }
 }

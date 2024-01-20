@@ -2,6 +2,7 @@ package com.example.googlelightcalendar.navigation.components
 
 import androidx.annotation.DrawableRes
 import com.example.googlelightcalendar.R
+import com.example.googlelightcalendar.navigation.components.ProfileRoutes.*
 
 sealed class NavigationDestinations(
     override val destination: String,
@@ -31,7 +32,6 @@ sealed class NavigationDestinations(
         destination = "mainScreen/{userId}",
     )
 }
-
 
 abstract class MainScreenNavigation(
 
@@ -66,6 +66,15 @@ abstract class MainScreenNavigation(
         override val iconDescription: String = ""
     }
 
+    companion object {
+        val screens = listOf(
+            Home,
+            Diary,
+            Calendar,
+            Profile,
+        )
+
+    }
 }
 
 
@@ -80,6 +89,7 @@ sealed class ProfileRoutes {
     object Account : NavigationDestinations(
         destination = "profile/account/{userId}"
     )
+
     object Notifications : NavigationDestinations(
         destination = "profile/notifications/{userId}"
     )

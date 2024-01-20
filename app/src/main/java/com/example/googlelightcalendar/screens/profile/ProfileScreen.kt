@@ -3,11 +3,9 @@ package com.example.googlelightcalendar.screens.profile
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,8 +17,8 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,19 +29,18 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.googlelightcalendar.R
 import com.example.googlelightcalendar.core.profile_screen.ProfileViewModel
-import com.example.googlelightcalendar.navigation.components.NavigationDestinations
-import com.example.googlelightcalendar.navigation.components.ProfileRoutes
 import com.example.googlelightcalendar.screens.loginScreen.sidePadding
 import com.example.googlelightcalendar.ui.theme.appColor
+import com.example.googlelightcalendar.ui_components.custom_layout.CustomRowLayout
 
 @Preview(
     showBackground = true
 )
 @Composable
 fun ProfileScreen(
-    logout: () -> Unit = {},
 ) {
     val vm: ProfileViewModel = hiltViewModel()
+    val state = vm.state.collectAsState().value
 
     BackHandler {
         vm.onBackPress()
@@ -76,8 +73,8 @@ fun ProfileScreen(
                 .wrapContentHeight(),
             verticalArrangement = Arrangement.SpaceBetween,
         ) {
-            items.forEach {
-                CustomBoxLayout(
+            state.items.forEach {
+                CustomRowLayout(
                     leadingIcon = {
                         Image(
                             painter = painterResource(
@@ -123,7 +120,7 @@ fun ProfileScreen(
                         52.dp,
                     )
                     .fillMaxWidth(),
-                onClick = logout
+                onClick = vm::logout
             ) {
                 Image(
                     modifier = Modifier.padding(
@@ -148,92 +145,3 @@ fun ProfileScreen(
 }
 
 
-@Composable
-fun CustomBoxLayout(
-    leadingIcon: @Composable () -> Unit = {},
-    title: @Composable () -> Unit = {},
-    trailingIcon: @Composable () -> Unit = {},
-    enable: Boolean = true,
-    onClick: () -> Unit = {},
-) {
-    Row(
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        Box(
-            modifier = Modifier.weight(
-                1f,
-            ),
-            contentAlignment = Alignment.Center,
-        ) {
-            leadingIcon()
-        }
-        Box(
-            modifier = Modifier
-                .weight(
-                    3f,
-                )
-                .clickable(
-                    enabled = enable
-                ) {
-                    onClick()
-                },
-        ) {
-            title()
-        }
-        Box(
-            modifier = Modifier
-                .weight(
-                    1f,
-                )
-                .clickable(
-                    enabled = enable
-                ) {
-                    onClick()
-                },
-            contentAlignment = Alignment.CenterEnd,
-        ) {
-            trailingIcon()
-        }
-    }
-}
-
-
-data class ProfileOptions(
-    val leadingIconId: Int,
-    val text: String,
-    val trailingIconId: Int,
-    val destination: NavigationDestinations,
-)
-
-
-val items = listOf(
-    ProfileOptions(
-        leadingIconId = R.drawable.profile_icon_2,
-        text = "Account",
-        trailingIconId = R.drawable.right_arrow,
-        destination = ProfileRoutes.Account
-    ),
-
-    ProfileOptions(
-        leadingIconId = R.drawable.notification_icon_2,
-        text = "Notification",
-        trailingIconId = R.drawable.right_arrow,
-        destination = ProfileRoutes.Notifications
-    ),
-
-    ProfileOptions(
-        leadingIconId = R.drawable.calendar_icon_2,
-        text = "Calendar",
-        trailingIconId = R.drawable.right_arrow,
-        destination = ProfileRoutes.Calendar,
-    ),
-
-    ProfileOptions(
-        leadingIconId = R.drawable.lock_icon,
-        text = "Terms of Service",
-        trailingIconId = R.drawable.right_arrow,
-        destination = ProfileRoutes.TOS,
-    )
-
-
-)
