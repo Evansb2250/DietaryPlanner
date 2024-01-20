@@ -26,6 +26,7 @@ sealed class NavigationDestinations(
     object RegisterGoalsScreen : NavigationDestinations(
         destination = "registerGoalScreen/",
     )
+
     object MainScreen : NavigationDestinations(
         destination = "mainScreen/{userId}",
     )
@@ -58,17 +59,36 @@ abstract class MainScreenNavigation(
         override val iconDescription: String = ""
     }
 
-    object Calender : MainScreenNavigation(
+    object Calendar : MainScreenNavigation(
         destination = "calendar/",
     ) {
         override val icon: Int = R.drawable.calendar_icon
         override val iconDescription: String = ""
     }
 
+}
+
+
+sealed class ProfileRoutes {
     object Profile : MainScreenNavigation(
         destination = "profile/",
     ) {
         override val icon: Int = R.drawable.profile_icon
         override val iconDescription: String = ""
     }
+
+    object Account : NavigationDestinations(
+        destination = "profile/account/{userId}"
+    )
+    object Notifications : NavigationDestinations(
+        destination = "profile/notifications/{userId}"
+    )
+
+    object Calendar : NavigationDestinations(
+        destination = "profile/calendar/{userId}"
+    )
+
+    object TOS : NavigationDestinations(
+        destination = "profile/tos/"
+    )
 }

@@ -8,23 +8,17 @@ import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -44,15 +38,15 @@ import com.example.googlelightcalendar.navigation.components.AuthNavManager
 import com.example.googlelightcalendar.navigation.components.MainScreenNavManager
 import com.example.googlelightcalendar.navigation.components.MainScreenNavigation
 import com.example.googlelightcalendar.navigation.components.NavigationDestinations
+import com.example.googlelightcalendar.navigation.components.ProfileRoutes
 import com.example.googlelightcalendar.screens.loginScreen.InitialScreen
-import com.example.googlelightcalendar.screens.loginScreen.sidePadding
+import com.example.googlelightcalendar.screens.profile.ProfileScreen
 import com.example.googlelightcalendar.screens.register.PhysicalDetailScreen
 import com.example.googlelightcalendar.screens.register.RegisterGoalsScreen
 import com.example.googlelightcalendar.screens.register.RegistrationScreen
 import com.example.googlelightcalendar.ui.theme.GoogleLightCalendarTheme
 import com.example.googlelightcalendar.ui.theme.appColor
 import com.example.googlelightcalendar.ui.theme.yellowMain
-import com.example.googlelightcalendar.ui_components.buttons.StandardButton
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import javax.inject.Inject
@@ -161,8 +155,8 @@ private fun MainScreen(
         selectedOption.value = when (navController.currentBackStackEntry?.destination?.route) {
             MainScreenNavigation.Home.destination -> 0
             MainScreenNavigation.Diary.destination -> 1
-            MainScreenNavigation.Calender.destination -> 2
-            MainScreenNavigation.Profile.destination -> 3
+            MainScreenNavigation.Calendar.destination -> 2
+            ProfileRoutes.Profile.destination -> 3
             else -> {
                 0
             }
@@ -172,8 +166,8 @@ private fun MainScreen(
     val screens = listOf(
         MainScreenNavigation.Home,
         MainScreenNavigation.Diary,
-        MainScreenNavigation.Calender,
-        MainScreenNavigation.Profile,
+        MainScreenNavigation.Calendar,
+        ProfileRoutes.Profile,
     )
 
     LaunchedEffect(
@@ -188,16 +182,16 @@ private fun MainScreen(
 
     Scaffold(
         modifier = Modifier.background(
-        color = appColor,
-    ), topBar = {
+            color = appColor,
+        ), topBar = {
             Column(
                 modifier = Modifier.background(
                     color = appColor,
                 ),
-            ){
+            ) {
                 TopAppBar(
                     modifier = Modifier.padding(
-                       horizontal =  12.dp,
+                        horizontal = 12.dp,
                     ),
                     colors = TopAppBarDefaults.topAppBarColors(
                         containerColor = appColor,
@@ -222,31 +216,31 @@ private fun MainScreen(
                     }
                 )
             }
-    }, bottomBar = {
-        NavigationBar(
-            containerColor = Color.White
-        ) {
-            screens.forEachIndexed { index, item ->
-                NavigationBarItem(selected = selectedOption.value == index, onClick = {
-                    selectedOption.value = index
-                    navController.navigate(
-                        item.destination.replace("{userID}", userId)
-                    ) {
-                        this.launchSingleTop = true
-                    }
-                }, icon = {
-                    Icon(
-                        painterResource(
-                            id = item.icon,
-                        ), contentDescription = null
+        }, bottomBar = {
+            NavigationBar(
+                containerColor = Color.White
+            ) {
+                screens.forEachIndexed { index, item ->
+                    NavigationBarItem(selected = selectedOption.value == index, onClick = {
+                        selectedOption.value = index
+                        navController.navigate(
+                            item.destination.replace("{userID}", userId)
+                        ) {
+                            this.launchSingleTop = true
+                        }
+                    }, icon = {
+                        Icon(
+                            painterResource(
+                                id = item.icon,
+                            ), contentDescription = null
+                        )
+                    }, colors = NavigationBarItemDefaults.colors(
+                        selectedIconColor = yellowMain, indicatorColor = Color.White
                     )
-                }, colors = NavigationBarItemDefaults.colors(
-                    selectedIconColor = yellowMain, indicatorColor = Color.White
-                )
-                )
+                    )
+                }
             }
-        }
-    }) { innerPadding ->
+        }) { innerPadding ->
         NavHost(
             modifier = Modifier
                 .padding(innerPadding)
@@ -271,8 +265,44 @@ private fun MainScreen(
 
 }
 
+fun NavGraphBuilder.ProfileRoutes(
+    logout: () -> Unit,
+) {
+    composable(
+        route = ProfileRoutes.Profile.destination
+    ) {
+        ProfileScreen(
+            logout = logout,
+        )
+    }
+
+    composable(
+        route = ProfileRoutes.Account.destination
+    ) {
+
+    }
+
+    composable(
+        route = ProfileRoutes.Notifications.destination
+    ) {
+
+    }
+
+    composable(
+        route = ProfileRoutes.Calendar.destination
+    ) {
+
+    }
+
+    composable(
+        route = ProfileRoutes.TOS.destination
+    ) {
+
+    }
+}
+
 fun NavGraphBuilder.MainScreenRoutes(
-    navigationManager: MainScreenNavManager, Logout: () -> Unit = {}
+    navigationManager: MainScreenNavManager, logout: () -> Unit = {}
 ) {
     composable(
         route = MainScreenNavigation.Home.destination
@@ -306,7 +336,7 @@ fun NavGraphBuilder.MainScreenRoutes(
     }
 
     composable(
-        route = MainScreenNavigation.Calender.destination
+        route = MainScreenNavigation.Calendar.destination
     ) {
         BackHandler {
             navigationManager.onBackPress()
@@ -320,34 +350,10 @@ fun NavGraphBuilder.MainScreenRoutes(
         )
     }
 
-    composable(
-        route = MainScreenNavigation.Profile.destination
-    ) {
+    ProfileRoutes(
+        logout = logout,
+    )
 
-        BackHandler {
-            navigationManager.onBackPress()
-        }
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(sidePadding),
-            verticalArrangement = Arrangement.Bottom
-        ) {
-            OutlinedButton(
-                modifier = Modifier
-                    .background(
-                        color = Color.Transparent, shape = RoundedCornerShape(40.dp)
-                    )
-                    .fillMaxWidth(),
-                onClick = Logout,
-            ) {
-
-                Text(
-                    color = Color.White, text = "Logout"
-                )
-            }
-        }
-    }
 }
 
 fun NavGraphBuilder.RegisterUserPath() {
