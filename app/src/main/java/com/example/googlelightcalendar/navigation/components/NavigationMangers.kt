@@ -24,13 +24,13 @@ abstract class NavigationManger(
     }
     fun navigate(
         navigation: NavigationDestinations,
-        parameters: Map<String, String> = emptyMap(),
+        arguments: Map<String, String> = emptyMap(),
     ){
         externalScope.launch {
             _navigationState.emit(
                 buildDestination(
                     navigation,
-                    parameters,
+                    arguments,
                 )
             )
         }

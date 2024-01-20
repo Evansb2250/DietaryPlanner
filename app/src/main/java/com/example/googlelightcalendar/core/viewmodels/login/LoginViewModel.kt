@@ -57,7 +57,7 @@ class LoginViewModel @Inject constructor(
     ) {
         navigationManager.navigate(
             navigation = NavigationDestinations.MainScreen,
-            parameters = mapOf(
+            arguments = mapOf(
                 "userId" to email
             ),
         )
@@ -78,7 +78,7 @@ class LoginViewModel @Inject constructor(
 
         navigationManager.navigate(
             navigation = NavigationDestinations.RegistrationPath,
-            parameters = parameters,
+            arguments = parameters,
         )
     }
 

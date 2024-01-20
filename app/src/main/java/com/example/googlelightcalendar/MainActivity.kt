@@ -8,6 +8,7 @@ import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -24,6 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -32,6 +34,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import com.example.googlelightcalendar.navigation.components.AuthNavManager
@@ -47,6 +50,7 @@ import com.example.googlelightcalendar.screens.register.RegistrationScreen
 import com.example.googlelightcalendar.ui.theme.GoogleLightCalendarTheme
 import com.example.googlelightcalendar.ui.theme.appColor
 import com.example.googlelightcalendar.ui.theme.yellowMain
+import com.example.googlelightcalendar.ui_components.ScreenUnavailable
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import javax.inject.Inject
@@ -217,27 +221,31 @@ private fun MainScreen(
                 )
             }
         }, bottomBar = {
-            NavigationBar(
-                containerColor = Color.White
-            ) {
-                screens.forEachIndexed { index, item ->
-                    NavigationBarItem(selected = selectedOption.value == index, onClick = {
-                        selectedOption.value = index
-                        navController.navigate(
-                            item.destination.replace("{userID}", userId)
-                        ) {
-                            this.launchSingleTop = true
-                        }
-                    }, icon = {
-                        Icon(
-                            painterResource(
-                                id = item.icon,
-                            ), contentDescription = null
+
+            if(screens.map { it.destination }.contains(navController.currentBackStackEntryAsState().value?.destination?.route)){
+                NavigationBar(
+                    containerColor = Color.White
+                ) {
+
+                    screens.forEachIndexed { index, item ->
+                        NavigationBarItem(selected = selectedOption.value == index, onClick = {
+                            selectedOption.value = index
+                            navController.navigate(
+                                item.destination.replace("{userID}", userId)
+                            ) {
+                                this.launchSingleTop = true
+                            }
+                        }, icon = {
+                            Icon(
+                                painterResource(
+                                    id = item.icon,
+                                ), contentDescription = null
+                            )
+                        }, colors = NavigationBarItemDefaults.colors(
+                            selectedIconColor = yellowMain, indicatorColor = Color.White
                         )
-                    }, colors = NavigationBarItemDefaults.colors(
-                        selectedIconColor = yellowMain, indicatorColor = Color.White
-                    )
-                    )
+                        )
+                    }
                 }
             }
         }) { innerPadding ->
@@ -268,36 +276,30 @@ private fun MainScreen(
 fun NavGraphBuilder.ProfileRoutes(
     logout: () -> Unit,
 ) {
-    composable(
-        route = ProfileRoutes.Profile.destination
-    ) {
-        ProfileScreen(
-            logout = logout,
-        )
-    }
+
 
     composable(
         route = ProfileRoutes.Account.destination
     ) {
-
+        ScreenUnavailable()
     }
 
     composable(
         route = ProfileRoutes.Notifications.destination
     ) {
-
+        ScreenUnavailable()
     }
 
     composable(
         route = ProfileRoutes.Calendar.destination
     ) {
-
+        ScreenUnavailable()
     }
 
     composable(
         route = ProfileRoutes.TOS.destination
     ) {
-
+        ScreenUnavailable()
     }
 }
 
@@ -350,8 +352,15 @@ fun NavGraphBuilder.MainScreenRoutes(
         )
     }
 
+    composable(
+        route = ProfileRoutes.Profile.destination
+    ) {
+        ProfileScreen(
+            logout = logout,
+        )
+    }
     ProfileRoutes(
-        logout = logout,
+        logout = {},
     )
 
 }
