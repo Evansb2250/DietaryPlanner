@@ -8,7 +8,6 @@ import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -23,20 +22,19 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
+import com.example.googlelightcalendar.core.main_screen.BottomNavViewModel
 import com.example.googlelightcalendar.navigation.components.AuthNavManager
 import com.example.googlelightcalendar.navigation.components.MainScreenNavManager
 import com.example.googlelightcalendar.navigation.components.MainScreenNavigation
@@ -62,9 +60,6 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var navAuthManager: AuthNavManager
 
-    @Inject
-    lateinit var mainScreenNavManager: MainScreenNavManager
-
     @RequiresApi(Build.VERSION_CODES.P)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,7 +70,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             GoogleLightCalendarTheme {
                 root(
-                    navAuthManager = navAuthManager, mainScreenNavManager = mainScreenNavManager
+                    navAuthManager = navAuthManager,
                 )
             }
         }
@@ -85,7 +80,7 @@ class MainActivity : ComponentActivity() {
 @RequiresApi(Build.VERSION_CODES.P)
 @Composable
 fun root(
-    navAuthManager: AuthNavManager, mainScreenNavManager: MainScreenNavManager
+    navAuthManager: AuthNavManager,
 ) {
     val navControl = rememberNavController()
 
@@ -126,7 +121,7 @@ fun root(
                 val email = it.arguments?.getString("userId") ?: " "
 
                 MainScreen(
-                    userId = email, navigationManager = mainScreenNavManager
+                    userId = email,
                 ) {
                     navControl.popBackStack()
                 }
@@ -140,38 +135,28 @@ fun root(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun MainScreen(
-    
-    navigationManager: MainScreenNavManager,
     userId: String,
     logout: () -> Unit = {},
 ) {
+
+    val vm = hiltViewModel<BottomNavViewModel>()
     val navController = rememberNavController()
 
 
-    var selectedOption = remember() {
-        mutableStateOf(0)
-    }
-
     //updates the bottomNavigationBar when user hits the back space bar.
-    navigationManager.onBackPressCallback = {
+    vm.setOnBackPressCallBack {
         navController.popBackStack(
             route = MainScreenNavigation.Home.destination,
             inclusive = false,
         )
-        //Needed to update the navigation Item when user hits the back button
-        selectedOption.value = when (navController.currentBackStackEntry?.destination?.route) {
-            MainScreenNavigation.Home.destination -> 0
-            MainScreenNavigation.Diary.destination -> 1
-            MainScreenNavigation.Calendar.destination -> 2
-            ProfileRoutes.Profile.destination -> 3
-            else -> {
-                0
-            }
-        }
+        vm.updateBottomBarTab(
+            navController.currentBackStackEntry?.destination?.route
+        )
     }
 
+
     //clear stack and logout
-    navigationManager.setLogCallBack {
+    vm.setLogoutCallBack {
         navController.clearBackStack(
             MainScreenNavigation.Home.destination,
         )
@@ -179,9 +164,9 @@ private fun MainScreen(
     }
 
     LaunchedEffect(
-        key1 = navigationManager.navigationState,
+        key1 = vm.navigationManager.navigationState,
     ) {
-        navigationManager.navigationState.collectLatest { navDirection ->
+        vm.navigationManager.navigationState.collectLatest { navDirection ->
             navController.navigate(navDirection.destination) {
                 this.launchSingleTop = true
             }
@@ -225,7 +210,6 @@ private fun MainScreen(
                 )
             }
         }, bottomBar = {
-
             if (screens.map { it.destination }
                     .contains(navController.currentBackStackEntryAsState().value?.destination?.route)) {
                 NavigationBar(
@@ -234,9 +218,9 @@ private fun MainScreen(
 
                     screens.forEachIndexed { index, item ->
                         NavigationBarItem(
-                            selected = selectedOption.value == index,
+                            selected = vm.selectedOption.value == index,
                             onClick = {
-                                selectedOption.value = index
+                                vm.selectedOption.value = index
                                 navController.navigate(
                                     item.destination.replace("{userID}", userId)
                                 ) {
@@ -267,7 +251,7 @@ private fun MainScreen(
             startDestination = MainScreenNavigation.Home.destination
         ) {
             MainScreenRoutes(
-                navigationManager
+                vm.navigationManager
             )
         }
 

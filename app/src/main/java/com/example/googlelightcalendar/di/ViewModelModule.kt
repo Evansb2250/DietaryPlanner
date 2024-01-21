@@ -1,5 +1,6 @@
 package com.example.googlelightcalendar.di
 
+import com.example.googlelightcalendar.core.main_screen.BottomNavViewModel
 import com.example.googlelightcalendar.core.profile_screen.ProfileViewModel
 import com.example.googlelightcalendar.core.registration.RegisterGoalViewModel
 import com.example.googlelightcalendar.core.registration.RegistrationViewModel
@@ -34,7 +35,7 @@ object ViewModelModule {
         userRepository: UserRepository,
         navigationManger: AuthNavManager,
     ): RegistrationViewModel {
-        return RegistrationViewModel (
+        return RegistrationViewModel(
             registrationCache = registrationCache,
             userRepository = userRepository,
             navigationManger = navigationManger,
@@ -54,6 +55,13 @@ object ViewModelModule {
     fun providesProfileViewModel(
         navigation: MainScreenNavManager
     ): ProfileViewModel = ProfileViewModel(
-       navigationManger =  navigation
+        navigationManger = navigation
+    )
+
+    @Provides
+    fun providesBottomNavViewModel(
+        navigationManger: MainScreenNavManager
+    ): BottomNavViewModel = BottomNavViewModel(
+        navigationManager = navigationManger,
     )
 }
