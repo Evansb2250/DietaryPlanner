@@ -21,14 +21,6 @@ class BottomNavViewModel @Inject constructor(
         navigationManager.onBackPressCallback = callBack
     }
 
-
-
-    fun setLogoutCallBack(
-        callBack: () -> Unit
-    ){
-        navigationManager.setLogCallBack(callBack)
-    }
-
     fun updateBottomBarTab(route: String? = null){
         //Needed to update the navigation Item when user hits the back button
         selectedOption.value = when (route) {

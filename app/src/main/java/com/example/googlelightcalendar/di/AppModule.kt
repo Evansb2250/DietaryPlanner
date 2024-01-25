@@ -61,15 +61,17 @@ class AppModule {
     @Singleton
     fun providesAuthNavigationManager(
         externalScope: CoroutineScope
-    ) : AuthNavManager = AuthNavManager(
+    ): AuthNavManager = AuthNavManager(
         externalScope
     )
 
     @Provides
     @Singleton
     fun providesMainScreenNavigationManager(
+        authNavManager: AuthNavManager,
         externalScope: CoroutineScope
-    ) : MainScreenNavManager = MainScreenNavManager(
+    ): MainScreenNavManager = MainScreenNavManager(
+        authNavManager,
         externalScope
     )
 

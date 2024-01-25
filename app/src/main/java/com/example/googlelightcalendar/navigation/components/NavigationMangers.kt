@@ -22,10 +22,11 @@ abstract class NavigationManger(
     fun onBackPress() {
         onBackPressCallback.invoke()
     }
+
     fun navigate(
         navigation: NavigationDestinations,
         arguments: Map<String, String> = emptyMap(),
-    ){
+    ) {
         externalScope.launch {
             _navigationState.emit(
                 buildDestination(
@@ -44,18 +45,13 @@ class AuthNavManager @Inject constructor(
 }
 
 class MainScreenNavManager @Inject constructor(
+    private val authNavManager: AuthNavManager,
     externalScope: CoroutineScope,
 ) : NavigationManger(externalScope) {
 
     override var onBackPressCallback: () -> Unit = {}
-    protected var logoutCallback: () -> Unit = {}
 
-    fun setLogCallBack(
-        callBack: () -> Unit
-    ){
-        logoutCallback = callBack
-    }
-    fun returnToTopOfStack(){
-        logoutCallback()
+    fun logout() {
+        authNavManager.onBackPress()
     }
 }

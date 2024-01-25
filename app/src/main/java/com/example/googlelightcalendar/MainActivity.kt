@@ -123,9 +123,7 @@ fun root(
 
                 MainScreen(
                     userId = email,
-                ) {
-                    navControl.popBackStack()
-                }
+                )
             }
 
             RegisterUserPath()
@@ -137,7 +135,6 @@ fun root(
 @Composable
 private fun MainScreen(
     userId: String,
-    logout: () -> Unit = {},
 ) {
 
     val vm = hiltViewModel<BottomNavViewModel>()
@@ -146,22 +143,24 @@ private fun MainScreen(
 
     //updates the bottomNavigationBar when user hits the back space bar.
     vm.setOnBackPressCallBack {
+        // Prevents stacking duplicate routes ontop of each other.
+        val backStackEntries = navController.currentBackStack.value.size
+        //takes the last one that was looked at, or it goes back to index 0
+        val route: String =
+            if (backStackEntries > 1) {
+                navController.currentBackStack.value[backStackEntries - 2].destination.route
+                    ?: MainScreenNavigation.Home.destination
+            } else {
+                MainScreenNavigation.Home.destination
+            }
+
         navController.popBackStack(
-            route = MainScreenNavigation.Home.destination,
+            route = route, // pop up to the last destination
             inclusive = false,
         )
         vm.updateBottomBarTab(
-            navController.currentBackStackEntry?.destination?.route
+            route
         )
-    }
-
-
-    //clear stack and logout
-    vm.setLogoutCallBack {
-        navController.clearBackStack(
-            MainScreenNavigation.Home.destination,
-        )
-        logout()
     }
 
     LaunchedEffect(

@@ -23,7 +23,7 @@ class ProfileViewModel @Inject constructor(
     }
 
     fun logout(){
-        navigationManger.returnToTopOfStack()
+        navigationManger.logout()
     }
     @OptIn(InternalCoroutinesApi::class)
     fun navigate(
