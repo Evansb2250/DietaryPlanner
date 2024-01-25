@@ -41,6 +41,7 @@ import com.example.googlelightcalendar.navigation.components.MainScreenNavigatio
 import com.example.googlelightcalendar.navigation.components.MainScreenNavigation.Companion.screens
 import com.example.googlelightcalendar.navigation.components.NavigationDestinations
 import com.example.googlelightcalendar.navigation.components.ProfileRoutes
+import com.example.googlelightcalendar.screens.food_diary.DiaryScreen
 import com.example.googlelightcalendar.screens.loginScreen.InitialScreen
 import com.example.googlelightcalendar.screens.profile.ProfileScreen
 import com.example.googlelightcalendar.screens.register.PhysicalDetailScreen
@@ -215,7 +216,6 @@ private fun MainScreen(
                 NavigationBar(
                     containerColor = Color.White
                 ) {
-
                     screens.forEachIndexed { index, item ->
                         NavigationBarItem(
                             selected = vm.selectedOption.value == index,
@@ -307,16 +307,7 @@ fun NavGraphBuilder.MainScreenRoutes(
     composable(
         route = MainScreenNavigation.Diary.destination
     ) {
-        BackHandler {
-            navigationManager.onBackPress()
-        }
-        Text(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(
-                    color = appColor,
-                ), text = "You are in the food"
-        )
+        DiaryScreen()
     }
 
     composable(
