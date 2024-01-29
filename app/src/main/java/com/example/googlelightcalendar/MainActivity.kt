@@ -28,6 +28,7 @@ import com.example.googlelightcalendar.screens.loginScreen.InitialScreen
 import com.example.googlelightcalendar.ui.theme.GoogleLightCalendarTheme
 import com.example.googlelightcalendar.ui.theme.appColor
 import com.example.googlelightcalendar.ui_components.bottomBar.ChooseUBottomBar
+import com.example.googlelightcalendar.ui_components.toolbar.ChooseUToolBar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import javax.inject.Inject
@@ -112,7 +113,6 @@ private fun root(
 private fun MainScreen(
     userId: String,
 ) {
-
     val vm = hiltViewModel<MainScreenViewModel>()
     val navController = rememberNavController()
 
@@ -152,6 +152,13 @@ private fun MainScreen(
         modifier = Modifier.background(
             color = appColor,
         ),
+        topBar = {
+            ChooseUToolBar(
+                toolBarState = vm._toolBarState,
+                navigateBack = { /*TODO*/ },
+                navigateToActionDestination = {}
+            )
+        },
         bottomBar = {
             if (screens.map { it.destination }
                     .contains(navController.currentBackStackEntryAsState().value?.destination?.route)) {
@@ -179,9 +186,7 @@ private fun MainScreen(
             navController = navController,
             startDestination = MainScreenNavigation.Home.destination
         ) {
-            MainScreenRoutes(
-                vm.navigationManager
-            )
+            MainScreenRoutes()
         }
 
     }

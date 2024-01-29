@@ -16,43 +16,63 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.googlelightcalendar.core.toolBarStates.LeadingIcon
 import com.example.googlelightcalendar.core.toolBarStates.ToolBarState
-import com.example.googlelightcalendar.core.toolBarStates.TrailingIcon
 import com.example.googlelightcalendar.navigation.components.NavigationDestinations
 import com.example.googlelightcalendar.ui.theme.appColor
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChooseUToolBar(
     toolBarState: ToolBarState,
     navigateBack: () -> Unit,
     navigateToActionDestination: (NavigationDestinations) -> Unit,
 ) {
-        Row(
-            modifier = Modifier.background(
-                color = appColor,
-            ),
-        ) {
-            when (toolBarState) {
-                is ToolBarState.Navigated -> {
-                    ChooseUToolBarContent(
-                        leadingIcon = toolBarState.leadingIcon,
-                        headline = toolBarState.headline,
-                        trailingIcon = toolBarState.trailingIcon,
-                        navigateBack = navigateBack,
-                        navigateToActionDestination = navigateToActionDestination
-                    )
-                }
 
-                is ToolBarState.Home -> {
-                    ChooseUToolBarContent(
-                        leadingIcon = toolBarState.leadingIcon,
-                        trailingIcon = toolBarState.trailingIcon,
-                        navigateBack = navigateBack,
-                        navigateToActionDestination = navigateToActionDestination
-                    )
-                }
+    Row(
+        modifier = Modifier.background(
+            color = appColor,
+        ),
+    ) {
+        when (toolBarState) {
+            is ToolBarState.Navigated -> {
+                ChooseUToolBarContent(
+                    leadingIcon = toolBarState.leadingIcon,
+                    headline = toolBarState.headline,
+                    navigateBack = navigateBack,
+                    trailingIcon = {
+                        Image(
+                            modifier = Modifier.clickable(
+                                onClick = { navigateToActionDestination(toolBarState.trailingIcon.destinations) }
+                            ),
+                            painter = painterResource(
+                                id = toolBarState.trailingIcon.drawable,
+                            ),
+                            contentDescription = ""
+                        )
+                    },
+                )
+            }
+
+            is ToolBarState.Home -> {
+                ChooseUToolBarContent(
+                    leadingIcon = toolBarState.leadingIcon,
+                    navigateBack = navigateBack,
+                    trailingIcon = {
+                        if (toolBarState.showTrailingIcon) {
+                            //TODO add code to have badge icon.
+                            Image(
+                                modifier = Modifier.clickable(
+                                    onClick = { navigateToActionDestination(toolBarState.trailingIcon.destinations) }
+                                ),
+                                painter = painterResource(
+                                    id = toolBarState.trailingIcon.drawable,
+                                ),
+                                contentDescription = ""
+                            )
+                        }
+                    },
+                )
             }
         }
+    }
 }
 
 
@@ -61,46 +81,36 @@ fun ChooseUToolBar(
 fun ChooseUToolBarContent(
     leadingIcon: LeadingIcon,
     headline: String = "",
-    trailingIcon: TrailingIcon,
-    navigateBack: () -> Unit,
-    navigateToActionDestination: (NavigationDestinations) -> Unit,
+    trailingIcon: @Composable () -> Unit,
+    navigateBack: () -> Unit
 ) {
-
-        TopAppBar(
-            modifier = Modifier.padding(
-                horizontal = 12.dp,
-            ),
-            colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = appColor,
-            ),
-            navigationIcon = {
-                Image(
-                    modifier = Modifier.clickable(
-                        enabled = leadingIcon.clickable,
-                        onClick = navigateBack
-                    ),
-                    painter = painterResource(
-                        id = leadingIcon.drawable,
-                    ),
-                    contentDescription = ""
-                )
-            },
-            title = {
-                Text(
-                    color = Color.White,
-                    text = headline
-                )
-            },
-            actions = {
-                Image(
-                    modifier = Modifier.clickable(
-                        onClick = { navigateToActionDestination(trailingIcon.destinations) }
-                    ),
-                    painter = painterResource(
-                        id = trailingIcon.drawable,
-                    ),
-                    contentDescription = ""
-                )
-            }
-        )
+    TopAppBar(
+        modifier = Modifier.padding(
+            horizontal = 12.dp,
+        ),
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = appColor,
+        ),
+        navigationIcon = {
+            Image(
+                modifier = Modifier.clickable(
+                    enabled = leadingIcon.clickable,
+                    onClick = navigateBack
+                ),
+                painter = painterResource(
+                    id = leadingIcon.drawable,
+                ),
+                contentDescription = ""
+            )
+        },
+        title = {
+            Text(
+                color = Color.White,
+                text = headline
+            )
+        },
+        actions = {
+            trailingIcon()
+        }
+    )
 }

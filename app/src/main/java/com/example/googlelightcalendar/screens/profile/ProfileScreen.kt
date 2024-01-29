@@ -30,11 +30,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.googlelightcalendar.R
 import com.example.googlelightcalendar.core.profile_screen.ProfileViewModel
-import com.example.googlelightcalendar.core.toolBarStates.ToolBarState
-import com.example.googlelightcalendar.screens.loginScreen.sidePadding
 import com.example.googlelightcalendar.ui.theme.appColor
 import com.example.googlelightcalendar.ui_components.custom_layout.CustomRowLayout
-import com.example.googlelightcalendar.ui_components.toolbar.ChooseUToolBar
 
 @Preview(
     showBackground = true
@@ -49,6 +46,7 @@ fun ProfileScreen(
         vm.onBackPress()
     }
 
+    //Used to prevent taping more than one option at a time.
     val unlocked = rememberSaveable {
         mutableStateOf(true)
     }
@@ -64,13 +62,6 @@ fun ProfileScreen(
             .background(
                 color = appColor,
             ),
-        topBar = {
-            ChooseUToolBar(
-                toolBarState = ToolBarState.Home,
-                navigateBack = {},
-                navigateToActionDestination = {},
-            )
-        }
     ){ it ->
         Box(
             modifier = Modifier

@@ -8,7 +8,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.googlelightcalendar.core.toolBarStates.ToolBarState
 import com.example.googlelightcalendar.navigation.components.MainScreenNavManager
 import com.example.googlelightcalendar.navigation.components.MainScreenNavigation
-import com.example.googlelightcalendar.navigation.components.NavigationDestinations
 import com.example.googlelightcalendar.navigation.components.ProfileRoutes
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -19,11 +18,10 @@ class MainScreenViewModel @Inject constructor(
     val navigationManager: MainScreenNavManager,
 ) : ViewModel() {
 
-    var _toolBarState by mutableStateOf(ToolBarState.Home)
+    var _toolBarState by mutableStateOf(ToolBarState.Home())
         private set
 
-    var isToolBarVisible by mutableStateOf(true)
-        private set
+
     var selectedOption by mutableStateOf(0)
         private set
 
@@ -36,13 +34,9 @@ class MainScreenViewModel @Inject constructor(
     }
 
 
-    fun navigateToAction(destinations: NavigationDestinations) {
-        //    mainScreenNavManager.navigate(destinations)
-    }
-
     fun navigateBack() {
         //returns the old view of the ToolBar
-        _toolBarState = ToolBarState.Home
+        _toolBarState = ToolBarState.Home()
     }
 
 
@@ -67,38 +61,39 @@ class MainScreenViewModel @Inject constructor(
         //Needed to update the navigation Item when user hits the back button
         selectedOption = when (route) {
             MainScreenNavigation.Home.destination -> {
-                showToolBar()
+                _toolBarState = ToolBarState.Home(
+                    showTrailingIcon = true
+                )
                 0
             }
 
             MainScreenNavigation.Diary.destination -> {
-                hideToolBar()
+                _toolBarState = ToolBarState.Home(
+                    showTrailingIcon = true
+                )
                 1
             }
 
             MainScreenNavigation.Calendar.destination -> {
-                hideToolBar()
+                _toolBarState = ToolBarState.Home(
+                    showTrailingIcon = true
+                )
                 2
             }
 
             ProfileRoutes.Profile.destination -> {
-                hideToolBar()
+                _toolBarState = ToolBarState.Home(
+                    showTrailingIcon = false
+                )
                 3
             }
 
             else -> {
-                showToolBar()
+                _toolBarState = ToolBarState.Home(
+                    showTrailingIcon = true
+                )
                 0
             }
         }
-    }
-
-
-    private fun hideToolBar() {
-        isToolBarVisible = false
-    }
-
-    private fun showToolBar() {
-        isToolBarVisible = true
     }
 }

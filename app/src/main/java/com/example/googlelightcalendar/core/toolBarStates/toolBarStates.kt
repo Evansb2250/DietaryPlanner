@@ -20,11 +20,12 @@ sealed class ToolBarState(
             drawable = R.drawable.notification_bell,
             destinations = MainScreenNavigation.NotificationScreen,
         ),
-    ) {
+    )
 
-    }
-
-    object Home : ToolBarState(
+    data class Home(
+        val showNotificationBadge: Boolean = false,
+        var showTrailingIcon: Boolean = true,
+    ) : ToolBarState(
         leadingIcon = LeadingIcon(
             R.drawable.logo3,
             clickable = false,
