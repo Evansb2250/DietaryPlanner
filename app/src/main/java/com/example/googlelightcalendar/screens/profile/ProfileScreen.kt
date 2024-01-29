@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -29,9 +30,11 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.googlelightcalendar.R
 import com.example.googlelightcalendar.core.profile_screen.ProfileViewModel
+import com.example.googlelightcalendar.core.toolBarStates.ToolBarState
 import com.example.googlelightcalendar.screens.loginScreen.sidePadding
 import com.example.googlelightcalendar.ui.theme.appColor
 import com.example.googlelightcalendar.ui_components.custom_layout.CustomRowLayout
+import com.example.googlelightcalendar.ui_components.toolbar.ChooseUToolBar
 
 @Preview(
     showBackground = true
@@ -46,102 +49,116 @@ fun ProfileScreen(
         vm.onBackPress()
     }
 
-    val unlocked = rememberSaveable{
+    val unlocked = rememberSaveable {
         mutableStateOf(true)
     }
 
-    LaunchedEffect(key1 = unlocked){
-        if (!unlocked.value){
+    LaunchedEffect(key1 = unlocked) {
+        if (!unlocked.value) {
             unlocked.value = true
         }
     }
-
-    Box(
+    Scaffold(
         modifier = Modifier
+            .fillMaxSize()
             .background(
                 color = appColor,
+            ),
+        topBar = {
+            ChooseUToolBar(
+                toolBarState = ToolBarState.Home,
+                navigateBack = {},
+                navigateToActionDestination = {},
             )
-            .padding(sidePadding)
-            .fillMaxSize(),
-        contentAlignment = Alignment.TopCenter
-    ) {
-        Column(
-            modifier = Modifier
-                .padding(
-                    vertical = 16.dp,
-                )
-                .wrapContentHeight(),
-            verticalArrangement = Arrangement.SpaceBetween,
-        ) {
-            state.items.forEach {
-                CustomRowLayout(
-                    leadingIcon = {
-                        Image(
-                            painter = painterResource(
-                                id = it.leadingIconId
-                            ),
-                            contentDescription = ""
-                        )
-                    },
-                    title = {
-                        Text(
-                            color = Color.White,
-                            text = it.text,
-                        )
-                    },
-                    trailingIcon = {
-                        Image(
-                            painter = painterResource(
-                                id = it.trailingIconId
-                            ),
-                            contentDescription = ""
-                        )
-                    }
-                ) {
-                    if (unlocked.value) {
-                        vm.navigate(it.destination)
-                        unlocked.value = false
-                    }
-                }
-                Spacer(modifier = Modifier.size(25.dp))
-            }
         }
+    ){ it ->
         Box(
             modifier = Modifier
-                .padding(
-                    vertical = 16.dp
-                )
-                .fillMaxSize(),
-            contentAlignment = Alignment.BottomCenter
+                .padding(it)
+                .background(
+                    color = appColor,
+                ),
+            contentAlignment = Alignment.TopCenter
         ) {
-            OutlinedButton(
+            Column(
                 modifier = Modifier
-                    .height(
-                        52.dp,
+                    .padding(
+                        vertical = 16.dp,
                     )
-                    .fillMaxWidth(),
-                onClick = vm::logout
+                    .wrapContentHeight(),
+                verticalArrangement = Arrangement.SpaceBetween,
             ) {
-                Image(
-                    modifier = Modifier.padding(
-                        horizontal = 4.dp,
-                    ),
-                    painter = painterResource(
-                        id = R.drawable.exit_icon,
-                    ),
-                    contentDescription = ""
-                )
-                Text(
+                state.items.forEach {
+                    CustomRowLayout(
+                        leadingIcon = {
+                            Image(
+                                painter = painterResource(
+                                    id = it.leadingIconId
+                                ),
+                                contentDescription = ""
+                            )
+                        },
+                        title = {
+                            Text(
+                                color = Color.White,
+                                text = it.text,
+                            )
+                        },
+                        trailingIcon = {
+                            Image(
+                                painter = painterResource(
+                                    id = it.trailingIconId
+                                ),
+                                contentDescription = ""
+                            )
+                        }
+                    ) {
+                        if (unlocked.value) {
+                            vm.navigate(it.destination)
+                            unlocked.value = false
+                        }
+                    }
+                    Spacer(modifier = Modifier.size(25.dp))
+                }
+            }
+            Box(
+                modifier = Modifier
+                    .padding(
+                        vertical = 16.dp
+                    )
+                    .fillMaxSize(),
+                contentAlignment = Alignment.BottomCenter
+            ) {
+                OutlinedButton(
                     modifier = Modifier
-                        .align(
-                            alignment = Alignment.CenterVertically
+                        .height(
+                            52.dp,
+                        )
+                        .fillMaxWidth(),
+                    onClick = vm::logout
+                ) {
+                    Image(
+                        modifier = Modifier.padding(
+                            horizontal = 4.dp,
                         ),
-                    color = Color.White,
-                    text = "Sign Out",
-                )
+                        painter = painterResource(
+                            id = R.drawable.exit_icon,
+                        ),
+                        contentDescription = ""
+                    )
+                    Text(
+                        modifier = Modifier
+                            .align(
+                                alignment = Alignment.CenterVertically
+                            ),
+                        color = Color.White,
+                        text = "Sign Out",
+                    )
+                }
             }
         }
     }
+
 }
 
 

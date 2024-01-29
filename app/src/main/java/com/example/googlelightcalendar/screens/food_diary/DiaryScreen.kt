@@ -40,23 +40,36 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import com.example.googlelightcalendar.R
+import com.example.googlelightcalendar.core.toolBarStates.ToolBarState
 import com.example.googlelightcalendar.screens.loginScreen.sidePadding
 import com.example.googlelightcalendar.ui.theme.appColor
 import com.example.googlelightcalendar.ui.theme.yellowMain
+import com.example.googlelightcalendar.ui_components.toolbar.ChooseUToolBar
 
 @Preview(
     showBackground = true,
 )
 @Composable
 fun DiaryScreen() {
-    Scaffold { it ->
-        Column {
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        topBar = {
+            ChooseUToolBar(
+                toolBarState = ToolBarState.Home,
+                navigateBack = {},
+                navigateToActionDestination = {},
+            )
+        }
+    ) { it ->
+        Column(
+            modifier = Modifier.padding(it)
+        ) {
+
             Header()
             LazyColumn(
                 modifier = Modifier
                     .background(color = appColor)
                     .padding(sidePadding)
-                    .fillMaxSize()
             ) {
                 MealItem(
                     title = "Breakfast",

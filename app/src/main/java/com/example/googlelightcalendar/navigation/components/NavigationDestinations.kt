@@ -33,8 +33,14 @@ sealed class NavigationDestinations(
     )
 }
 
-abstract class MainScreenNavigation(
+val screens = listOf(
+    MainScreenNavigation.Home,
+    MainScreenNavigation.Diary,
+    MainScreenNavigation.Calendar,
+    Profile,
+)
 
+sealed class MainScreenNavigation(
     override val destination: String,
     override val arguments: List<String> = emptyList()
 ) : NavigationDestinations(
@@ -66,14 +72,13 @@ abstract class MainScreenNavigation(
         override val iconDescription: String = ""
     }
 
-    companion object {
-        val screens = listOf(
-            Home,
-            Diary,
-            Calendar,
-            Profile,
-        )
-
+    object NotificationScreen : MainScreenNavigation(
+        destination = "NotificationScreen/{userId}",
+    ) {
+        override val icon: Int
+            get() = TODO("Not yet implemented")
+        override val iconDescription: String
+            get() = TODO("Not yet implemented")
     }
 }
 

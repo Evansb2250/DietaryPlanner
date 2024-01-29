@@ -32,9 +32,9 @@ class LoginViewModel @Inject constructor(
         Constants.SCOPE_PROFILE,
         Constants.SCOPE_EMAIL,
         Constants.SCOPE_OPENID,
-        Constants.CALENDAR_SCOPE,
-        Constants.CALENDAR_EVENTS,
-        Constants.CALENDAR_READ_ONLY,
+//        Constants.CALENDAR_SCOPE,
+//        Constants.CALENDAR_EVENTS,
+//        Constants.CALENDAR_READ_ONLY,
     )
 
     private val _state: MutableStateFlow<LoginScreenStates> = MutableStateFlow(
