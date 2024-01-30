@@ -34,15 +34,15 @@ android {
             useSupportLibrary = true
         }
 
-        val myPropert = Properties()
-        myPropert.load(
-            project.file("C:\\Users\\samue\\GoogleLightCalendar\\private_keys.properties")
-                .inputStream()
-        )
-
-        val clientSecret = myPropert.getProperty("client")
-        if (clientSecret != null)
-            buildConfigField("String", "CLIENT_SECRET", "\"$clientSecret\"")
+//        val myPropert = Properties()
+//        myPropert.load(
+//            project.file("C:\\Users\\samue\\GoogleLightCalendar\\private_keys.properties")
+//                .inputStream()
+//        )
+//
+////        val clientSecret = myPropert.getProperty("client")
+////        if (clientSecret != null)
+////            buildConfigField("String", "CLIENT_SECRET", "\"$clientSecret\"")
 
     }
 
