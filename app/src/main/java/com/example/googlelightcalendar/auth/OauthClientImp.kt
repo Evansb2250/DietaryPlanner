@@ -9,6 +9,7 @@ import androidx.activity.result.ActivityResultLauncher
 import com.auth0.android.jwt.JWT
 import com.example.googlelightcalendar.BuildConfig
 import com.example.googlelightcalendar.common.Constants
+import com.example.googlelightcalendar.common.Constants.Companion.CLIENT_SECRET
 import com.example.googlelightcalendar.core.TokenManager
 import com.example.googlelightcalendar.domain.User
 import com.example.googlelightcalendar.utils.AsyncResponse
@@ -116,7 +117,7 @@ class OauthClientImp @Inject constructor(
         try {
             val builder = AuthorizationRequest.Builder(
                 oauthState.getAuthServiceConfig(),
-                BuildConfig.CLIENT_SECRET,
+                CLIENT_SECRET,
                 ResponseTypeValues.CODE,
                 Uri.parse(Constants.URL_AUTH_REDIRECT)
             ).setCodeVerifier(
@@ -197,7 +198,7 @@ class OauthClientImp @Inject constructor(
                 transport,
                 json
             ).setAudience(
-                Collections.singleton(BuildConfig.CLIENT_SECRET)
+                Collections.singleton(CLIENT_SECRET)
             ).build()
 
             val idToken = verifier.verify(tokenId)
