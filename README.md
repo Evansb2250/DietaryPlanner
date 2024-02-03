@@ -47,3 +47,4 @@ Caching Strategy: Ensuring data is up-to-date and providing offline functionalit
 We have ambitious plans for further development, including enhancing the user interface, adding more features, and improving overall user experience. Stay tuned for updates and new releases!
 
 Thank you for your interest in our Meal Planning Application. We look forward to helping you achieve your dietary and nutrition goals.
+
