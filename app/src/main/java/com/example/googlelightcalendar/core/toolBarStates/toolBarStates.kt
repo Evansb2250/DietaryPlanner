@@ -2,7 +2,7 @@ package com.example.googlelightcalendar.core.toolBarStates
 
 import androidx.annotation.DrawableRes
 import com.example.googlelightcalendar.R
-import com.example.googlelightcalendar.navigation.components.MainScreenNavigation
+import com.example.googlelightcalendar.navigation.components.MainScreenNavigations
 
 sealed class ToolBarState(
     val leadingIcon: LeadingIcon,
@@ -18,12 +18,11 @@ sealed class ToolBarState(
         headline = title,
         trailingIcon = TrailingIcon(
             drawable = R.drawable.notification_bell,
-            destinations = MainScreenNavigation.NotificationScreen,
+            destinations = MainScreenNavigations.NotificationScreen,
         ),
     )
 
     data class Home(
-        val showNotificationBadge: Boolean = false,
         var showTrailingIcon: Boolean = true,
     ) : ToolBarState(
         leadingIcon = LeadingIcon(
@@ -32,7 +31,7 @@ sealed class ToolBarState(
         ),
         trailingIcon = TrailingIcon(
             drawable = R.drawable.notification_bell,
-            destinations = MainScreenNavigation.NotificationScreen,
+            destinations = MainScreenNavigations.NotificationScreen,
         ),
     )
 }
@@ -48,5 +47,5 @@ data class Headline(
 
 data class TrailingIcon(
     @DrawableRes val drawable: Int,
-    val destinations: MainScreenNavigation,
+    val destinations: MainScreenNavigations,
 )

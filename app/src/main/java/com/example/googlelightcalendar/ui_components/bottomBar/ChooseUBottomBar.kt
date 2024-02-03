@@ -7,25 +7,24 @@ import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import com.example.googlelightcalendar.navigation.components.MainScreenNavigation
-import com.example.googlelightcalendar.navigation.components.screens
+import com.example.googlelightcalendar.navigation.components.BottomNavBarDestinations
 import com.example.googlelightcalendar.ui.theme.yellowMain
 
 @Composable
 fun ChooseUBottomBar(
+    tabs: List<BottomNavBarDestinations>,
     tabPosition: Int,
     onClick: (
-        tabIndex: Int,
-        item: MainScreenNavigation,
-    ) -> Unit = { _, _ -> },
+        item: BottomNavBarDestinations,
+    ) -> Unit = {},
 ) {
     NavigationBar(
         containerColor = Color.White
     ) {
-        screens.forEachIndexed { index, item ->
+        tabs.forEach{  item ->
             NavigationBarItem(
-                selected = tabPosition == index,
-                onClick = { onClick(index, item) },
+                selected = tabPosition == item.routeId,
+                onClick = { onClick(item) },
                 icon = {
                     Icon(
                         painterResource(

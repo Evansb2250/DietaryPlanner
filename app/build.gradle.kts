@@ -33,22 +33,12 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
-
-//        val myPropert = Properties()
-//        myPropert.load(
-//            project.file("C:\\Users\\samue\\GoogleLightCalendar\\private_keys.properties")
-//                .inputStream()
-//        )
-//
-////        val clientSecret = myPropert.getProperty("client")
-////        if (clientSecret != null)
-////            buildConfigField("String", "CLIENT_SECRET", "\"$clientSecret\"")
-
     }
 
     buildTypes {
         release {
             isMinifyEnabled = true
+            isDebuggable = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"

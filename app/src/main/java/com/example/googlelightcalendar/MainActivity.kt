@@ -3,6 +3,7 @@ package com.example.googlelightcalendar
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
@@ -15,20 +16,17 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.googlelightcalendar.core.main_screen.MainScreenViewModel
+import com.example.googlelightcalendar.core.main_screen.BottomNavViewModel
 import com.example.googlelightcalendar.navigation.components.AuthNavManager
-import com.example.googlelightcalendar.navigation.components.MainScreenNavigation
+import com.example.googlelightcalendar.navigation.components.BottomNavBarDestinations
 import com.example.googlelightcalendar.navigation.components.NavigationDestinations
-import com.example.googlelightcalendar.navigation.components.screens
 import com.example.googlelightcalendar.navigation.routes.MainScreenRoutes
 import com.example.googlelightcalendar.navigation.routes.RegisterUserRoutes
 import com.example.googlelightcalendar.screens.loginScreen.InitialScreen
 import com.example.googlelightcalendar.ui.theme.GoogleLightCalendarTheme
 import com.example.googlelightcalendar.ui.theme.appColor
 import com.example.googlelightcalendar.ui_components.bottomBar.ChooseUBottomBar
-import com.example.googlelightcalendar.ui_components.toolbar.ChooseUToolBar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import javax.inject.Inject
@@ -113,35 +111,23 @@ private fun root(
 private fun MainScreen(
     userId: String,
 ) {
-    val vm = hiltViewModel<MainScreenViewModel>()
+    val vm = hiltViewModel<BottomNavViewModel>()
     val navController = rememberNavController()
+    //Overrides the onBack handler to force user to logout.
+    BackHandler {
 
-    //updates the bottomNavigationBar when user hits the back space bar.
-    vm.setOnBackPressCallBack {
-        // Prevents stacking duplicate routes ontop of each other.
-        val backStackEntries = navController.currentBackStack.value.size
-        //takes the last one that was looked at, or it goes back to index 0
-        val route: String =
-            if (backStackEntries > 1) {
-                navController.currentBackStack.value[backStackEntries - 2].destination.route
-                    ?: MainScreenNavigation.Home.destination
-            } else {
-                MainScreenNavigation.Home.destination
-            }
-
-        navController.popBackStack(
-            route = route, // pop up to the last destination
-            inclusive = false,
-        )
-        vm.updateBottomBarTab(
-            route
-        )
     }
+
+    LaunchedEffect(key1 = userId){
+        vm.resetNavBarTab()
+    }
+
 
     LaunchedEffect(
         key1 = vm.navigationManager.navigationState,
     ) {
         vm.navigationManager.navigationState.collectLatest { navDirection ->
+            navController.popBackStack()
             navController.navigate(navDirection.destination) {
                 this.launchSingleTop = true
             }
@@ -152,21 +138,12 @@ private fun MainScreen(
         modifier = Modifier.background(
             color = appColor,
         ),
-        topBar = {
-            ChooseUToolBar(
-                toolBarState = vm._toolBarState,
-                navigateBack = { /*TODO*/ },
-                navigateToActionDestination = {}
-            )
-        },
         bottomBar = {
-            if (screens.map { it.destination }
-                    .contains(navController.currentBackStackEntryAsState().value?.destination?.route)) {
                 ChooseUBottomBar(
+                    tabs = vm.navigationsTabs,
                     tabPosition = vm.selectedOption,
-                    onClick = { index, item ->
+                    onClick = { item ->
                         vm.navigate(
-                            index,
                             item,
                             arguments = mapOf(
                                 "userID" to userId
@@ -174,7 +151,6 @@ private fun MainScreen(
                         )
                     }
                 )
-            }
         }) { innerPadding ->
         NavHost(
             modifier = Modifier
@@ -184,10 +160,9 @@ private fun MainScreen(
                     color = appColor
                 ),
             navController = navController,
-            startDestination = MainScreenNavigation.Home.destination
+            startDestination = vm.navigationsTabs.get(0).destination
         ) {
             MainScreenRoutes()
         }
-
     }
 }

@@ -1,34 +1,57 @@
 package com.example.googlelightcalendar.navigation.routes
 
+import androidx.compose.material3.Scaffold
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import com.example.googlelightcalendar.navigation.components.MainScreenNavigation
+import com.example.googlelightcalendar.core.toolBarStates.ToolBarState
+import com.example.googlelightcalendar.navigation.components.BottomNavBarDestinations
 import com.example.googlelightcalendar.screens.food_diary.DiaryScreen
 import com.example.googlelightcalendar.screens.profile.ProfileScreen
 import com.example.googlelightcalendar.ui_components.ScreenUnavailable
+import com.example.googlelightcalendar.ui_components.toolbar.ChooseUToolBar
 
 fun NavGraphBuilder.MainScreenRoutes(
 ) {
     composable(
-        route = MainScreenNavigation.Home.destination
+        route = BottomNavBarDestinations.Home.destination
     ) {
-        ScreenUnavailable()
+        Scaffold(
+            topBar = {
+                ChooseUToolBar(
+                    toolBarState = ToolBarState.Home(),
+                    navigateBack = { /*TODO*/ },
+                    navigateToActionDestination = {}
+                )
+            }
+        ) { it ->
+            ScreenUnavailable()
+        }
     }
 
     composable(
-        route = MainScreenNavigation.Diary.destination
+        route = BottomNavBarDestinations.Diary.destination
     ) {
         DiaryScreen()
     }
 
     composable(
-        route = MainScreenNavigation.Calendar.destination
+        route = BottomNavBarDestinations.Calendar.destination
     ) {
-        ScreenUnavailable()
+        Scaffold(
+            topBar = {
+                ChooseUToolBar(
+                    toolBarState = ToolBarState.Home(),
+                    navigateBack = { /*TODO*/ },
+                    navigateToActionDestination = {}
+                )
+            }
+        ) { it ->
+            ScreenUnavailable()
+        }
     }
 
     composable(
-        route = com.example.googlelightcalendar.navigation.components.ProfileRoutes.Profile.destination
+        route = BottomNavBarDestinations.Profile.destination
     ) {
         ProfileScreen()
     }

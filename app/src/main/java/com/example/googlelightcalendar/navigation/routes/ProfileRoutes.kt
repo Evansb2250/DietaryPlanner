@@ -3,7 +3,7 @@ package com.example.googlelightcalendar.navigation.routes
 import androidx.compose.material3.Text
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import com.example.googlelightcalendar.navigation.components.MainScreenNavigation
+import com.example.googlelightcalendar.navigation.components.MainScreenNavigations
 import com.example.googlelightcalendar.ui_components.ScreenUnavailable
 
 fun NavGraphBuilder.ProfileRoutes() {
@@ -32,7 +32,7 @@ fun NavGraphBuilder.ProfileRoutes() {
     }
 
     composable(
-        route = MainScreenNavigation.NotificationScreen.destination
+        route = MainScreenNavigations.NotificationScreen.destination
     ) {
         Text(text = "Notification")
     }

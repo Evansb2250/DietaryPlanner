@@ -35,10 +35,12 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import com.example.googlelightcalendar.R
+import com.example.googlelightcalendar.core.toolBarStates.ToolBarState
 import com.example.googlelightcalendar.screens.loginScreen.sidePadding
 import com.example.googlelightcalendar.ui.theme.appColor
 import com.example.googlelightcalendar.ui.theme.yellowMain
 import com.example.googlelightcalendar.ui_components.mealItem.MealItem
+import com.example.googlelightcalendar.ui_components.toolbar.ChooseUToolBar
 
 @Preview(
     showBackground = true,
@@ -47,6 +49,13 @@ import com.example.googlelightcalendar.ui_components.mealItem.MealItem
 fun DiaryScreen() {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
+        topBar = {
+            ChooseUToolBar(
+                toolBarState = ToolBarState.Home(),
+                navigateBack = { /*TODO*/ },
+                navigateToActionDestination = {}
+            )
+        }
     ) { it ->
         Column(
             modifier = Modifier.padding(it)

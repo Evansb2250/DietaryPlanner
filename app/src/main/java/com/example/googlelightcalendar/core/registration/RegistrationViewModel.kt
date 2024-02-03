@@ -2,7 +2,9 @@ package com.example.googlelightcalendar.core.registration
 
 import android.content.Intent
 import androidx.activity.result.ActivityResultLauncher
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.googlelightcalendar.common.Constants
@@ -56,10 +58,10 @@ class RegistrationViewModel @Inject constructor(
         if (                   //state.registrationComplete()
             true
         ) {
-            registrationCache.storeKey(RegistrationKeys.FirstName, state.firstName.value)
-            registrationCache.storeKey(RegistrationKeys.LASTNAME, state.lastName.value)
-            registrationCache.storeKey(RegistrationKeys.EMAIL, state.email.value)
-            registrationCache.storeKey(RegistrationKeys.PASSWORD, state.password.value)
+            registrationCache.storeKey(RegistrationKeys.FirstName, state.firstName)
+            registrationCache.storeKey(RegistrationKeys.LASTNAME, state.lastName)
+            registrationCache.storeKey(RegistrationKeys.EMAIL, state.email)
+            registrationCache.storeKey(RegistrationKeys.PASSWORD, state.password)
 
             navigateNextPage()
             reset()
@@ -136,26 +138,26 @@ sealed class InitialRegistrationState {
         private val initialFailedLoginState: Failed = Failed()
     ) : InitialRegistrationState() {
 
-        var firstName = mutableStateOf(initialFirstName)
-        var lastName = mutableStateOf(initialLastName)
-        var email = mutableStateOf(initialEmail)
-        var password = mutableStateOf(initialPassword)
-        var failedSignUp = mutableStateOf(initialFailedLoginState)
+        var firstName by mutableStateOf(initialFirstName)
+        var lastName by mutableStateOf(initialLastName)
+        var email by mutableStateOf(initialEmail)
+        var password by mutableStateOf(initialPassword)
+        var failedSignUp by mutableStateOf(initialFailedLoginState)
 
         fun containsValidFirstName(): Boolean {
-            return TextFieldUtils.isValidName(firstName.value)
+            return TextFieldUtils.isValidName(firstName)
         }
 
         fun containsValidLastName(): Boolean {
-            return TextFieldUtils.isValidName(lastName.value)
+            return TextFieldUtils.isValidName(lastName)
         }
 
         fun containsValidEmail(): Boolean {
-            return TextFieldUtils.isValidEmail(email.value)
+            return TextFieldUtils.isValidEmail(email)
         }
 
         fun containsValidPassword(): Boolean {
-            return TextFieldUtils.isValidPassword(password.value)
+            return TextFieldUtils.isValidPassword(password)
         }
 
         fun registrationComplete(): Boolean {

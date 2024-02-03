@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -73,10 +74,10 @@ private fun RegistrationScreenContent(
         verticalArrangement = Arrangement.spacedBy(15.dp),
     ) {
 
-        if (registrationState.failedSignUp.value.isError) {
+        if (registrationState.failedSignUp.isError) {
             ErrorAlertDialog(
                 title = "Error",
-                error = registrationState.failedSignUp.value.errorMessage ?: "unkown",
+                error = registrationState.failedSignUp.errorMessage ?: "unkown",
                 onDismiss = onReset
             )
         }
@@ -87,7 +88,6 @@ private fun RegistrationScreenContent(
         )
     }
 }
-
 @Composable
 private fun InitialRegistrationScreen(
     state: InitialRegistrationState.PersonalInformationState,
@@ -99,10 +99,8 @@ private fun InitialRegistrationScreen(
             leadingIcon = R.drawable.avatar_icon, description = "first name avatar"
         ),
         label = "First name",
-        value = state.firstName.value,
-        onValueChange = {
-            state.firstName.value = it
-        },
+        value = state.firstName,
+        onValueChange = state::firstName::set,
     )
 
     CustomOutlineTextField(
@@ -111,29 +109,22 @@ private fun InitialRegistrationScreen(
             description = "last name avatar",
         ),
         label = "Last name",
-        value = state.lastName.value,
-        onValueChange = {
-            state.lastName.value = it
-        },
+        value = state.lastName,
+        onValueChange = state::lastName::set,
     )
-
 
     CustomOutlineTextField(
         leadingIcon = imageHolder(
             leadingIcon = R.drawable.email_envelope, description = "envelope"
         ),
         label = "Email",
-        value = state.email.value,
-        onValueChange = {
-            state.email.value = it
-        },
+        value = state.email,
+        onValueChange = state::email::set,
     )
 
     CustomPasswordTextField(
-        value = state.password.value,
-        onValueChange = {
-            state.password.value = it
-        },
+        value = state.password,
+        onValueChange = state::password::set,
     )
 
     Spacer(modifier = Modifier.size(10.dp))

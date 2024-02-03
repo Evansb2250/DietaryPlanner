@@ -1,6 +1,6 @@
 package com.example.googlelightcalendar.di
 
-import com.example.googlelightcalendar.core.main_screen.MainScreenViewModel
+import com.example.googlelightcalendar.core.main_screen.BottomNavViewModel
 import com.example.googlelightcalendar.core.profile_screen.ProfileViewModel
 import com.example.googlelightcalendar.core.registration.RegisterGoalViewModel
 import com.example.googlelightcalendar.core.registration.RegistrationViewModel
@@ -60,7 +60,7 @@ object ViewModelModule {
     @Provides
     fun providesBottomNavViewModel(
         navigationManger: MainScreenNavManager
-    ): MainScreenViewModel = MainScreenViewModel(
+    ): BottomNavViewModel = BottomNavViewModel(
         navigationManager = navigationManger,
     )
 }

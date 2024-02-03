@@ -2,7 +2,6 @@ package com.example.googlelightcalendar.navigation.components
 
 import androidx.annotation.DrawableRes
 import com.example.googlelightcalendar.R
-import com.example.googlelightcalendar.navigation.components.ProfileRoutes.*
 
 sealed class NavigationDestinations(
     override val destination: String,
@@ -33,63 +32,19 @@ sealed class NavigationDestinations(
     )
 }
 
-val screens = listOf(
-    MainScreenNavigation.Home,
-    MainScreenNavigation.Diary,
-    MainScreenNavigation.Calendar,
-    Profile,
-)
-
-sealed class MainScreenNavigation(
+sealed class MainScreenNavigations(
     override val destination: String,
     override val arguments: List<String> = emptyList()
 ) : NavigationDestinations(
-    destination = destination,
-    arguments = arguments,
-) {
-    abstract @get:DrawableRes
-    val icon: Int
-    abstract val iconDescription: String
-
-    object Home : MainScreenNavigation(
-        destination = "homeScreen/",
-    ) {
-        override val icon: Int = R.drawable.home_icon
-        override val iconDescription: String = ""
-    }
-
-    object Diary : MainScreenNavigation(
-        destination = "Diary/",
-    ) {
-        override val icon: Int = R.drawable.food_icon
-        override val iconDescription: String = ""
-    }
-
-    object Calendar : MainScreenNavigation(
-        destination = "calendar/",
-    ) {
-        override val icon: Int = R.drawable.calendar_icon
-        override val iconDescription: String = ""
-    }
-
-    object NotificationScreen : MainScreenNavigation(
+    destination,
+    arguments
+){
+    object NotificationScreen : MainScreenNavigations(
         destination = "NotificationScreen/{userId}",
-    ) {
-        override val icon: Int
-            get() = TODO("Not yet implemented")
-        override val iconDescription: String
-            get() = TODO("Not yet implemented")
-    }
+    )
 }
 
-
 sealed class ProfileRoutes {
-    object Profile : MainScreenNavigation(
-        destination = "profile/",
-    ) {
-        override val icon: Int = R.drawable.profile_icon
-        override val iconDescription: String = ""
-    }
 
     object Account : NavigationDestinations(
         destination = "profile/account/{userId}"
@@ -107,3 +62,50 @@ sealed class ProfileRoutes {
         destination = "profile/tos/"
     )
 }
+
+sealed class BottomNavBarDestinations(
+    val routeId: Int,
+    override val destination: String,
+    override val arguments: List<String> = emptyList()
+) : MainScreenNavigations(
+    destination = destination,
+    arguments = arguments,
+) {
+    abstract @get:DrawableRes
+    val icon: Int
+    abstract val iconDescription: String
+
+    object Home : BottomNavBarDestinations(
+        routeId = 0,
+        destination = "homeScreen/",
+    ) {
+        override val icon: Int = R.drawable.home_icon
+        override val iconDescription: String = ""
+    }
+
+    object Diary : BottomNavBarDestinations(
+        routeId = 1,
+        destination = "Diary/",
+    ) {
+        override val icon: Int = R.drawable.food_icon
+        override val iconDescription: String = ""
+    }
+
+    object Calendar : BottomNavBarDestinations(
+        routeId = 2,
+        destination = "calendar/",
+    ) {
+        override val icon: Int = R.drawable.calendar_icon
+        override val iconDescription: String = ""
+    }
+
+    object Profile : BottomNavBarDestinations(
+        routeId = 3,
+        destination = "profile/",
+    ) {
+        override val icon: Int = R.drawable.profile_icon
+        override val iconDescription: String = ""
+    }
+}
+
+

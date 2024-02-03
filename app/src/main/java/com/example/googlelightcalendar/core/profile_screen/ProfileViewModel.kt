@@ -18,10 +18,6 @@ class ProfileViewModel @Inject constructor(
 ) : ViewModel() {
     val state = MutableStateFlow(ProfileScreenStates.ProfilePage).asStateFlow()
 
-    fun onBackPress() {
-        navigationManger.onBackPress()
-    }
-
     fun logout(){
         navigationManger.logout()
     }
