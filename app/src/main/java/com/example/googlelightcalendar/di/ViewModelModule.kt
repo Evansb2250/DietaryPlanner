@@ -43,9 +43,11 @@ object ViewModelModule {
 
     @Provides
     fun providesRegisterGoalViewModel(
+        navigationManger: AuthNavManager,
         userRegistrationCache: UserRegistrationCache,
         userRepository: UserRepository,
     ): RegisterGoalViewModel = RegisterGoalViewModel(
+        navManager = navigationManger,
         userRegistrationCache = userRegistrationCache,
         userRepository = userRepository,
     )

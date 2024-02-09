@@ -35,10 +35,7 @@ class AuthNavManager @Inject constructor(
     private val externalScope: CoroutineScope,
 ) : NavigationManger(externalScope) {
 
-    var onBackPressCallback: () -> Unit = {}
-    fun onBackPress() {
-        onBackPressCallback.invoke()
-    }
+    var exitMainScreen: () -> Unit = {}
 }
 
 class MainScreenNavManager @Inject constructor(
@@ -69,6 +66,6 @@ class MainScreenNavManager @Inject constructor(
     }
 
     fun logout() {
-        authNavManager.onBackPress()
+        authNavManager.exitMainScreen.invoke()
     }
 }

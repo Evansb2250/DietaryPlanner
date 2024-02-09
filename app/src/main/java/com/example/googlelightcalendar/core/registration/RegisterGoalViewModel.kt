@@ -6,6 +6,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.googlelightcalendar.core.registration.state.ErrorState
 import com.example.googlelightcalendar.core.registration.state.RegisterGoalStates
 import com.example.googlelightcalendar.core.registration.state.UnitsOfWeight
+import com.example.googlelightcalendar.navigation.components.AuthNavManager
+import com.example.googlelightcalendar.navigation.components.NavigationDestinations
 import com.example.googlelightcalendar.repo.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -19,6 +21,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RegisterGoalViewModel @Inject constructor(
+    val navManager: AuthNavManager,
     val userRegistrationCache: UserRegistrationCache,
     val userRepository: UserRepository,
 ) : ViewModel() {
@@ -61,16 +64,21 @@ class RegisterGoalViewModel @Inject constructor(
     }
 
     fun createAccount(){
-        viewModelScope.launch(Dispatchers.IO) {
-            userRepository.createUser(
-                userRegistrationCache.getKey(RegistrationKeys.EMAIL) ?: "",
-                userRegistrationCache.getKey(RegistrationKeys.FirstName) ?: "",
-                userRegistrationCache.getKey(RegistrationKeys.LASTNAME) ?: "",
-                userRegistrationCache.getKey(RegistrationKeys.PASSWORD) ?: "",
-                )
-        }
+//        viewModelScope.launch(Dispatchers.IO) {
+//            userRepository.createUser(
+//                userRegistrationCache.getKey(RegistrationKeys.EMAIL) ?: "",
+//                userRegistrationCache.getKey(RegistrationKeys.FirstName) ?: "",
+//                userRegistrationCache.getKey(RegistrationKeys.LASTNAME) ?: "",
+//                userRegistrationCache.getKey(RegistrationKeys.PASSWORD) ?: "",
+//                )
+//
+//        }
+        returnToLoginScreen()
     }
 
+    private fun returnToLoginScreen(){
+        navManager.navigate(NavigationDestinations.OnAppStartUp)
+    }
     fun initiateAccountCreation(
         data: RegisterGoalStates.GoalSelectionState
     ) {

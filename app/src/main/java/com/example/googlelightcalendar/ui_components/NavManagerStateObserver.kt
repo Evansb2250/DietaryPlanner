@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.collectLatest
  * returns the destination to pass to the navController
  */
 @Composable
-fun NavigatationStateObserver(
+fun NavManagerStateObserver(
     navigationState: SharedFlow<Navigation>,
     navigateToDestination: (Navigation) -> Unit,
 ) {

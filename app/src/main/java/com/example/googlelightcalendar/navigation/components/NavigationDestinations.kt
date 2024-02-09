@@ -8,11 +8,11 @@ sealed class NavigationDestinations(
     override val arguments: List<String> = emptyList()
 ) : Navigation {
 
+    /**
+     * Contains both login and registration screen wrapped in a container.
+     */
     object OnAppStartUp: NavigationDestinations(
         destination = "onAppStartUp/{screenType}",
-    )
-    object loginScreen : NavigationDestinations(
-        destination = "loginScreen",
     )
 
     object RegistrationPath : NavigationDestinations(

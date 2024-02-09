@@ -1,4 +1,4 @@
-package com.example.googlelightcalendar.screens.register
+package com.example.googlelightcalendar.ui.screens.register.goal_creation
 
 import android.widget.Toast
 import androidx.compose.foundation.Image
@@ -8,17 +8,14 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
-import androidx.compose.material3.Checkbox
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,226 +26,21 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import coil.compose.AsyncImage
 import com.example.googlelightcalendar.R
-import com.example.googlelightcalendar.common.sidePadding
-import com.example.googlelightcalendar.core.registration.RegisterGoalViewModel
-import com.example.googlelightcalendar.core.registration.state.RegisterGoalStates.AccountComfirmationState
-import com.example.googlelightcalendar.core.registration.state.RegisterGoalStates.GoalSelectionState
+import com.example.googlelightcalendar.core.registration.state.RegisterGoalStates
 import com.example.googlelightcalendar.core.registration.state.weightUnits
 import com.example.googlelightcalendar.ui.theme.appColor
-import com.example.googlelightcalendar.ui_components.buttons.StandardButton
 import com.example.googlelightcalendar.ui_components.calendar.DateSelector
-import com.example.googlelightcalendar.ui_components.custom_column.AppColumnContainer
 import com.example.googlelightcalendar.ui_components.menu.CustomDropDownMenu
 import com.example.googlelightcalendar.ui_components.text_fields.CustomOutlineTextField
 
-
-@Preview(showBackground = true)
-@Composable
-fun RegisterGoalsScreen() {
-
-    val viewModel = hiltViewModel<RegisterGoalViewModel>()
-    val state = viewModel.state.collectAsStateWithLifecycle().value
-
-    when (
-        state
-    ) {
-        is AccountComfirmationState -> {
-            confirmationPage(
-                createAccount = viewModel::createAccount,
-                userData = state.registrationInfoList,
-            )
-        }
-
-        is GoalSelectionState -> {
-            RegisterGoalsContent(
-                state = state,
-                onCreateAccount = viewModel::initiateAccountCreation
-            )
-        }
-    }
-
-}
-
-@Preview(
-    showBackground = true,
-)
-@Composable
-fun confirmationPage(
-    createAccount: () -> Unit = {},
-    userData: List<String> = emptyList()
-) {
-    Box(
-        modifier = Modifier
-            .background(
-                color = appColor,
-            )
-            .fillMaxSize(),
-        contentAlignment = Alignment.TopCenter,
-    ) {
-        Image(
-            modifier = Modifier.padding(
-                all = sidePadding
-            ),
-            painter = painterResource(
-                id = R.drawable.confirmation_circle,
-            ),
-            contentDescription = ""
-        )
-        Box(
-            modifier = Modifier
-                .background(
-                    color = Color.Transparent,
-                )
-                .fillMaxSize(),
-            contentAlignment = Alignment.CenterStart,
-        ) {
-            LazyColumn(
-            ) {
-                items(
-                    userData.size
-                ) { index ->
-                    Text(
-                        modifier = Modifier
-                            .padding(
-                                horizontal = sidePadding,
-                            )
-                            .fillMaxWidth(),
-                        text = userData[index],
-                        textAlign = TextAlign.Left,
-                        color = Color.White,
-                    )
-                }
-            }
-        }
-        Box(
-            modifier = Modifier
-                .background(
-                    color = Color.Transparent,
-                )
-                .fillMaxSize(),
-            contentAlignment = Alignment.BottomCenter,
-        ) {
-            StandardButton(
-                modifier = Modifier.padding(
-                    all = sidePadding
-                ),
-                text = "Create Account",
-                onClick = createAccount  ,
-            )
-        }
-    }
-}
-
-@Composable
-private fun RegisterGoalsContent(
-    state: GoalSelectionState,
-    onCreateAccount: (GoalSelectionState) -> Unit = {},
-) {
-
-    AppColumnContainer(
-        modifier = Modifier
-            .padding(8.dp)
-            .fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.SpaceAround,
-    ) {
-
-        Image(
-            modifier = Modifier
-                .fillMaxWidth()
-                .align(
-                    alignment = Alignment.CenterHorizontally,
-                ),
-            painter = painterResource(
-                id = R.drawable.main_logo,
-            ),
-            contentDescription = "Logo"
-        )
-
-        Spacer(
-            modifier = Modifier.size(30.dp),
-        )
-
-        Text(
-            modifier = Modifier
-                .fillMaxWidth(),
-            text = "What do you want to achieve?",
-            color = Color.White,
-            textAlign = TextAlign.Left,
-        )
-
-        Spacer(
-            modifier = Modifier.size(30.dp),
-        )
-
-        LazyColumn(
-            modifier = Modifier
-                .weight(10f)
-                .padding(8.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceAround,
-        ) {
-
-            items(
-                state.goals.size
-            ) { index ->
-                Column {
-                    AsyncImage(
-                        modifier = Modifier.size(
-                            width = 318.dp,
-                            height = 249.dp
-                        ),
-                        model = state.goals[index].imageUri,
-                        contentDescription = state.goals[index].imageDescription
-                    )
-
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Start,
-                    ) {
-                        Checkbox(
-                            checked = state.selectedGoal.value == state.goals[index],
-                            onCheckedChange = { state.selectedGoal.value = state.goals[index] },
-                        )
-                        Text(
-                            text = state.goals[index].toString(),
-                            color = Color.White,
-                        )
-                    }
-                }
-
-                Spacer(modifier = Modifier.size(30.dp))
-
-            }
-        }
-
-
-        if (state.selectedGoal.value != null) {
-            GoalsDialog(
-                state = state,
-                onDismiss = {
-                    state.selectedGoal.value = null
-                    state.clear()
-                },
-                onCreateAccount = onCreateAccount,
-            )
-        }
-    }
-}
-
-
 @Composable
 fun GoalsDialog(
-    state: GoalSelectionState,
+    state: RegisterGoalStates.GoalSelectionState,
     onDismiss: () -> Unit,
-    onCreateAccount: (GoalSelectionState) -> Unit,
+    onCreateAccount: (RegisterGoalStates.GoalSelectionState) -> Unit,
 ) {
     val context = LocalContext.current
 
