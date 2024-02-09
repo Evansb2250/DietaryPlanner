@@ -36,11 +36,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.example.googlelightcalendar.R
+import com.example.googlelightcalendar.common.sidePadding
 import com.example.googlelightcalendar.core.registration.RegisterGoalViewModel
 import com.example.googlelightcalendar.core.registration.state.RegisterGoalStates.AccountComfirmationState
 import com.example.googlelightcalendar.core.registration.state.RegisterGoalStates.GoalSelectionState
 import com.example.googlelightcalendar.core.registration.state.weightUnits
-import com.example.googlelightcalendar.screens.loginScreen.sidePadding
 import com.example.googlelightcalendar.ui.theme.appColor
 import com.example.googlelightcalendar.ui_components.buttons.StandardButton
 import com.example.googlelightcalendar.ui_components.calendar.DateSelector

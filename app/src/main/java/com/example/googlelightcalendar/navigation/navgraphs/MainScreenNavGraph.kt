@@ -1,4 +1,4 @@
-package com.example.googlelightcalendar.navigation.routes
+package com.example.googlelightcalendar.navigation.navgraphs
 
 import androidx.compose.material3.Scaffold
 import androidx.navigation.NavGraphBuilder
@@ -56,5 +56,5 @@ fun NavGraphBuilder.MainScreenRoutes(
         ProfileScreen()
     }
 
-    ProfileRoutes()
+    ProfileNavGraph()
 }

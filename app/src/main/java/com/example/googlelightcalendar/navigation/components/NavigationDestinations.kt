@@ -7,6 +7,10 @@ sealed class NavigationDestinations(
     override val destination: String,
     override val arguments: List<String> = emptyList()
 ) : Navigation {
+
+    object OnAppStartUp: NavigationDestinations(
+        destination = "onAppStartUp/{screenType}",
+    )
     object loginScreen : NavigationDestinations(
         destination = "loginScreen",
     )

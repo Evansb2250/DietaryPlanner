@@ -1,13 +1,13 @@
-package com.example.googlelightcalendar.screens.register
+package com.example.googlelightcalendar.ui.screens.register
 
 import android.content.Intent
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Stable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,11 +35,14 @@ fun RegistrationScreen(
     registrationViewModel: RegistrationViewModel = hiltViewModel(),
 ) {
 
+    BackHandler {
+
+    }
+
     val googleSignInLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult(),
         onResult = { result ->
             val googleSignInIntent = result.data as Intent
-
             registrationViewModel.handleAuthorizationResponse(googleSignInIntent)
         }
     )

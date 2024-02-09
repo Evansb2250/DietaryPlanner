@@ -110,6 +110,8 @@ class LoginViewModel @Inject constructor(
                         )
                     }
                 }
+
+                else -> {}
             }
         }
     }
@@ -127,7 +129,6 @@ class LoginViewModel @Inject constructor(
     fun handleAuthorizationResponse(intent: Intent) {
         viewModelScope.launch(dispatcher) {
             userRepository.handleAuthorizationResponse(intent) { serverResponse ->
-
                 when (serverResponse) {
                     is AuthorizationResponseStates.FailedResponsState -> {
                         _state.update {
@@ -153,6 +154,7 @@ class LoginViewModel @Inject constructor(
                             )
                         }
                     }
+                    else -> {}
                 }
             }
         }

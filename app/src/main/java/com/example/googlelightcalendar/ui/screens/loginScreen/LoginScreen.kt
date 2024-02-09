@@ -1,24 +1,21 @@
-package com.example.googlelightcalendar.screens.loginScreen
+package com.example.googlelightcalendar.ui.screens.loginScreen
 
 import android.content.Intent
 import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRow
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -26,7 +23,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
@@ -37,76 +33,57 @@ import com.example.googlelightcalendar.common.imageHolder
 import com.example.googlelightcalendar.core.viewmodels.login.LoginScreenStates
 import com.example.googlelightcalendar.core.viewmodels.login.LoginViewModel
 import com.example.googlelightcalendar.screens.loginScreen.preview.LoginScreenPreviewProvider
-import com.example.googlelightcalendar.screens.register.RegistrationScreen
+import com.example.googlelightcalendar.ui.screens.register.RegistrationScreen
 import com.example.googlelightcalendar.ui_components.buttons.GoogleButton
 import com.example.googlelightcalendar.ui_components.buttons.StandardButton
 import com.example.googlelightcalendar.ui_components.custom_column.AppColumnContainer
 import com.example.googlelightcalendar.ui_components.dialog.ErrorAlertDialog
 import com.example.googlelightcalendar.ui_components.divider.CustomDividerText
+import com.example.googlelightcalendar.ui_components.header.LoginOrSignUpTabAndHeader
 import com.example.googlelightcalendar.ui_components.text_fields.CustomOutlineTextField
 import com.example.googlelightcalendar.ui_components.text_fields.CustomPasswordTextField
 import kotlinx.coroutines.Dispatchers
 
-val sidePadding = 16.dp
 
-@Preview(
-    showBackground = true,
-)
+enum class OnAppStartUpScreen(
+    type: String,
+) {
+    LOGIN("Login"),
+    REGISTER("Register")
+}
+
 @RequiresApi(Build.VERSION_CODES.P)
 @Composable
-fun InitialScreen() {
-    val tabIndex by remember {
-        derivedStateOf { mutableStateOf(0) }
+fun LoginOrSignUpScreen(
+    displayScreen: String = OnAppStartUpScreen.LOGIN.name,
+) {
+    var screenToShow by remember {
+        mutableStateOf(displayScreen)
     }
-
-    val tabs = listOf("Login", "Sign Up")
-
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(Color.Black),
-    ) {
-        Image(
-            painter = painterResource(id = R.drawable.chooseuloginlogo),
-            contentDescription = "",
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        TabRow(
-            modifier = Modifier.align(
-                Alignment.CenterHorizontally
-            ),
-            containerColor = Color.Black,
-            selectedTabIndex = tabIndex.value,
-        ) {
-            tabs.forEachIndexed { index, title ->
-                Tab(
-                    text = { Text(title) },
-                    selected = tabIndex.value == index,
-                    onClick = { tabIndex.value = index },
-                    selectedContentColor = Color.White
-                )
-            }
+    Scaffold(
+        topBar = {
+            LoginOrSignUpTabAndHeader(
+                onShowLoginScreen = {screenToShow = OnAppStartUpScreen.LOGIN.toString() },
+                onShowRegistrationScreen = {screenToShow = OnAppStartUpScreen.REGISTER.toString() }
+            )
         }
-
-        when (tabIndex.value) {
-            0 -> {
-                LoginScreen()
-            }
-
-            else -> {
-                RegistrationScreen()
-            }
+    ) { it ->
+        when(screenToShow){
+            OnAppStartUpScreen.LOGIN.toString() -> LoginScreen(
+                modifier = Modifier.padding(it),
+            )
+            OnAppStartUpScreen.REGISTER.toString() -> RegistrationScreen()
         }
     }
 }
-
 @Preview(
     showBackground = true,
 )
 @Composable
-private fun LoginScreen() {
-    val loginViewModel = hiltViewModel<LoginViewModel>()
+private fun LoginScreen(
+    loginViewModel: LoginViewModel = hiltViewModel(),
+    modifier: Modifier = Modifier,
+) {
 
     val googleSignInLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult(),
@@ -120,6 +97,7 @@ private fun LoginScreen() {
     )
 
     LoginContent(
+        modifier = modifier,
         loginState = loginViewModel.state.collectAsState(Dispatchers.Main.immediate).value,
         signInManually = loginViewModel::signInManually,
         initiateGoogleSignIn = loginViewModel::signInWithGoogle,
@@ -141,6 +119,7 @@ fun LoginContent(
     initiateGoogleSignIn: () -> Unit = {},
     navigateToHomeScreen: (String) -> Unit = {},
     navigateToRegisterScreen: () -> Unit = {},
+    modifier: Modifier = Modifier,
 ) {
     Box(
         modifier = Modifier.background(Color.Black)
@@ -168,6 +147,7 @@ fun LoginContent(
         }
 
         LoginScreenStateContent(
+            modifier = modifier,
             loginState = if (loginState is LoginScreenStates.LoginScreenState) loginState else LoginScreenStates.LoginScreenState(),
             signInManually = signInManually,
             initiateGoogleSignIn = initiateGoogleSignIn,
@@ -177,6 +157,7 @@ fun LoginContent(
 
 @Composable
 private fun LoginScreenStateContent(
+    modifier: Modifier = Modifier,
     loginState: LoginScreenStates.LoginScreenState,
     signInManually: (userName: String, password: String) -> Unit = { _, _ -> },
     initiateGoogleSignIn: () -> Unit = {},
@@ -185,6 +166,7 @@ private fun LoginScreenStateContent(
         mutableStateOf(false)
     }
     AppColumnContainer(
+        modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {

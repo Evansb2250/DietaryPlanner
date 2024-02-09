@@ -1,4 +1,4 @@
-package com.example.googlelightcalendar.navigation.routes
+package com.example.googlelightcalendar.navigation.navgraphs
 
 import androidx.compose.material3.Text
 import androidx.navigation.NavGraphBuilder
@@ -6,7 +6,7 @@ import androidx.navigation.compose.composable
 import com.example.googlelightcalendar.navigation.components.MainScreenNavigations
 import com.example.googlelightcalendar.ui_components.ScreenUnavailable
 
-fun NavGraphBuilder.ProfileRoutes() {
+fun NavGraphBuilder.ProfileNavGraph() {
     composable(
         route = com.example.googlelightcalendar.navigation.components.ProfileRoutes.Account.destination
     ) {

@@ -15,7 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.example.googlelightcalendar.screens.loginScreen.sidePadding
+import com.example.googlelightcalendar.common.sidePadding
 import com.example.googlelightcalendar.ui.theme.appColor
 
 @Composable
