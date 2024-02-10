@@ -154,9 +154,14 @@ class LoginViewModel @Inject constructor(
                             )
                         }
                     }
+
                     else -> {}
                 }
             }
         }
+    }
+
+    fun updateLoginState(loginScreenState: LoginScreenStates.LoginScreenState) {
+        _state.update { loginScreenState }
     }
 }

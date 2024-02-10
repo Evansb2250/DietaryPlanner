@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -32,36 +33,35 @@ import com.example.googlelightcalendar.ui_components.text_fields.CustomPasswordT
 @Preview(
     showBackground = true,
 )
+@Stable
 @Composable
 fun LoginScreenContent(
     modifier: Modifier = Modifier,
     @PreviewParameter(LoginScreenPreviewProvider::class)
     loginState: LoginScreenStates.LoginScreenState,
+    updateLoginState: (LoginScreenStates.LoginScreenState) -> Unit = {},
     signInManually: (userName: String, password: String) -> Unit = { _, _ -> },
     initiateGoogleSignIn: () -> Unit = {},
 ) {
-    var containsIncompleteCredentials by remember {
-        mutableStateOf(false)
-    }
 
     AppColumnContainer(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
-        if (containsIncompleteCredentials) {
+        if (loginState.containsIncompleteCredentials) {
             ErrorAlertDialog(
                 title = "Invalid Credentials",
                 error = "please fill in the required information",
                 onDismiss = {
-                    containsIncompleteCredentials = false
+                    updateLoginState(loginState.copy(containsIncompleteCredentials = false))
                 }
             )
         }
         CustomOutlineTextField(
-            value = loginState.email.value,
+            value = loginState.email,
             onValueChange = { userNameUpdate ->
-                loginState.email.value = userNameUpdate
+                updateLoginState(loginState.copy(email = userNameUpdate))
             },
             leadingIcon = imageHolder(
                 leadingIcon = R.drawable.email_envelope,
@@ -76,9 +76,9 @@ fun LoginScreenContent(
 
 
         CustomPasswordTextField(
-            value = loginState.password.value,
+            value = loginState.password,
             onValueChange = { passwordUpdate ->
-                loginState.password.value = passwordUpdate
+                updateLoginState(loginState.copy(password = passwordUpdate))
             },
         )
         Spacer(
@@ -100,11 +100,11 @@ fun LoginScreenContent(
             onClick = {
                 if (loginState.containsValidCredentials()) {
                     signInManually(
-                        loginState.email.value,
-                        loginState.password.value,
+                        loginState.email,
+                        loginState.password,
                     )
                 } else {
-                    containsIncompleteCredentials = true
+                    updateLoginState(loginState.copy(containsIncompleteCredentials = true))
                 }
             },
         )

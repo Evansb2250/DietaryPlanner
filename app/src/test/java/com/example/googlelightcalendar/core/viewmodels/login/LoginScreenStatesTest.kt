@@ -24,8 +24,8 @@ class LoginScreenStatesTest {
     ) {
         val state =
             LoginScreenStates.LoginScreenState(
-                initialUserName = loginScreenStates.userName,
-                initialPassword = loginScreenStates.password,
+                email = loginScreenStates.userName,
+                password = loginScreenStates.password,
             )
 
         val isValidEmail = state.isValidEmail()
@@ -44,8 +44,8 @@ class LoginScreenStatesTest {
     fun failsValidCredentialsTest() {
         val state =
             LoginScreenStates.LoginScreenState(
-                initialUserName = "das",
-                initialPassword = "ds"
+                email = "das",
+                password = "ds"
             )
 
         assertThat(state.containsValidCredentials()).isEqualTo(false)
@@ -66,7 +66,7 @@ class LoginScreenStatesTest {
         args: PasswordCredentials,
         ){
         val loginstate = LoginScreenStates.LoginScreenState(
-            initialPassword = args.password
+            password = args.password
         )
 
         assertThat(loginstate.isValidPassword()).isEqualTo(args.expectedResult)
@@ -79,7 +79,7 @@ class LoginScreenStatesTest {
         args: EmailCredentials,
     ){
         val loginState = LoginScreenStates.LoginScreenState(
-            initialUserName = args.emailCredential,
+            email = args.emailCredential,
         )
 
         assertThat(loginState.isValidEmail()).isEqualTo(args.expectedResult)
