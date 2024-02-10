@@ -2,20 +2,16 @@ package com.example.googlelightcalendar.core.registration
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.example.googlelightcalendar.core.registration.state.ErrorState
 import com.example.googlelightcalendar.core.registration.state.RegisterGoalStates
 import com.example.googlelightcalendar.core.registration.state.UnitsOfWeight
-import com.example.googlelightcalendar.navigation.components.AuthNavManager
 import com.example.googlelightcalendar.navigation.components.NavigationDestinations
+import com.example.googlelightcalendar.navigation.components.navmanagers.AuthNavManager
 import com.example.googlelightcalendar.repo.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
-import java.lang.NullPointerException
 import javax.inject.Inject
 
 

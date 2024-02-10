@@ -41,6 +41,11 @@ import com.example.googlelightcalendar.ui_components.toolbar.ChooseUToolBar
 @Composable
 fun ProfileScreen(
 ) {
+    BackHandler {
+
+    }
+
+
     val vm: ProfileViewModel = hiltViewModel()
     val state = vm.state.collectAsState().value
 

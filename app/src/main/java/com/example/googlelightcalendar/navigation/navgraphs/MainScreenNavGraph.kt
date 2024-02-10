@@ -1,5 +1,6 @@
 package com.example.googlelightcalendar.navigation.navgraphs
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.material3.Scaffold
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
@@ -24,6 +25,10 @@ fun NavGraphBuilder.MainScreenRoutes(
                 )
             }
         ) { it ->
+            BackHandler {
+
+            }
+
             ScreenUnavailable()
         }
     }
@@ -46,6 +51,10 @@ fun NavGraphBuilder.MainScreenRoutes(
                 )
             }
         ) { it ->
+            BackHandler {
+
+            }
+
             ScreenUnavailable()
         }
     }

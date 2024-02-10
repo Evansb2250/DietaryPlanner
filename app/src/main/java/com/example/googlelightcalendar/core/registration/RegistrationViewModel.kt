@@ -8,13 +8,12 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.googlelightcalendar.common.Constants
-import com.example.googlelightcalendar.navigation.components.AuthNavManager
 import com.example.googlelightcalendar.navigation.components.NavigationDestinations
+import com.example.googlelightcalendar.navigation.components.navmanagers.AuthNavManager
 import com.example.googlelightcalendar.repo.AuthorizationResponseStates
 import com.example.googlelightcalendar.repo.UserRepository
 import com.example.googlelightcalendar.utils.TextFieldUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update

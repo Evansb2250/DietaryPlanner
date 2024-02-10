@@ -5,8 +5,8 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.googlelightcalendar.common.Constants
-import com.example.googlelightcalendar.navigation.components.AuthNavManager
 import com.example.googlelightcalendar.navigation.components.NavigationDestinations
+import com.example.googlelightcalendar.navigation.components.navmanagers.AuthNavManager
 import com.example.googlelightcalendar.repo.AuthorizationResponseStates
 import com.example.googlelightcalendar.repo.UserRepository
 import com.example.googlelightcalendar.utils.AsyncResponse

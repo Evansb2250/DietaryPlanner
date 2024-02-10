@@ -15,7 +15,6 @@ import com.example.googlelightcalendar.ui.screens.mainScreen.MainScreen
  */
 @RequiresApi(Build.VERSION_CODES.P)
 fun NavGraphBuilder.OnAppStartNavGraph() {
-
     composable(
         route = NavigationDestinations.OnAppStartUp.destination,
         arguments = listOf(
@@ -25,19 +24,14 @@ fun NavGraphBuilder.OnAppStartNavGraph() {
         )
     ) {
         val displayedScreen = it.arguments?.getString("screenType")!!
-
         LoginOrSignUpContainer(
             displayedScreen,
         )
-
     }
 
     composable(
         route = NavigationDestinations.MainScreen.destination,
-    ){
+    ) {
         MainScreen(userId = "")
-
     }
-
-
 }

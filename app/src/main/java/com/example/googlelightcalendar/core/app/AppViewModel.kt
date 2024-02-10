@@ -4,7 +4,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import com.example.googlelightcalendar.navigation.components.AuthNavManager
+import com.example.googlelightcalendar.navigation.components.navmanagers.AuthNavManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 

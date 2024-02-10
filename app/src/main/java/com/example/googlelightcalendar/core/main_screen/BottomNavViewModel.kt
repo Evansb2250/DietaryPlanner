@@ -5,22 +5,22 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.googlelightcalendar.navigation.components.MainScreenNavManager
 import com.example.googlelightcalendar.navigation.components.BottomNavBarDestinations
+import com.example.googlelightcalendar.navigation.components.navmanagers.BottomNavManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class BottomNavViewModel @Inject constructor(
-    val navigationManager: MainScreenNavManager,
+    val navigationManager: BottomNavManager,
 ) : ViewModel() {
 
 
     val navigationsTabs = listOf(
-        //      BottomNavBarDestinations.Home,
+        BottomNavBarDestinations.Home,
         BottomNavBarDestinations.Diary,
-        //      BottomNavBarDestinations.Calendar,
+        BottomNavBarDestinations.Calendar,
         BottomNavBarDestinations.Profile,
     )
 

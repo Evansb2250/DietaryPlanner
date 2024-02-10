@@ -10,8 +10,8 @@ import com.example.googlelightcalendar.core.GoogleTokenManagerImpl
 import com.example.googlelightcalendar.core.TokenManager
 import com.example.googlelightcalendar.core.registration.UserRegistrationCache
 import com.example.googlelightcalendar.core.registration.UserRegistrationCacheImpl
-import com.example.googlelightcalendar.navigation.components.AuthNavManager
-import com.example.googlelightcalendar.navigation.components.MainScreenNavManager
+import com.example.googlelightcalendar.navigation.components.navmanagers.AuthNavManager
+import com.example.googlelightcalendar.navigation.components.navmanagers.BottomNavManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -70,7 +70,7 @@ class AppModule {
     fun providesMainScreenNavigationManager(
         authNavManager: AuthNavManager,
         externalScope: CoroutineScope
-    ): MainScreenNavManager = MainScreenNavManager(
+    ): BottomNavManager = BottomNavManager(
         authNavManager,
         externalScope
     )

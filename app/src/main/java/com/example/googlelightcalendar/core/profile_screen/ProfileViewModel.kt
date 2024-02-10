@@ -2,31 +2,35 @@ package com.example.googlelightcalendar.core.profile_screen
 
 import androidx.lifecycle.ViewModel
 import com.example.googlelightcalendar.R
-import com.example.googlelightcalendar.navigation.components.MainScreenNavManager
 import com.example.googlelightcalendar.navigation.components.NavigationDestinations
 import com.example.googlelightcalendar.navigation.components.ProfileRoutes
+import com.example.googlelightcalendar.navigation.components.navmanagers.AuthNavManager
+import com.example.googlelightcalendar.navigation.components.navmanagers.BottomNavManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.internal.synchronized
 import javax.inject.Inject
+
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
-    private val navigationManger: MainScreenNavManager,
+    private val bottomNavManager: BottomNavManager,
+    private val authNavManager: AuthNavManager,
 ) : ViewModel() {
     val state = MutableStateFlow(ProfileScreenStates.ProfilePage).asStateFlow()
 
     fun logout(){
-        navigationManger.logout()
+        authNavManager.navigate(
+            NavigationDestinations.OnAppStartUp
+        )
     }
     @OptIn(InternalCoroutinesApi::class)
     fun navigate(
         destinations: NavigationDestinations
     ) {
         synchronized(destinations){
-            navigationManger.navigate(
+            bottomNavManager.navigate(
                 navigation = destinations,
                 arguments = mapOf(
                     "userId" to "23"

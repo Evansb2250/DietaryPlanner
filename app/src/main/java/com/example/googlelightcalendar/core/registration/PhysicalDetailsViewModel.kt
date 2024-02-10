@@ -3,8 +3,8 @@ package com.example.googlelightcalendar.core.registration
 import androidx.lifecycle.ViewModel
 import com.example.googlelightcalendar.core.registration.state.ErrorState
 import com.example.googlelightcalendar.core.registration.state.PhysicalDetailState
-import com.example.googlelightcalendar.navigation.components.AuthNavManager
 import com.example.googlelightcalendar.navigation.components.NavigationDestinations
+import com.example.googlelightcalendar.navigation.components.navmanagers.AuthNavManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

@@ -1,6 +1,7 @@
 package com.example.googlelightcalendar.screens.food_diary
 
 import android.view.MotionEvent
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -47,6 +48,10 @@ import com.example.googlelightcalendar.ui_components.toolbar.ChooseUToolBar
 )
 @Composable
 fun DiaryScreen() {
+    BackHandler {
+
+    }
+
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {

@@ -1,5 +1,6 @@
 package com.example.googlelightcalendar.ui.screens.mainScreen
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -11,6 +12,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.example.googlelightcalendar.core.main_screen.BottomNavViewModel
+import com.example.googlelightcalendar.navigation.components.BottomNavBarDestinations
 import com.example.googlelightcalendar.navigation.navgraphs.MainScreenRoutes
 import com.example.googlelightcalendar.ui.theme.appColor
 import com.example.googlelightcalendar.ui_components.bottomBar.ChooseUBottomBar
@@ -22,7 +24,12 @@ fun MainScreen(
     vm: BottomNavViewModel = hiltViewModel(),
     navController: NavHostController = rememberNavController()
 ) {
-    LaunchedEffect(key1 = userId){
+
+    BackHandler {
+
+    }
+
+    LaunchedEffect(key1 = userId) {
         vm.resetNavBarTab()
     }
 
@@ -30,9 +37,14 @@ fun MainScreen(
         key1 = vm.navigationManager.navigationState,
     ) {
         vm.navigationManager.navigationState.collectLatest { navDirection ->
-            navController.popBackStack()
+            if (navDirection is BottomNavBarDestinations)
+                navController.popBackStack()
+
             navController.navigate(navDirection.destination) {
                 this.launchSingleTop = true
+                popUpTo(BottomNavBarDestinations.Home.destination) {
+                    inclusive = true
+                }
             }
         }
     }
