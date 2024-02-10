@@ -84,34 +84,33 @@ class RegistrationViewModel @Inject constructor(
     }
 
     fun handleAuthorizationResponse(intent: Intent) {
-        viewModelScope.launch(Dispatchers.IO) {
-            userRepository.handleAuthorizationResponse(intent) { serverResponse ->
+        viewModelScope.launch {
+            val serverResponse = userRepository.handleAuthorizationResponse(intent)
 
-                when (serverResponse) {
-                    is AuthorizationResponseStates.FailedResponsState -> {
-                        _state.update {
-                          InitialRegistrationState.PersonalInformationState(
-                              initialFailedLoginState = InitialRegistrationState.Failed(
-                                  isError = true,
-                                  errorMessage = "Failed to login into google",
-                              )
-                          )
-                        }
-                    }
-
-                    is AuthorizationResponseStates.FirstTimeUserState -> {
-                        _state.value = InitialRegistrationState.PersonalInformationState(
-                            initialFirstName = serverResponse.name,
-                            initialEmail = serverResponse.email
+            when (serverResponse) {
+                is AuthorizationResponseStates.FailedResponsState -> {
+                    _state.update {
+                        InitialRegistrationState.PersonalInformationState(
+                            initialFailedLoginState = InitialRegistrationState.Failed(
+                                isError = true,
+                                errorMessage = "Failed to login into google",
+                            )
                         )
                     }
+                }
 
-                    is AuthorizationResponseStates.SuccessResponseState -> {
-                        _state.value = InitialRegistrationState.PersonalInformationState(
-                            initialFirstName = serverResponse.name,
-                            initialEmail = serverResponse.email
-                        )
-                    }
+                is AuthorizationResponseStates.FirstTimeUserState -> {
+                    _state.value = InitialRegistrationState.PersonalInformationState(
+                        initialFirstName = serverResponse.name,
+                        initialEmail = serverResponse.email
+                    )
+                }
+
+                is AuthorizationResponseStates.SuccessResponseState -> {
+                    _state.value = InitialRegistrationState.PersonalInformationState(
+                        initialFirstName = serverResponse.name,
+                        initialEmail = serverResponse.email
+                    )
                 }
             }
         }

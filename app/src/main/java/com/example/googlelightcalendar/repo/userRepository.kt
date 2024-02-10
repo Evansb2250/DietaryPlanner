@@ -11,11 +11,14 @@ import com.example.googlelightcalendar.domain.User
 import com.example.googlelightcalendar.utils.AsyncResponse
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import net.openid.appauth.AuthorizationException
 import net.openid.appauth.AuthorizationResponse
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.coroutines.resume
 
 interface UserRepository {
     fun attemptAuthorization(
@@ -35,26 +38,20 @@ interface UserRepository {
         intent: Intent,
         authorizationResponse: AuthorizationResponse? = AuthorizationResponse.fromIntent(intent),
         error: AuthorizationException? = AuthorizationException.fromIntent(intent),
-        authorizationResponseCallback: (
-            AuthorizationResponseStates,
-        ) -> Unit = {},
-    )
+    ): AuthorizationResponseStates
 
-     suspend fun handleSignUpResponse(
+    suspend fun handleSignUpResponse(
         intent: Intent,
         authorizationResponse: AuthorizationResponse?,
         error: AuthorizationException?,
-        authorizationResponseCallback: (
-            AuthorizationResponseStates
-        ) -> Unit
-    )
+    ): AuthorizationResponseStates
 
-     suspend fun createUser(
-         email: String,
-         firstName: String,
-         lastName: String,
-         password: String,
-     )
+    suspend fun createUser(
+        email: String,
+        firstName: String,
+        lastName: String,
+        password: String,
+    )
 }
 
 sealed class AuthorizationResponseStates {
@@ -78,7 +75,7 @@ class UserRepositoryImpl @Inject constructor(
     private val googleOauthClient: Lazy<OauthClient>,
     private val userDao: UserDao,
     private val tokenManager: TokenManager,
-    private val dispatcher : CoroutineDispatcher = Dispatchers.IO,
+    private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : UserRepository {
 
     // Aysnc response is received in the ActivityResultLauncher in the loginScreen
@@ -114,49 +111,48 @@ class UserRepositoryImpl @Inject constructor(
             }
         }
     }
-
     override suspend fun handleAuthorizationResponse(
         intent: Intent,
         authorizationResponse: AuthorizationResponse?,
         error: AuthorizationException?,
-        authorizationResponseCallback: (
-            AuthorizationResponseStates
-        ) -> Unit
-    ) {
-        val asyncResponse = googleOauthClient.value.handleAuthorizationResponse(
-            intent = intent,
-            authorizationResponse = authorizationResponse,
-            error = error,
-        )
-
-        withContext(dispatcher) {
-            when (asyncResponse) {
-                is AsyncResponse.Failed<User?> -> {
-                    authorizationResponseCallback(
-                        AuthorizationResponseStates.FailedResponsState(
-                            asyncResponse.message ?: "Failed"
-                        )
-                    )
-                }
-
-                is AsyncResponse.Success<User?> -> {
-                    val user = userDao.getUserFromGmailSignIn(asyncResponse.data?.userName ?: "")?.toUser()
-
-                    if (user != null) {
-                        authorizationResponseCallback(
-                            AuthorizationResponseStates.SuccessResponseState(
-                                email = user.userName,
-                                name = user.name,
+    ): AuthorizationResponseStates {
+        return withContext(dispatcher) {
+            val asyncResponse = googleOauthClient.value.handleAuthorizationResponse(
+                intent = intent,
+                authorizationResponse = authorizationResponse,
+                error = error,
+            )
+            suspendCancellableCoroutine { continuation ->
+                when (asyncResponse) {
+                    is AsyncResponse.Failed<User?> -> {
+                        continuation.resume(
+                            AuthorizationResponseStates.FailedResponsState(
+                                asyncResponse.message ?: "Failed"
                             )
                         )
-                    } else {
-                        // Have user register account.
-                        authorizationResponseCallback(
-                            AuthorizationResponseStates.FirstTimeUserState(
-                                asyncResponse.data!!.userName,
-                                asyncResponse.data.name,
+                    }
+
+                    is AsyncResponse.Success<User?> -> {
+                        val user =
+                            userDao.getUserFromGmailSignIn(asyncResponse.data?.userName ?: "")
+                                ?.toUser()
+
+                        if (user != null) {
+                            continuation.resume(
+                                AuthorizationResponseStates.SuccessResponseState(
+                                    email = user.userName,
+                                    name = user.name,
                                 )
-                        )
+                            )
+                        } else {
+                            // Have user register account.
+                            continuation.resume(
+                                AuthorizationResponseStates.FirstTimeUserState(
+                                    asyncResponse.data!!.userName,
+                                    asyncResponse.data.name,
+                                )
+                            )
+                        }
                     }
                 }
             }
@@ -166,9 +162,8 @@ class UserRepositoryImpl @Inject constructor(
     override suspend fun handleSignUpResponse(
         intent: Intent,
         authorizationResponse: AuthorizationResponse?,
-        error: AuthorizationException?,
-        authorizationResponseCallback: (AuthorizationResponseStates) -> Unit
-    ) {
+        error: AuthorizationException?
+    ): AuthorizationResponseStates {
         TODO("Not yet implemented")
     }
 

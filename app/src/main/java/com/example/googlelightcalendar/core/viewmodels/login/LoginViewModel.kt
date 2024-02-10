@@ -128,35 +128,34 @@ class LoginViewModel @Inject constructor(
 
     fun handleAuthorizationResponse(intent: Intent) {
         viewModelScope.launch(dispatcher) {
-            userRepository.handleAuthorizationResponse(intent) { serverResponse ->
-                when (serverResponse) {
-                    is AuthorizationResponseStates.FailedResponsState -> {
-                        _state.update {
-                            LoginScreenStates.LoginError(
-                                message = serverResponse.message,
-                            )
-                        }
+           val serverResponse = userRepository.handleAuthorizationResponse(intent)
+            when (serverResponse) {
+                is AuthorizationResponseStates.FailedResponsState -> {
+                    _state.update {
+                        LoginScreenStates.LoginError(
+                            message = serverResponse.message,
+                        )
                     }
-
-                    is AuthorizationResponseStates.FirstTimeUserState -> {
-                        _state.update {
-                            LoginScreenStates.RegistrationRequiredState(
-                                email = serverResponse.email,
-                            )
-                        }
-                    }
-
-                    is AuthorizationResponseStates.SuccessResponseState -> {
-                        _state.update {
-                            LoginScreenStates.UserSignedInState(
-                                serverResponse.email,
-                                serverResponse.name,
-                            )
-                        }
-                    }
-
-                    else -> {}
                 }
+
+                is AuthorizationResponseStates.FirstTimeUserState -> {
+                    _state.update {
+                        LoginScreenStates.RegistrationRequiredState(
+                            email = serverResponse.email,
+                        )
+                    }
+                }
+
+                is AuthorizationResponseStates.SuccessResponseState -> {
+                    _state.update {
+                        LoginScreenStates.UserSignedInState(
+                            serverResponse.email,
+                            serverResponse.name,
+                        )
+                    }
+                }
+
+                else -> {}
             }
         }
     }
