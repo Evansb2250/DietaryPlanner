@@ -18,7 +18,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.googlelightcalendar.R
 import com.example.googlelightcalendar.common.sidePadding
 import com.example.googlelightcalendar.ui.theme.appColor
-import com.example.googlelightcalendar.ui_components.buttons.StandardButton
+import com.example.googlelightcalendar.ui.ui_components.buttons.StandardButton
 
 @Preview(
     showBackground = true,
@@ -26,7 +26,7 @@ import com.example.googlelightcalendar.ui_components.buttons.StandardButton
 @Composable
 fun GoalConfirmationScreen(
     createAccount: () -> Unit = {},
-    userData: List<String> = emptyList()
+    userData: List<String> = emptyList(),
 ) {
     Box(
         modifier = Modifier

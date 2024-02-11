@@ -15,8 +15,8 @@ import com.example.googlelightcalendar.navigation.components.destinations.Genera
 import com.example.googlelightcalendar.navigation.navgraphs.OnAppStartNavGraph
 import com.example.googlelightcalendar.navigation.navgraphs.RegisterUserNavGraph
 import com.example.googlelightcalendar.ui.theme.appColor
-import com.example.googlelightcalendar.ui_components.NavManagerStateObserver
-import com.example.googlelightcalendar.ui_components.dialog.ExitAppDialog
+import com.example.googlelightcalendar.ui.ui_components.NavManagerStateObserver
+import com.example.googlelightcalendar.ui.ui_components.dialog.ExitAppDialog
 
 @RequiresApi(Build.VERSION_CODES.P)
 @Composable
@@ -25,7 +25,6 @@ fun App(
     navControl: NavHostController = rememberNavController(),
     closeApp: () -> Unit,
 ) {
-
 
     BackHandler {
         viewModel.showExitDialog()

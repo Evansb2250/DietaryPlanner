@@ -32,8 +32,8 @@ import com.example.googlelightcalendar.R
 import com.example.googlelightcalendar.core.profile_screen.ProfileViewModel
 import com.example.googlelightcalendar.core.toolBarStates.ToolBarState
 import com.example.googlelightcalendar.ui.theme.appColor
-import com.example.googlelightcalendar.ui_components.custom_layout.CustomRowLayout
-import com.example.googlelightcalendar.ui_components.toolbar.ChooseUToolBar
+import com.example.googlelightcalendar.ui.ui_components.custom_layout.CustomRowLayout
+import com.example.googlelightcalendar.ui.ui_components.toolbar.ChooseUToolBar
 
 @Preview(
     showBackground = true

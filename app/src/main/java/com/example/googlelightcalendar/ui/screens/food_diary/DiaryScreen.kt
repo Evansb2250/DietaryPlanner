@@ -17,8 +17,8 @@ import com.example.googlelightcalendar.core.diary.DiaryScreenViewModel
 import com.example.googlelightcalendar.core.diary.states.DiaryScreenStates
 import com.example.googlelightcalendar.core.toolBarStates.ToolBarState
 import com.example.googlelightcalendar.ui.theme.appColor
-import com.example.googlelightcalendar.ui_components.mealItem.MealItem
-import com.example.googlelightcalendar.ui_components.toolbar.ChooseUToolBar
+import com.example.googlelightcalendar.ui.ui_components.mealItem.MealItem
+import com.example.googlelightcalendar.ui.ui_components.toolbar.ChooseUToolBar
 import com.example.googlelightcalendar.utils.DateUtil
 
 @Preview(

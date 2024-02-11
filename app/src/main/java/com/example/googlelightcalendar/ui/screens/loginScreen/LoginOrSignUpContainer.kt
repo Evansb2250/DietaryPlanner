@@ -11,7 +11,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.example.googlelightcalendar.ui.screens.register.RegistrationScreen
-import com.example.googlelightcalendar.ui_components.header.LoginOrSignUpTabAndHeader
+import com.example.googlelightcalendar.ui.ui_components.header.LoginOrSignUpTabAndHeader
 
 
 enum class OnAppStartUpScreen(
@@ -38,8 +38,13 @@ fun LoginOrSignUpContainer(
         }
     ) { it ->
         when (screenToShow) {
-            OnAppStartUpScreen.LOGIN.toString() -> LoginScreen(modifier = Modifier.padding(it))
-            OnAppStartUpScreen.REGISTER.toString() -> RegistrationScreen(modifier = Modifier.padding(it))
+            OnAppStartUpScreen.LOGIN.toString() -> LoginScreen(
+                modifier = Modifier.padding(it),
+            )
+
+            OnAppStartUpScreen.REGISTER.toString() -> RegistrationScreen(
+                modifier = Modifier.padding(it)
+            )
         }
     }
 }

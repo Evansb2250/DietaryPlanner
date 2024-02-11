@@ -18,13 +18,13 @@ import com.example.googlelightcalendar.R
 import com.example.googlelightcalendar.common.imageHolder
 import com.example.googlelightcalendar.core.viewmodels.login.LoginScreenStates
 import com.example.googlelightcalendar.ui.screens.loginScreen.preview.LoginScreenPreviewProvider
-import com.example.googlelightcalendar.ui_components.buttons.GoogleButton
-import com.example.googlelightcalendar.ui_components.buttons.StandardButton
-import com.example.googlelightcalendar.ui_components.custom_column.AppColumnContainer
-import com.example.googlelightcalendar.ui_components.dialog.ErrorAlertDialog
-import com.example.googlelightcalendar.ui_components.divider.CustomDividerText
-import com.example.googlelightcalendar.ui_components.text_fields.CustomOutlineTextField
-import com.example.googlelightcalendar.ui_components.text_fields.CustomPasswordTextField
+import com.example.googlelightcalendar.ui.ui_components.buttons.GoogleButton
+import com.example.googlelightcalendar.ui.ui_components.buttons.StandardButton
+import com.example.googlelightcalendar.ui.ui_components.custom_column.AppColumnContainer
+import com.example.googlelightcalendar.ui.ui_components.dialog.ErrorAlertDialog
+import com.example.googlelightcalendar.ui.ui_components.divider.CustomDividerText
+import com.example.googlelightcalendar.ui.ui_components.text_fields.CustomOutlineTextField
+import com.example.googlelightcalendar.ui.ui_components.text_fields.CustomPasswordTextField
 
 @Preview(
     showBackground = true,
@@ -70,7 +70,6 @@ fun LoginScreenContent(
         Spacer(
             modifier = Modifier.size(20.dp)
         )
-
 
         CustomPasswordTextField(
             value = loginState.password,

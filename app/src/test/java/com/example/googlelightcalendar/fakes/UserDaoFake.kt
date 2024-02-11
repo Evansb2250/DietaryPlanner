@@ -1,7 +1,7 @@
 package com.example.googlelightcalendar.fakes
 
-import com.example.googlelightcalendar.data.room.database.dao.UserDao
-import com.example.googlelightcalendar.data.room.database.models.UserEntity
+import com.example.googlelightcalendar.data.database.dao.UserDao
+import com.example.googlelightcalendar.data.database.models.UserEntity
 
 class UserDaoFake : UserDao {
     private val inMemoryUserDao = hashMapOf<String, UserEntity>()

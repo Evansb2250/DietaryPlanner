@@ -17,8 +17,8 @@ import com.example.googlelightcalendar.R
 import com.example.googlelightcalendar.common.sidePadding
 import com.example.googlelightcalendar.core.diary.searchFood.FoodSearchViewModel
 import com.example.googlelightcalendar.core.toolBarStates.ToolBarState
-import com.example.googlelightcalendar.ui_components.custom_column.AppColumnContainer
-import com.example.googlelightcalendar.ui_components.toolbar.ChooseUToolBar
+import com.example.googlelightcalendar.ui.ui_components.custom_column.AppColumnContainer
+import com.example.googlelightcalendar.ui.ui_components.toolbar.ChooseUToolBar
 
 @Composable
 fun FoodSearchScreen(

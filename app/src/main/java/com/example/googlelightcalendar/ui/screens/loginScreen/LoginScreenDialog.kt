@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import com.example.googlelightcalendar.core.viewmodels.login.LoginScreenStates
 import com.example.googlelightcalendar.ui.screens.loginScreen.preview.LoginScreenPreviewProvider
-import com.example.googlelightcalendar.ui_components.dialog.ErrorAlertDialog
+import com.example.googlelightcalendar.ui.ui_components.dialog.ErrorAlertDialog
 
 @Composable
 fun LoginScreenDialog(

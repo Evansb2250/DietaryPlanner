@@ -10,8 +10,8 @@ import com.example.googlelightcalendar.navigation.components.destinations.Genera
 import com.example.googlelightcalendar.ui.screens.food_diary.DiaryScreen
 import com.example.googlelightcalendar.ui.screens.food_search.FoodSearchScreen
 import com.example.googlelightcalendar.ui.screens.profile.ProfileScreen
-import com.example.googlelightcalendar.ui_components.ScreenUnavailable
-import com.example.googlelightcalendar.ui_components.toolbar.ChooseUToolBar
+import com.example.googlelightcalendar.ui.ui_components.ScreenUnavailable
+import com.example.googlelightcalendar.ui.ui_components.toolbar.ChooseUToolBar
 
 fun NavGraphBuilder.MainScreenRoutes(
 ) {

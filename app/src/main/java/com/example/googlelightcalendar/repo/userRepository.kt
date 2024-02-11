@@ -4,14 +4,13 @@ import android.content.Intent
 import androidx.activity.result.ActivityResultLauncher
 import com.example.googlelightcalendar.auth.OauthClient
 import com.example.googlelightcalendar.core.TokenManager
-import com.example.googlelightcalendar.data.room.database.dao.UserDao
-import com.example.googlelightcalendar.data.room.database.models.UserEntity
-import com.example.googlelightcalendar.data.room.database.models.toUser
+import com.example.googlelightcalendar.data.database.dao.UserDao
+import com.example.googlelightcalendar.data.database.models.UserEntity
+import com.example.googlelightcalendar.data.database.models.toUser
 import com.example.googlelightcalendar.domain.User
 import com.example.googlelightcalendar.utils.AsyncResponse
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import net.openid.appauth.AuthorizationException

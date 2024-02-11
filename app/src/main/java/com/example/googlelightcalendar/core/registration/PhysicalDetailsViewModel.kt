@@ -44,7 +44,6 @@ class PhysicalDetailsViewModel @Inject constructor(
         }
     }
 
-
     private fun navToRegisterGoals() {
         navigationManger.navigate(
             navigation = GeneralDestinations.RegisterGoalsDestination,

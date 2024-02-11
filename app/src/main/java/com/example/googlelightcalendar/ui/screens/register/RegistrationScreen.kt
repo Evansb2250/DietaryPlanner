@@ -40,6 +40,6 @@ fun RegistrationScreen(
         registrationState = registrationViewModel.state.collectAsState(Dispatchers.Main.immediate).value,
         onNext = registrationViewModel::onStoreCredentials,
         onReset = registrationViewModel::reset,
-        signUpWithGoogle = registrationViewModel::signInWithGoogle
+        signUpWithGoogle = registrationViewModel::signInWithGoogle,
     )
 }

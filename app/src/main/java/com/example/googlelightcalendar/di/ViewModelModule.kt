@@ -7,7 +7,7 @@ import com.example.googlelightcalendar.core.registration.RegistrationViewModel
 import com.example.googlelightcalendar.core.registration.UserRegistrationCache
 import com.example.googlelightcalendar.core.viewmodels.login.LoginViewModel
 import com.example.googlelightcalendar.navigation.components.navmanagers.AuthNavManager
-import com.example.googlelightcalendar.navigation.components.navmanagers.BottomNavManager
+import com.example.googlelightcalendar.navigation.components.navmanagers.AppNavManager
 import com.example.googlelightcalendar.repo.UserRepository
 import dagger.Module
 import dagger.Provides
@@ -54,7 +54,7 @@ object ViewModelModule {
 
     @Provides
     fun providesProfileViewModel(
-        bottomNavManager: BottomNavManager,
+        bottomNavManager: AppNavManager,
         authNavManager: AuthNavManager,
     ): ProfileViewModel = ProfileViewModel(
         bottomNavManager = bottomNavManager,
@@ -63,10 +63,8 @@ object ViewModelModule {
 
     @Provides
     fun providesBottomNavViewModel(
-        authNavManager: AuthNavManager,
-        navigationManger: BottomNavManager
+        navigationManger: AppNavManager
     ): BottomNavViewModel = BottomNavViewModel(
-        authNavManager = authNavManager,
         navigationManager = navigationManger,
     )
 }

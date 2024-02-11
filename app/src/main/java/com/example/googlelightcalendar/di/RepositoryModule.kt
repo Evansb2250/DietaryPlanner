@@ -2,14 +2,13 @@ package com.example.googlelightcalendar.di
 
 import com.example.googlelightcalendar.auth.OauthClientImp
 import com.example.googlelightcalendar.core.GoogleTokenManagerImpl
-import com.example.googlelightcalendar.data.room.database.GoogleLightCalenderDatabase
+import com.example.googlelightcalendar.data.database.GoogleLightCalenderDatabase
 import com.example.googlelightcalendar.repo.UserRepository
 import com.example.googlelightcalendar.repo.UserRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Singleton
 

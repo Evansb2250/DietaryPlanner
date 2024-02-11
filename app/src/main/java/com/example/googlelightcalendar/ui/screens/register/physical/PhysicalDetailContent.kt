@@ -30,12 +30,12 @@ import com.example.googlelightcalendar.core.registration.state.PhysicalDetailSta
 import com.example.googlelightcalendar.core.registration.state.heightUnits
 import com.example.googlelightcalendar.core.registration.state.weightUnits
 import com.example.googlelightcalendar.screens.register.previews.PhysicalDetailPreview
-import com.example.googlelightcalendar.ui_components.buttons.StandardButton
-import com.example.googlelightcalendar.ui_components.calendar.DateSelector
-import com.example.googlelightcalendar.ui_components.custom_column.AppColumnContainer
-import com.example.googlelightcalendar.ui_components.dialog.ErrorAlertDialog
-import com.example.googlelightcalendar.ui_components.menu.CustomDropDownMenu
-import com.example.googlelightcalendar.ui_components.text_fields.CustomOutlineTextField
+import com.example.googlelightcalendar.ui.ui_components.buttons.StandardButton
+import com.example.googlelightcalendar.ui.ui_components.calendar.DateSelector
+import com.example.googlelightcalendar.ui.ui_components.custom_column.AppColumnContainer
+import com.example.googlelightcalendar.ui.ui_components.dialog.ErrorAlertDialog
+import com.example.googlelightcalendar.ui.ui_components.menu.CustomDropDownMenu
+import com.example.googlelightcalendar.ui.ui_components.text_fields.CustomOutlineTextField
 
 
 @Composable

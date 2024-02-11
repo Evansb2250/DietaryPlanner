@@ -13,13 +13,13 @@ import com.example.googlelightcalendar.R
 import com.example.googlelightcalendar.common.imageHolder
 import com.example.googlelightcalendar.core.registration.InitialRegistrationState
 import com.example.googlelightcalendar.screens.register.previews.RegistrationScreenPreview
-import com.example.googlelightcalendar.ui_components.buttons.GoogleButton
-import com.example.googlelightcalendar.ui_components.buttons.StandardButton
-import com.example.googlelightcalendar.ui_components.custom_column.AppColumnContainer
-import com.example.googlelightcalendar.ui_components.dialog.ErrorAlertDialog
-import com.example.googlelightcalendar.ui_components.divider.CustomDividerText
-import com.example.googlelightcalendar.ui_components.text_fields.CustomOutlineTextField
-import com.example.googlelightcalendar.ui_components.text_fields.CustomPasswordTextField
+import com.example.googlelightcalendar.ui.ui_components.buttons.GoogleButton
+import com.example.googlelightcalendar.ui.ui_components.buttons.StandardButton
+import com.example.googlelightcalendar.ui.ui_components.custom_column.AppColumnContainer
+import com.example.googlelightcalendar.ui.ui_components.dialog.ErrorAlertDialog
+import com.example.googlelightcalendar.ui.ui_components.divider.CustomDividerText
+import com.example.googlelightcalendar.ui.ui_components.text_fields.CustomOutlineTextField
+import com.example.googlelightcalendar.ui.ui_components.text_fields.CustomPasswordTextField
 
 @Preview(
     showBackground = true,
@@ -32,7 +32,7 @@ fun RegistrationScreenContent(
     onNext: (state: InitialRegistrationState.PersonalInformationState) -> Unit = {},
     onReset: () -> Unit = {},
     signUpWithGoogle: () -> Unit = {},
-) {
+    ) {
 
     AppColumnContainer(
         modifier = modifier,

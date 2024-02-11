@@ -32,9 +32,9 @@ import com.example.googlelightcalendar.R
 import com.example.googlelightcalendar.core.registration.state.RegisterGoalStates
 import com.example.googlelightcalendar.core.registration.state.weightUnits
 import com.example.googlelightcalendar.ui.theme.appColor
-import com.example.googlelightcalendar.ui_components.calendar.DateSelector
-import com.example.googlelightcalendar.ui_components.menu.CustomDropDownMenu
-import com.example.googlelightcalendar.ui_components.text_fields.CustomOutlineTextField
+import com.example.googlelightcalendar.ui.ui_components.calendar.DateSelector
+import com.example.googlelightcalendar.ui.ui_components.menu.CustomDropDownMenu
+import com.example.googlelightcalendar.ui.ui_components.text_fields.CustomOutlineTextField
 
 @Composable
 fun GoalsDialog(

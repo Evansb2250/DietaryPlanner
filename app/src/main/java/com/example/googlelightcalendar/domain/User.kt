@@ -1,6 +1,6 @@
 package com.example.googlelightcalendar.domain
 
-import com.example.googlelightcalendar.data.room.database.models.UserEntity
+import com.example.googlelightcalendar.data.database.models.UserEntity
 
 data class User(
     val userName: String,

@@ -9,14 +9,13 @@ import assertk.assertions.isEqualTo
 import assertk.assertions.isInstanceOf
 import com.example.googlelightcalendar.core.viewmodels.login.LoginScreenStates
 import com.example.googlelightcalendar.core.viewmodels.login.LoginViewModel
-import com.example.googlelightcalendar.data.room.database.dao.UserDao
-import com.example.googlelightcalendar.data.room.database.models.UserEntity
+import com.example.googlelightcalendar.data.database.dao.UserDao
+import com.example.googlelightcalendar.data.database.models.UserEntity
 import com.example.googlelightcalendar.domain.User
 import com.example.googlelightcalendar.domain.toUserEntity
 import com.example.googlelightcalendar.fakes.OAuthClientFake
 import com.example.googlelightcalendar.fakes.UserDaoFake
 import com.example.googlelightcalendar.fakes.UserRepositoryFake
-import com.example.googlelightcalendar.navigation.components.AuthNavManager
 import com.example.googlelightcalendar.navigation.components.destinations.GeneralDestinations
 import com.example.googlelightcalendar.repo.UserRepository
 import kotlinx.coroutines.CoroutineScope

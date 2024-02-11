@@ -3,7 +3,7 @@ package com.example.googlelightcalendar.core.diary
 import androidx.lifecycle.ViewModel
 import com.example.googlelightcalendar.core.diary.states.DiaryScreenStates
 import com.example.googlelightcalendar.navigation.components.destinations.GeneralDestinations
-import com.example.googlelightcalendar.navigation.components.navmanagers.BottomNavManager
+import com.example.googlelightcalendar.navigation.components.navmanagers.AppNavManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -12,7 +12,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DiaryScreenViewModel @Inject constructor(
-    val navigationManager: BottomNavManager,
+    val navigationManager: AppNavManager,
 ) : ViewModel() {
     private val _state: MutableStateFlow<DiaryScreenStates> = MutableStateFlow(
         DiaryScreenStates.MealDiary(date = LocalDate.now())

@@ -4,21 +4,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.example.googlelightcalendar.navigation.components.destinations.BottomNavBarDestinations
-import com.example.googlelightcalendar.navigation.components.destinations.GeneralDestinations
-import com.example.googlelightcalendar.navigation.components.navmanagers.AuthNavManager
-import com.example.googlelightcalendar.navigation.components.navmanagers.BottomNavManager
+import com.example.googlelightcalendar.navigation.components.navmanagers.AppNavManager
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class BottomNavViewModel @Inject constructor(
-    val authNavManager: AuthNavManager,
-    val navigationManager: BottomNavManager,
+    val navigationManager: AppNavManager,
 ) : ViewModel() {
 
     var isVisible by mutableStateOf(true)
@@ -33,20 +26,6 @@ class BottomNavViewModel @Inject constructor(
 
     var selectedOption by mutableStateOf(navigationsTabs[0].routeId)
         private set
-
-    init {
-        viewModelScope.launch {
-            combine(
-                flow = navigationManager.currentDestinations,
-                flow2 = navigationManager.navigationState
-            ) { bottomNavState: BottomNavBarDestinations, screenState ->
-                updateBottomBarTab(bottomNavState, screenState.destination)
-            }.collect{
-
-            }
-        }
-    }
-
     fun navigate(
         navigationDestinations: BottomNavBarDestinations,
         arguments: Map<String, String>,
@@ -65,11 +44,8 @@ class BottomNavViewModel @Inject constructor(
     }
 
     fun updateBottomBarTab(route: BottomNavBarDestinations? = null, currentScreen: String? = null) {
-        isVisible = currentScreen?.let { currentDestination ->
-            navigationsTabs.firstOrNull { it.destination == currentDestination }
-        } != null
+        isVisible = currentScreen in navigationsTabs.map { it.destination }
+        selectedOption = navigationsTabs.firstOrNull { it.destination == currentScreen }?.routeId ?: 0
 
-
-        selectedOption = route?.routeId ?: 0
     }
 }

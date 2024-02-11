@@ -8,8 +8,8 @@ import com.example.googlelightcalendar.auth.OauthClient
 import com.example.googlelightcalendar.auth.OauthClientImp
 import com.example.googlelightcalendar.core.GoogleTokenManagerImpl
 import com.example.googlelightcalendar.core.TokenManager
-import com.example.googlelightcalendar.data.room.database.dao.UserDao
-import com.example.googlelightcalendar.data.room.database.models.UserEntity
+import com.example.googlelightcalendar.data.database.dao.UserDao
+import com.example.googlelightcalendar.data.database.models.UserEntity
 import com.example.googlelightcalendar.domain.User
 import com.example.googlelightcalendar.fakes.OAuthClientFake
 import com.example.googlelightcalendar.fakes.TokenManagerFakeImpl

@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.googlelightcalendar.R
 import com.example.googlelightcalendar.core.registration.state.RegisterGoalStates
-import com.example.googlelightcalendar.ui_components.custom_column.AppColumnContainer
+import com.example.googlelightcalendar.ui.ui_components.custom_column.AppColumnContainer
 
 @Composable
 fun RegisterGoalsContent(
@@ -104,10 +104,8 @@ fun RegisterGoalsContent(
                 }
 
                 Spacer(modifier = Modifier.size(30.dp))
-
             }
         }
-
 
         if (state.selectedGoal.value != null) {
             GoalsDialog(

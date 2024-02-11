@@ -10,12 +10,13 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.googlelightcalendar.core.main_screen.BottomNavViewModel
 import com.example.googlelightcalendar.navigation.components.destinations.BottomNavBarDestinations
 import com.example.googlelightcalendar.navigation.navgraphs.MainScreenRoutes
 import com.example.googlelightcalendar.ui.theme.appColor
-import com.example.googlelightcalendar.ui_components.bottomBar.ChooseUBottomBar
+import com.example.googlelightcalendar.ui.ui_components.bottomBar.ChooseUBottomBar
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
@@ -27,6 +28,13 @@ fun MainScreen(
 
     BackHandler {
 
+    }
+
+    //needed to check the current destination on BackPress because it isn't tracked through the flow.
+    val destinations = navController.currentBackStackEntryAsState().value?.destination
+
+    LaunchedEffect(key1 = destinations ){
+        vm.updateBottomBarTab(route = null, currentScreen = destinations?.route)
     }
 
     LaunchedEffect(key1 = userId) {

@@ -11,7 +11,7 @@ import com.example.googlelightcalendar.core.TokenManager
 import com.example.googlelightcalendar.core.registration.UserRegistrationCache
 import com.example.googlelightcalendar.core.registration.UserRegistrationCacheImpl
 import com.example.googlelightcalendar.navigation.components.navmanagers.AuthNavManager
-import com.example.googlelightcalendar.navigation.components.navmanagers.BottomNavManager
+import com.example.googlelightcalendar.navigation.components.navmanagers.AppNavManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -70,7 +70,7 @@ class AppModule {
     fun providesMainScreenNavigationManager(
         authNavManager: AuthNavManager,
         externalScope: CoroutineScope
-    ): BottomNavManager = BottomNavManager(
+    ): AppNavManager = AppNavManager(
         authNavManager,
         externalScope
     )

@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import com.example.googlelightcalendar.core.profile_screen.states.ProfileScreenStates
 import com.example.googlelightcalendar.navigation.components.destinations.GeneralDestinations
 import com.example.googlelightcalendar.navigation.components.navmanagers.AuthNavManager
-import com.example.googlelightcalendar.navigation.components.navmanagers.BottomNavManager
+import com.example.googlelightcalendar.navigation.components.navmanagers.AppNavManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,7 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
-    private val bottomNavManager: BottomNavManager,
+    private val bottomNavManager: AppNavManager,
     private val authNavManager: AuthNavManager,
 ) : ViewModel() {
     val state = MutableStateFlow(ProfileScreenStates.ProfilePage).asStateFlow()
