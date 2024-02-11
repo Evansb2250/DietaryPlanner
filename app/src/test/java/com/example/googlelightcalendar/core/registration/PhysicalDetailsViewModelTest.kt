@@ -6,7 +6,7 @@ import assertk.assertions.isEqualTo
 import com.example.googlelightcalendar.core.PhysicalDetailStateTest
 import com.example.googlelightcalendar.core.provideDateToString
 import com.example.googlelightcalendar.core.registration.state.PhysicalDetailState
-import com.example.googlelightcalendar.navigation.components.NavigationDestinations
+import com.example.googlelightcalendar.navigation.components.destinations.GeneralDestinations
 import com.example.googlelightcalendar.navigation.components.AuthNavManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.test.StandardTestDispatcher
@@ -42,7 +42,7 @@ class PhysicalDetailsViewModelTest {
     fun storePhysicalDetailsInCacheTestPass() {
         val state = provideCompletedDetailsState()
         viewModel.storePhysicalDetailsInCache(state)
-        verify(navigationManager, times(1)).navigate(NavigationDestinations.RegisterGoalsScreen)
+        verify(navigationManager, times(1)).navigate(GeneralDestinations.RegisterGoalsDestination)
         verify(userRegistrationCache, times(1)).storeKey(RegistrationKeys.BIRTHDATE, state.birthDate.value)
         assertThat(userRegistrationCache.getKey(RegistrationKeys.BIRTHDATE)).isEqualTo(state.birthDate.value)
     }
@@ -53,7 +53,7 @@ class PhysicalDetailsViewModelTest {
             this.birthDate.value = ""
         }
         viewModel.storePhysicalDetailsInCache(state)
-        verify(navigationManager, times(0)).navigate(NavigationDestinations.RegisterGoalsScreen)
+        verify(navigationManager, times(0)).navigate(GeneralDestinations.RegisterGoalsDestination)
         viewModel.state.test {
             val stateAfterStoringCache = awaitItem()
             assertThat(stateAfterStoringCache.errorState.isError).isEqualTo(true)
@@ -67,7 +67,7 @@ class PhysicalDetailsViewModelTest {
             this.birthDate.value = ""
         }
         viewModel.storePhysicalDetailsInCache(state)
-        verify(navigationManager, times(0)).navigate(NavigationDestinations.RegisterGoalsScreen)
+        verify(navigationManager, times(0)).navigate(GeneralDestinations.RegisterGoalsDestination)
         viewModel.state.test {
 
             val stateAfterStoringCache = awaitItem()

@@ -5,17 +5,24 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.googlelightcalendar.navigation.components.BottomNavBarDestinations
+import com.example.googlelightcalendar.navigation.components.destinations.BottomNavBarDestinations
+import com.example.googlelightcalendar.navigation.components.destinations.GeneralDestinations
+import com.example.googlelightcalendar.navigation.components.navmanagers.AuthNavManager
 import com.example.googlelightcalendar.navigation.components.navmanagers.BottomNavManager
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class BottomNavViewModel @Inject constructor(
+    val authNavManager: AuthNavManager,
     val navigationManager: BottomNavManager,
 ) : ViewModel() {
 
+    var isVisible by mutableStateOf(true)
+        private set
 
     val navigationsTabs = listOf(
         BottomNavBarDestinations.Home,
@@ -29,8 +36,13 @@ class BottomNavViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            navigationManager.currentDestinations.collect { route ->
-                updateBottomBarTab(route)
+            combine(
+                flow = navigationManager.currentDestinations,
+                flow2 = navigationManager.navigationState
+            ) { bottomNavState: BottomNavBarDestinations, screenState ->
+                updateBottomBarTab(bottomNavState, screenState.destination)
+            }.collect{
+
             }
         }
     }
@@ -52,7 +64,12 @@ class BottomNavViewModel @Inject constructor(
         selectedOption = navigationsTabs[0].routeId
     }
 
-    fun updateBottomBarTab(route: BottomNavBarDestinations? = null) {
+    fun updateBottomBarTab(route: BottomNavBarDestinations? = null, currentScreen: String? = null) {
+        isVisible = currentScreen?.let { currentDestination ->
+            navigationsTabs.firstOrNull { it.destination == currentDestination }
+        } != null
+
+
         selectedOption = route?.routeId ?: 0
     }
 }

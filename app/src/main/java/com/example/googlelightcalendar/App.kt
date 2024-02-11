@@ -11,7 +11,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.example.googlelightcalendar.core.app.AppViewModel
-import com.example.googlelightcalendar.navigation.components.NavigationDestinations
+import com.example.googlelightcalendar.navigation.components.destinations.GeneralDestinations
 import com.example.googlelightcalendar.navigation.navgraphs.OnAppStartNavGraph
 import com.example.googlelightcalendar.navigation.navgraphs.RegisterUserNavGraph
 import com.example.googlelightcalendar.ui.theme.appColor
@@ -47,9 +47,9 @@ fun App(
         navigationState = viewModel.navigationManager.navigationState,
         navigateToDestination = { navDirection ->
             //clears the stack if we are navigating back to the LoginScreen
-            if (navDirection.destination == NavigationDestinations.OnAppStartUp.destination) {
-                navControl.navigate(NavigationDestinations.OnAppStartUp.destination) {
-                    popUpTo(NavigationDestinations.OnAppStartUp.destination) {
+            if (navDirection.destination == GeneralDestinations.OnAppStartUpDestination.destination) {
+                navControl.navigate(GeneralDestinations.OnAppStartUpDestination.destination) {
+                    popUpTo(GeneralDestinations.OnAppStartUpDestination.destination) {
                         inclusive = true
                     }
                 }
@@ -68,7 +68,7 @@ fun App(
                 color = appColor
             ),
         navController = navControl,
-        startDestination = NavigationDestinations.OnAppStartUp.destination,
+        startDestination = GeneralDestinations.OnAppStartUpDestination.destination,
     ) {
         OnAppStartNavGraph()
         RegisterUserNavGraph()

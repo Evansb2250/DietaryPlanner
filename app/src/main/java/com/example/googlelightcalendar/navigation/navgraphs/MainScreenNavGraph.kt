@@ -5,9 +5,11 @@ import androidx.compose.material3.Scaffold
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.example.googlelightcalendar.core.toolBarStates.ToolBarState
-import com.example.googlelightcalendar.navigation.components.BottomNavBarDestinations
-import com.example.googlelightcalendar.screens.food_diary.DiaryScreen
-import com.example.googlelightcalendar.screens.profile.ProfileScreen
+import com.example.googlelightcalendar.navigation.components.destinations.BottomNavBarDestinations
+import com.example.googlelightcalendar.navigation.components.destinations.GeneralDestinations
+import com.example.googlelightcalendar.ui.screens.food_diary.DiaryScreen
+import com.example.googlelightcalendar.ui.screens.food_search.FoodSearchScreen
+import com.example.googlelightcalendar.ui.screens.profile.ProfileScreen
 import com.example.googlelightcalendar.ui_components.ScreenUnavailable
 import com.example.googlelightcalendar.ui_components.toolbar.ChooseUToolBar
 
@@ -66,4 +68,13 @@ fun NavGraphBuilder.MainScreenRoutes(
     }
 
     ProfileNavGraph()
+
+    composable(
+        route = GeneralDestinations.FoodSearchDestination.destination
+    ) {
+        val title = it.arguments?.getString("foodType") ?: "cant find"
+        FoodSearchScreen(
+            title = title,
+        )
+    }
 }

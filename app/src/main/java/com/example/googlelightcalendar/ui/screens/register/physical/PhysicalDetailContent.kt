@@ -49,7 +49,8 @@ fun PhysicalDetailContent(
     AppColumnContainer(
         modifier = Modifier
             .padding(20.dp)
-            .fillMaxSize()
+            .fillMaxSize(),
+        disableBackPress = false,
     ) {
         if (
             state.errorState.isError

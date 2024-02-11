@@ -7,7 +7,7 @@ import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import com.example.googlelightcalendar.navigation.components.BottomNavBarDestinations
+import com.example.googlelightcalendar.navigation.components.destinations.BottomNavBarDestinations
 import com.example.googlelightcalendar.ui.theme.yellowMain
 
 @Composable

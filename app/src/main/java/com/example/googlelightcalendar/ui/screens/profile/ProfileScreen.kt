@@ -1,4 +1,4 @@
-package com.example.googlelightcalendar.screens.profile
+package com.example.googlelightcalendar.ui.screens.profile
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
@@ -159,7 +159,6 @@ fun ProfileScreen(
             }
         }
     }
-
 }
 
 

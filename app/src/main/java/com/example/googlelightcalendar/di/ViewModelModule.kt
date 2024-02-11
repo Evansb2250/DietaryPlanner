@@ -63,8 +63,10 @@ object ViewModelModule {
 
     @Provides
     fun providesBottomNavViewModel(
+        authNavManager: AuthNavManager,
         navigationManger: BottomNavManager
     ): BottomNavViewModel = BottomNavViewModel(
+        authNavManager = authNavManager,
         navigationManager = navigationManger,
     )
 }

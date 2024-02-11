@@ -8,7 +8,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.googlelightcalendar.common.Constants
-import com.example.googlelightcalendar.navigation.components.NavigationDestinations
+import com.example.googlelightcalendar.navigation.components.destinations.GeneralDestinations
 import com.example.googlelightcalendar.navigation.components.navmanagers.AuthNavManager
 import com.example.googlelightcalendar.repo.AuthorizationResponseStates
 import com.example.googlelightcalendar.repo.UserRepository
@@ -117,7 +117,7 @@ class RegistrationViewModel @Inject constructor(
 
 
     private fun navigateNextPage() {
-        navigationManger.navigate(NavigationDestinations.RegisterPhysicalScreen)
+        navigationManger.navigate(GeneralDestinations.RegisterDetailsDestination)
     }
 
     fun reset() {

@@ -1,39 +1,32 @@
 package com.example.googlelightcalendar.navigation.navgraphs
 
-import androidx.compose.material3.Text
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import com.example.googlelightcalendar.navigation.components.MainScreenNavigations
+import com.example.googlelightcalendar.navigation.components.destinations.ProfileDestinations
 import com.example.googlelightcalendar.ui_components.ScreenUnavailable
 
 fun NavGraphBuilder.ProfileNavGraph() {
     composable(
-        route = com.example.googlelightcalendar.navigation.components.ProfileRoutes.Account.destination
+        route = ProfileDestinations.Account.destination
     ) {
         ScreenUnavailable()
     }
 
     composable(
-        route = com.example.googlelightcalendar.navigation.components.ProfileRoutes.Notifications.destination
+        route = ProfileDestinations.NotificationScreen.destination
     ) {
         ScreenUnavailable()
     }
 
     composable(
-        route = com.example.googlelightcalendar.navigation.components.ProfileRoutes.Calendar.destination
+        route = ProfileDestinations.Calendar.destination
     ) {
         ScreenUnavailable()
     }
 
     composable(
-        route = com.example.googlelightcalendar.navigation.components.ProfileRoutes.TOS.destination
+        route = ProfileDestinations.TOS.destination
     ) {
         ScreenUnavailable()
-    }
-
-    composable(
-        route = MainScreenNavigations.NotificationScreen.destination
-    ) {
-        Text(text = "Notification")
     }
 }

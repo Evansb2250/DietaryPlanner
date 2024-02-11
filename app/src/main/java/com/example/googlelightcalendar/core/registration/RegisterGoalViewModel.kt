@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import com.example.googlelightcalendar.core.registration.state.ErrorState
 import com.example.googlelightcalendar.core.registration.state.RegisterGoalStates
 import com.example.googlelightcalendar.core.registration.state.UnitsOfWeight
-import com.example.googlelightcalendar.navigation.components.NavigationDestinations
+import com.example.googlelightcalendar.navigation.components.destinations.GeneralDestinations
 import com.example.googlelightcalendar.navigation.components.navmanagers.AuthNavManager
 import com.example.googlelightcalendar.repo.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -73,7 +73,7 @@ class RegisterGoalViewModel @Inject constructor(
     }
 
     private fun returnToLoginScreen(){
-        navManager.navigate(NavigationDestinations.OnAppStartUp)
+        navManager.navigate(GeneralDestinations.OnAppStartUpDestination)
     }
     fun initiateAccountCreation(
         data: RegisterGoalStates.GoalSelectionState

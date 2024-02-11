@@ -5,7 +5,7 @@ import androidx.annotation.RequiresApi
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.example.googlelightcalendar.navigation.components.NavigationDestinations
+import com.example.googlelightcalendar.navigation.components.destinations.GeneralDestinations
 import com.example.googlelightcalendar.ui.screens.loginScreen.LoginOrSignUpContainer
 import com.example.googlelightcalendar.ui.screens.mainScreen.MainScreen
 /*
@@ -16,7 +16,7 @@ import com.example.googlelightcalendar.ui.screens.mainScreen.MainScreen
 @RequiresApi(Build.VERSION_CODES.P)
 fun NavGraphBuilder.OnAppStartNavGraph() {
     composable(
-        route = NavigationDestinations.OnAppStartUp.destination,
+        route = GeneralDestinations.OnAppStartUpDestination.destination,
         arguments = listOf(
             navArgument("screenType") {
                 defaultValue = "Login"
@@ -30,7 +30,7 @@ fun NavGraphBuilder.OnAppStartNavGraph() {
     }
 
     composable(
-        route = NavigationDestinations.MainScreen.destination,
+        route = GeneralDestinations.MainScreenDestinations.destination,
     ) {
         MainScreen(userId = "")
     }

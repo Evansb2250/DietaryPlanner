@@ -1,4 +1,4 @@
-package com.example.googlelightcalendar.screens.loginScreen.preview
+package com.example.googlelightcalendar.ui.screens.loginScreen.preview
 
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import com.example.googlelightcalendar.core.viewmodels.login.LoginScreenStates

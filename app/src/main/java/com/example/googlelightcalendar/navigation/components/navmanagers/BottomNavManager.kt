@@ -1,6 +1,6 @@
 package com.example.googlelightcalendar.navigation.components.navmanagers
 
-import com.example.googlelightcalendar.navigation.components.BottomNavBarDestinations
+import com.example.googlelightcalendar.navigation.components.destinations.BottomNavBarDestinations
 import com.example.googlelightcalendar.utils.buildDestination
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow

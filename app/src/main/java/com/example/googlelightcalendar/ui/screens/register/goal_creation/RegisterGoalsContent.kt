@@ -34,6 +34,7 @@ fun RegisterGoalsContent(
         modifier = Modifier
             .padding(8.dp)
             .fillMaxSize(),
+        disableBackPress = false,
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceAround,
     ) {

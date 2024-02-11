@@ -12,7 +12,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.example.googlelightcalendar.core.main_screen.BottomNavViewModel
-import com.example.googlelightcalendar.navigation.components.BottomNavBarDestinations
+import com.example.googlelightcalendar.navigation.components.destinations.BottomNavBarDestinations
 import com.example.googlelightcalendar.navigation.navgraphs.MainScreenRoutes
 import com.example.googlelightcalendar.ui.theme.appColor
 import com.example.googlelightcalendar.ui_components.bottomBar.ChooseUBottomBar
@@ -54,18 +54,20 @@ fun MainScreen(
             color = appColor,
         ),
         bottomBar = {
-            ChooseUBottomBar(
-                tabs = vm.navigationsTabs,
-                tabPosition = vm.selectedOption,
-                onClick = { item ->
-                    vm.navigate(
-                        item,
-                        arguments = mapOf(
-                            "userID" to userId
+            if (vm.isVisible){
+                ChooseUBottomBar(
+                    tabs = vm.navigationsTabs,
+                    tabPosition = vm.selectedOption,
+                    onClick = { item ->
+                        vm.navigate(
+                            item,
+                            arguments = mapOf(
+                                "userID" to userId
+                            )
                         )
-                    )
-                }
-            )
+                    }
+                )
+            }
         }) { innerPadding ->
         NavHost(
             modifier = Modifier

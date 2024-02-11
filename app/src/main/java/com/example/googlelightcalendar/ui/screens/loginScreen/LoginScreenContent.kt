@@ -7,10 +7,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -21,7 +17,7 @@ import androidx.compose.ui.unit.dp
 import com.example.googlelightcalendar.R
 import com.example.googlelightcalendar.common.imageHolder
 import com.example.googlelightcalendar.core.viewmodels.login.LoginScreenStates
-import com.example.googlelightcalendar.screens.loginScreen.preview.LoginScreenPreviewProvider
+import com.example.googlelightcalendar.ui.screens.loginScreen.preview.LoginScreenPreviewProvider
 import com.example.googlelightcalendar.ui_components.buttons.GoogleButton
 import com.example.googlelightcalendar.ui_components.buttons.StandardButton
 import com.example.googlelightcalendar.ui_components.custom_column.AppColumnContainer
@@ -46,6 +42,7 @@ fun LoginScreenContent(
 
     AppColumnContainer(
         modifier = modifier,
+        disableBackPress = false,
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {

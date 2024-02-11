@@ -17,7 +17,7 @@ import com.example.googlelightcalendar.fakes.OAuthClientFake
 import com.example.googlelightcalendar.fakes.UserDaoFake
 import com.example.googlelightcalendar.fakes.UserRepositoryFake
 import com.example.googlelightcalendar.navigation.components.AuthNavManager
-import com.example.googlelightcalendar.navigation.components.NavigationDestinations
+import com.example.googlelightcalendar.navigation.components.destinations.GeneralDestinations
 import com.example.googlelightcalendar.repo.UserRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -202,13 +202,13 @@ class LoginViewModelTest {
     @Test
     fun navigateHomeScreenTest(){
         verify(navigationManager, times(0)).navigate(
-            NavigationDestinations.MainScreen
+            GeneralDestinations.MainScreenDestinations
         )
 
         loginViewModel.navigateToHomeScreen("exampleEmail@.com")
 
         verify(navigationManager, times(1)).navigate(
-            NavigationDestinations.MainScreen,
+            GeneralDestinations.MainScreenDestinations,
             mapOf(
                 "userId" to "exampleEmail@.com"
             )
@@ -219,13 +219,13 @@ class LoginViewModelTest {
     fun navigateToRegisterScreen() {
 
         verify(navigationManager, times(0)).navigate(
-            NavigationDestinations.RegisterScreen
+            GeneralDestinations.RegisterScreen
         )
 
         loginViewModel.navigateToRegisterScreen()
 
         verify(navigationManager, times(1)).navigate(
-            NavigationDestinations.RegistrationPath,
+            GeneralDestinations.RegistrationDestinations,
         )
     }
 

@@ -1,6 +1,7 @@
 package com.example.googlelightcalendar.ui_components.mealItem
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -14,17 +15,23 @@ import androidx.compose.material3.Text
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
-import com.example.googlelightcalendar.screens.food_diary.dummySample
-import com.example.googlelightcalendar.screens.food_diary.foodStyle
-import com.example.googlelightcalendar.screens.food_diary.mealHeader
+import com.example.googlelightcalendar.core.diary.models.FoodDiaryItem
 import com.example.googlelightcalendar.ui.theme.appColor
 import com.example.googlelightcalendar.ui.theme.yellowMain
 
 fun LazyListScope.MealItem(
-    title: String,
-    color: Color = Color.White
+    dayOfMonth: String,
+    menuItem: FoodDiaryItem,
+    color: Color = Color.White,
+    onAddFood: (
+        day: String,
+        mealType: String,
+    ) -> Unit = { _, _ -> },
 ) {
     item {
         Row(
@@ -33,13 +40,13 @@ fun LazyListScope.MealItem(
             )
         ) {
             Text(
-                text = title,
+                text = menuItem.typeOfMeal.entryType,
                 color = color,
                 style = mealHeader
             )
             Text(
                 modifier = Modifier.fillMaxWidth(),
-                text = "748",
+                text = "${menuItem.calorieCount}",
                 color = color,
                 textAlign = TextAlign.Right,
                 style = mealHeader,
@@ -48,7 +55,12 @@ fun LazyListScope.MealItem(
         Divider()
     }
 
-    items(dummySample) {
+    this.items(
+        items = menuItem.items,
+        key = {
+            it
+        },
+    ) {
         Row(
             modifier = Modifier
                 .padding(
@@ -100,12 +112,34 @@ fun LazyListScope.MealItem(
 
     item {
         Box(
-            modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.TopEnd
+            modifier = Modifier
+                .fillMaxWidth(),
+            contentAlignment = Alignment.TopEnd,
         ) {
             Text(
+                modifier = Modifier.clickable {
+                    onAddFood(
+                        dayOfMonth,
+                        menuItem.typeOfMeal.entryType
+                    )
+                },
                 text = "Add Food", color = yellowMain
             )
             Spacer(modifier = Modifier.size(60.dp))
         }
     }
 }
+
+val mealHeader = TextStyle(
+    fontSize = TextUnit(
+        value = 5f,
+        type = TextUnitType.Em,
+    )
+)
+
+val foodStyle = TextStyle(
+    fontSize = TextUnit(
+        value = 4f,
+        type = TextUnitType.Em,
+    )
+)

@@ -5,7 +5,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.googlelightcalendar.common.Constants
-import com.example.googlelightcalendar.navigation.components.NavigationDestinations
+import com.example.googlelightcalendar.navigation.components.destinations.GeneralDestinations
 import com.example.googlelightcalendar.navigation.components.navmanagers.AuthNavManager
 import com.example.googlelightcalendar.repo.AuthorizationResponseStates
 import com.example.googlelightcalendar.repo.UserRepository
@@ -56,7 +56,7 @@ class LoginViewModel @Inject constructor(
         email: String
     ) {
         navigationManager.navigate(
-            navigation = NavigationDestinations.MainScreen,
+            navigation = GeneralDestinations.MainScreenDestinations,
             arguments = mapOf(
                 "userId" to email
             ),
@@ -77,7 +77,7 @@ class LoginViewModel @Inject constructor(
         }
 
         navigationManager.navigate(
-            navigation = NavigationDestinations.RegistrationPath,
+            navigation = GeneralDestinations.RegistrationDestinations,
             arguments = parameters,
         )
     }

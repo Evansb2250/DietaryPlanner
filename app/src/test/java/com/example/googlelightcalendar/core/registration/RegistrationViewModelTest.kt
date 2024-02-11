@@ -4,7 +4,7 @@ import app.cash.turbine.test
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import com.example.googlelightcalendar.core.registration.InitialRegistrationState.*
-import com.example.googlelightcalendar.navigation.components.NavigationDestinations
+import com.example.googlelightcalendar.navigation.components.destinations.GeneralDestinations
 import com.example.googlelightcalendar.navigation.components.AuthNavManager
 import com.example.googlelightcalendar.repo.UserRepository
 import kotlinx.coroutines.CoroutineScope
@@ -64,7 +64,7 @@ class RegistrationViewModelTest {
 
         viewModel.onStoreCredentials(state)
 
-        verify(navigationManger, times(1)).navigate(NavigationDestinations.RegisterPhysicalScreen)
+        verify(navigationManger, times(1)).navigate(GeneralDestinations.RegisterDetailsDestination)
     }
 
 
@@ -74,7 +74,7 @@ class RegistrationViewModelTest {
 
         viewModel.onStoreCredentials(state)
 
-        verify(navigationManger, times(0)).navigate(NavigationDestinations.RegisterPhysicalScreen)
+        verify(navigationManger, times(0)).navigate(GeneralDestinations.RegisterDetailsDestination)
 
         viewModel.state.test {
             val stateAfterOnStoreCredentials = awaitItem()

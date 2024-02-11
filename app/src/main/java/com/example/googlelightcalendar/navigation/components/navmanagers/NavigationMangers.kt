@@ -1,7 +1,7 @@
 package com.example.googlelightcalendar.navigation.components.navmanagers
 
 import com.example.googlelightcalendar.navigation.components.Navigation
-import com.example.googlelightcalendar.navigation.components.NavigationDestinations
+import com.example.googlelightcalendar.navigation.components.destinations.GeneralDestinations
 import com.example.googlelightcalendar.utils.buildDestination
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -20,7 +20,7 @@ abstract class NavigationManger(
     val navigationState: SharedFlow<Navigation> = _navigationState.asSharedFlow()
 
     fun navigate(
-        navigation: NavigationDestinations,
+        navigation: GeneralDestinations,
         arguments: Map<String, String> = emptyMap(),
     ) {
         externalScope.launch {
