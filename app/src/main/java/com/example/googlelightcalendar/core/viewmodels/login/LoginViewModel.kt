@@ -5,10 +5,8 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.googlelightcalendar.common.Constants
-import com.example.googlelightcalendar.interfaces.AppAuthClient
-import com.example.googlelightcalendar.navigation.components.NavigationBuilder
-import com.example.googlelightcalendar.navigation.components.NavigationDestinations
-import com.example.googlelightcalendar.navigation.components.NavigationManger
+import com.example.googlelightcalendar.navigation.components.destinations.GeneralDestinations
+import com.example.googlelightcalendar.navigation.components.navmanagers.AuthNavManager
 import com.example.googlelightcalendar.repo.AuthorizationResponseStates
 import com.example.googlelightcalendar.repo.UserRepository
 import com.example.googlelightcalendar.utils.AsyncResponse
@@ -19,14 +17,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-const val TAG = "LoginViewModel"
-
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val navigationManager: NavigationManger,
+    private val navigationManager: AuthNavManager,
     private val userRepository: UserRepository,
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : ViewModel() {
@@ -35,10 +32,14 @@ class LoginViewModel @Inject constructor(
         Constants.SCOPE_PROFILE,
         Constants.SCOPE_EMAIL,
         Constants.SCOPE_OPENID,
-        Constants.CALENDAR_SCOPE,
-        Constants.CALENDAR_EVENTS,
-        Constants.CALENDAR_READ_ONLY,
+//        Constants.CALENDAR_SCOPE,
+//        Constants.CALENDAR_EVENTS,
+//        Constants.CALENDAR_READ_ONLY,
     )
+
+
+    init {
+    }
 
     private val _state: MutableStateFlow<LoginScreenStates> = MutableStateFlow(
         LoginScreenStates.LoginScreenState()
@@ -55,22 +56,33 @@ class LoginViewModel @Inject constructor(
         )
     }
 
+    fun navigateToHomeScreen(
+        email: String
+    ) {
+        navigationManager.navigate(
+            navigation = GeneralDestinations.MainScreenDestinations,
+            arguments = mapOf(
+                "userId" to email
+            ),
+        )
+        resetLoginScreenState()
+    }
+
     fun navigateToRegisterScreen(
         email: String = ""
     ) {
 
-        val map = if (email.isEmpty()) {
+        val parameters = if (email.isEmpty()) {
             emptyMap()
         } else {
             mapOf(
                 "email" to email
             )
         }
+
         navigationManager.navigate(
-            NavigationBuilder.buildDestination(
-                NavigationDestinations.RegistrationPath,
-                map
-            )
+            navigation = GeneralDestinations.RegistrationDestinations,
+            arguments = parameters,
         )
     }
 
@@ -85,29 +97,39 @@ class LoginViewModel @Inject constructor(
             )
             when (response) {
                 is AsyncResponse.Failed -> {
-                    _state.value = LoginScreenStates.LoginError(
-                        message = response.message ?: "Unkown error occurred"
-                    )
+                    _state.update {
+                        LoginScreenStates.LoginError(
+                            message = response.message ?: "Unkown error occurred"
+                        )
+                    }
                 }
 
                 is AsyncResponse.Success -> {
                     if (response.data != null) {
-                        _state.value = LoginScreenStates.UserSignedInState(
-                            email = response.data.userName,
-                            name = response.data.name,
-                        )
+                        _state.update {
+                            LoginScreenStates.UserSignedInState(
+                                email = response.data.userName,
+                                name = response.data.name,
+                            )
+                        }
                     } else {
-                        _state.value = LoginScreenStates.LoginError(
-                            message = "Unknown User"
-                        )
+                        _state.update {
+                            LoginScreenStates.LoginError(
+                                message = "Unknown User"
+                            )
+                        }
                     }
                 }
+
+                else -> {}
             }
         }
     }
 
     fun resetLoginScreenState() {
-        _state.value = LoginScreenStates.LoginScreenState()
+        _state.update {
+            LoginScreenStates.LoginScreenState()
+        }
     }
 
     fun registerAuthLauncher(launcher: ActivityResultLauncher<Intent>) {
@@ -116,29 +138,39 @@ class LoginViewModel @Inject constructor(
 
     fun handleAuthorizationResponse(intent: Intent) {
         viewModelScope.launch(dispatcher) {
-            userRepository.handleAuthorizationResponse(intent) { serverResponse ->
-
-                when (serverResponse) {
-                    is AuthorizationResponseStates.FailedResponsState -> {
-                        _state.value = LoginScreenStates.LoginError(
+            val serverResponse = userRepository.handleAuthorizationResponse(intent)
+            when (serverResponse) {
+                is AuthorizationResponseStates.FailedResponsState -> {
+                    _state.update {
+                        LoginScreenStates.LoginError(
                             message = serverResponse.message,
                         )
                     }
+                }
 
-                    is AuthorizationResponseStates.FirstTimeUserState -> {
-                        _state.value = LoginScreenStates.RegistrationRequiredState(
+                is AuthorizationResponseStates.FirstTimeUserState -> {
+                    _state.update {
+                        LoginScreenStates.RegistrationRequiredState(
                             email = serverResponse.email,
                         )
                     }
+                }
 
-                    is AuthorizationResponseStates.SuccessResponseState -> {
-                        _state.value = LoginScreenStates.UserSignedInState(
+                is AuthorizationResponseStates.SuccessResponseState -> {
+                    _state.update {
+                        LoginScreenStates.UserSignedInState(
                             serverResponse.email,
                             serverResponse.name,
                         )
                     }
                 }
+
+                else -> {}
             }
         }
+    }
+
+    fun updateLoginState(loginScreenState: LoginScreenStates.LoginScreenState) {
+        _state.update { loginScreenState }
     }
 }

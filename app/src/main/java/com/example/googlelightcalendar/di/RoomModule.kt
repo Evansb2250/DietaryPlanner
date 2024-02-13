@@ -1,7 +1,7 @@
 package com.example.googlelightcalendar.di
 
 import android.content.Context
-import com.example.googlelightcalendar.data.room.database.GoogleLightCalenderDatabase
+import com.example.googlelightcalendar.data.database.GoogleLightCalenderDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,7 +16,7 @@ object RoomModule {
     @Singleton
     fun provideGoogleCalendarDatabase(
         @ApplicationContext context: Context,
-    ):GoogleLightCalenderDatabase {
+    ): GoogleLightCalenderDatabase {
         return GoogleLightCalenderDatabase.getDatabase(context)
     }
 }

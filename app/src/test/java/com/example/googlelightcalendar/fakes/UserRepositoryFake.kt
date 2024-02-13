@@ -3,8 +3,8 @@ package com.example.googlelightcalendar.fakes
 import android.content.Intent
 import androidx.activity.result.ActivityResultLauncher
 import com.example.googlelightcalendar.auth.OauthClient
-import com.example.googlelightcalendar.data.room.database.dao.UserDao
-import com.example.googlelightcalendar.data.room.database.models.toUser
+import com.example.googlelightcalendar.data.database.dao.UserDao
+import com.example.googlelightcalendar.data.database.models.toUser
 import com.example.googlelightcalendar.domain.User
 import com.example.googlelightcalendar.repo.AuthorizationResponseStates
 import com.example.googlelightcalendar.repo.UserRepository
@@ -71,5 +71,23 @@ class UserRepositoryFake(
             )
         }
 
+    }
+
+    override suspend fun handleSignUpResponse(
+        intent: Intent,
+        authorizationResponse: AuthorizationResponse?,
+        error: AuthorizationException?,
+        authorizationResponseCallback: (AuthorizationResponseStates) -> Unit
+    ) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun createUser(
+        email: String,
+        firstName: String,
+        lastName: String,
+        password: String
+    ) {
+        TODO("Not yet implemented")
     }
 }

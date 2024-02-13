@@ -1,10 +1,10 @@
 package com.example.googlelightcalendar.core.registration
 
 import androidx.lifecycle.ViewModel
-import com.example.googlelightcalendar.core.registration.state.ErrorHolder
+import com.example.googlelightcalendar.core.registration.state.ErrorState
 import com.example.googlelightcalendar.core.registration.state.PhysicalDetailState
-import com.example.googlelightcalendar.navigation.components.NavigationDestinations.registerGoalsScreen
-import com.example.googlelightcalendar.navigation.components.NavigationManger
+import com.example.googlelightcalendar.navigation.components.destinations.GeneralDestinations
+import com.example.googlelightcalendar.navigation.components.navmanagers.AuthNavManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PhysicalDetailsViewModel @Inject constructor(
-    private val navigationManger: NavigationManger,
+    val navigationManger: AuthNavManager,
     private val cache: UserRegistrationCache,
 ) : ViewModel() {
 
@@ -23,7 +23,7 @@ class PhysicalDetailsViewModel @Inject constructor(
     fun storePhysicalDetailsInCache(
         data: PhysicalDetailState.PhysicalDetails
     ) {
-        if (data.completedForm()) {
+        if (true) {
             cache.storeKey(RegistrationKeys.GENDER, data.selectedGender.value.gender)
             cache.storeKey(RegistrationKeys.BIRTHDATE, data.birthDate.value)
             cache.storeKey(RegistrationKeys.HEIGHT, data.userHeight.value.height)
@@ -36,7 +36,7 @@ class PhysicalDetailsViewModel @Inject constructor(
             reset()
         } else {
             _state.value = PhysicalDetailState.PhysicalDetails(
-                errorState = ErrorHolder(
+                errorState = ErrorState(
                     isError = true,
                     message = "Missing information!! please complete form."
                 )
@@ -44,10 +44,9 @@ class PhysicalDetailsViewModel @Inject constructor(
         }
     }
 
-
     private fun navToRegisterGoals() {
         navigationManger.navigate(
-            registerGoalsScreen
+            navigation = GeneralDestinations.RegisterGoalsDestination,
         )
     }
 

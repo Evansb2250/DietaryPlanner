@@ -9,16 +9,14 @@ import assertk.assertions.isEqualTo
 import assertk.assertions.isInstanceOf
 import com.example.googlelightcalendar.core.viewmodels.login.LoginScreenStates
 import com.example.googlelightcalendar.core.viewmodels.login.LoginViewModel
-import com.example.googlelightcalendar.data.room.database.dao.UserDao
-import com.example.googlelightcalendar.data.room.database.models.UserEntity
+import com.example.googlelightcalendar.data.database.dao.UserDao
+import com.example.googlelightcalendar.data.database.models.UserEntity
 import com.example.googlelightcalendar.domain.User
 import com.example.googlelightcalendar.domain.toUserEntity
 import com.example.googlelightcalendar.fakes.OAuthClientFake
 import com.example.googlelightcalendar.fakes.UserDaoFake
 import com.example.googlelightcalendar.fakes.UserRepositoryFake
-import com.example.googlelightcalendar.navigation.components.NavigationBuilder
-import com.example.googlelightcalendar.navigation.components.NavigationDestinations
-import com.example.googlelightcalendar.navigation.components.NavigationManger
+import com.example.googlelightcalendar.navigation.components.destinations.GeneralDestinations
 import com.example.googlelightcalendar.repo.UserRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -30,8 +28,6 @@ import org.junit.After
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import org.mockito.Mockito
-import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
@@ -41,7 +37,7 @@ class LoginViewModelTest {
 
     private lateinit var externalScope: CoroutineScope
     private lateinit var userRespositoryFake: UserRepository
-    private lateinit var navigationManager: NavigationManger
+    private lateinit var navigationManager: AuthNavManager
     private lateinit var oauthClientFake: OAuthClientFake
     private lateinit var loginViewModel: LoginViewModel
     private lateinit var userDaoFake: UserDao
@@ -191,7 +187,7 @@ class LoginViewModelTest {
             awaitItem()
 
             userDaoFake.insertUser(
-                UserEntity("Sam", "", password = "132")
+                UserEntity("Sam", "", lastName = "", password = "132")
             )
 
             loginViewModel.signInManually("Sam", "1232")
@@ -203,16 +199,32 @@ class LoginViewModelTest {
     }
 
     @Test
+    fun navigateHomeScreenTest(){
+        verify(navigationManager, times(0)).navigate(
+            GeneralDestinations.MainScreenDestinations
+        )
+
+        loginViewModel.navigateToHomeScreen("exampleEmail@.com")
+
+        verify(navigationManager, times(1)).navigate(
+            GeneralDestinations.MainScreenDestinations,
+            mapOf(
+                "userId" to "exampleEmail@.com"
+            )
+        )
+    }
+
+    @Test
     fun navigateToRegisterScreen() {
 
         verify(navigationManager, times(0)).navigate(
-            NavigationDestinations.registerScreen
+            GeneralDestinations.RegisterScreen
         )
 
         loginViewModel.navigateToRegisterScreen()
 
         verify(navigationManager, times(1)).navigate(
-            any()
+            GeneralDestinations.RegistrationDestinations,
         )
     }
 
@@ -222,7 +234,7 @@ class LoginViewModelTest {
             awaitItem()
 
             userDaoFake.insertUser(
-                UserEntity("Sam", "", password = "1232")
+                UserEntity("Sam", "", lastName = "", password = "1232")
             )
 
             loginViewModel.signInManually("Sam", "1232")

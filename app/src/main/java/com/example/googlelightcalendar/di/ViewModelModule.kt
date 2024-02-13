@@ -1,10 +1,14 @@
 package com.example.googlelightcalendar.di
 
+import com.example.googlelightcalendar.core.main_screen.BottomNavViewModel
+import com.example.googlelightcalendar.core.profile_screen.ProfileViewModel
+import com.example.googlelightcalendar.core.registration.RegisterGoalViewModel
 import com.example.googlelightcalendar.core.registration.RegistrationViewModel
 import com.example.googlelightcalendar.core.registration.UserRegistrationCache
-import com.example.googlelightcalendar.repo.UserRepository
 import com.example.googlelightcalendar.core.viewmodels.login.LoginViewModel
-import com.example.googlelightcalendar.navigation.components.NavigationManger
+import com.example.googlelightcalendar.navigation.components.navmanagers.AuthNavManager
+import com.example.googlelightcalendar.navigation.components.navmanagers.AppNavManager
+import com.example.googlelightcalendar.repo.UserRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -13,11 +17,10 @@ import dagger.hilt.android.components.ViewModelComponent
 @Module
 @InstallIn(ViewModelComponent::class)
 object ViewModelModule {
-
     @Provides
     fun providesLoginViewModel(
         userRepository: UserRepository,
-        navigationManger: NavigationManger,
+        navigationManger: AuthNavManager,
     ): LoginViewModel {
         return LoginViewModel(
             navigationManager = navigationManger,
@@ -26,15 +29,29 @@ object ViewModelModule {
     }
 
     @Provides
-    fun providesRegistrationViewMode(
-        registrationCache: UserRegistrationCache,
+    fun providesRegisterGoalViewModel(
+        navigationManger: AuthNavManager,
+        userRegistrationCache: UserRegistrationCache,
         userRepository: UserRepository,
-        navigationManger: NavigationManger,
-    ):RegistrationViewModel{
-        return RegistrationViewModel(
-            registrationCache = registrationCache,
-            userRepository = userRepository,
-            navigationManger = navigationManger,
-        )
-    }
+    ): RegisterGoalViewModel = RegisterGoalViewModel(
+        navManager = navigationManger,
+        userRegistrationCache = userRegistrationCache,
+        userRepository = userRepository,
+    )
+
+    @Provides
+    fun providesProfileViewModel(
+        bottomNavManager: AppNavManager,
+        authNavManager: AuthNavManager,
+    ): ProfileViewModel = ProfileViewModel(
+        bottomNavManager = bottomNavManager,
+        authNavManager = authNavManager,
+    )
+
+    @Provides
+    fun providesBottomNavViewModel(
+        navigationManger: AppNavManager
+    ): BottomNavViewModel = BottomNavViewModel(
+        navigationManager = navigationManger,
+    )
 }

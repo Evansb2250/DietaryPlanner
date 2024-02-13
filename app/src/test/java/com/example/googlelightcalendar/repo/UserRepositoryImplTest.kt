@@ -8,8 +8,8 @@ import com.example.googlelightcalendar.auth.OauthClient
 import com.example.googlelightcalendar.auth.OauthClientImp
 import com.example.googlelightcalendar.core.GoogleTokenManagerImpl
 import com.example.googlelightcalendar.core.TokenManager
-import com.example.googlelightcalendar.data.room.database.dao.UserDao
-import com.example.googlelightcalendar.data.room.database.models.UserEntity
+import com.example.googlelightcalendar.data.database.dao.UserDao
+import com.example.googlelightcalendar.data.database.models.UserEntity
 import com.example.googlelightcalendar.domain.User
 import com.example.googlelightcalendar.fakes.OAuthClientFake
 import com.example.googlelightcalendar.fakes.TokenManagerFakeImpl
@@ -96,7 +96,7 @@ class UserRepositoryImplTest {
     @Test
     fun signInTest() = runTest {
         userDao.insertUser(
-            UserEntity("dsads", "dsa", "sadsa")
+            UserEntity("dsads", "dsa", "sadsa", password = "")
         )
         val result = repository.signIn("dsa", "ds")
 
@@ -107,7 +107,7 @@ class UserRepositoryImplTest {
     @Test
     fun signInTestPassed() = runTest {
         userDao.insertUser(
-            UserEntity("block@example", "dsa", "123")
+            UserEntity("block@example", "dsa", "123", password = "")
         )
         val result: AsyncResponse<User?> = repository.signIn("block@example", "123")
 

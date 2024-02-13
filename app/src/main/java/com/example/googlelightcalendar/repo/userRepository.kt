@@ -4,16 +4,20 @@ import android.content.Intent
 import androidx.activity.result.ActivityResultLauncher
 import com.example.googlelightcalendar.auth.OauthClient
 import com.example.googlelightcalendar.core.TokenManager
-import com.example.googlelightcalendar.data.room.database.dao.UserDao
-import com.example.googlelightcalendar.data.room.database.models.toUser
+import com.example.googlelightcalendar.data.database.dao.UserDao
+import com.example.googlelightcalendar.data.database.models.UserEntity
+import com.example.googlelightcalendar.data.database.models.toUser
 import com.example.googlelightcalendar.domain.User
 import com.example.googlelightcalendar.utils.AsyncResponse
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import net.openid.appauth.AuthorizationException
 import net.openid.appauth.AuthorizationResponse
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.coroutines.resume
 
 interface UserRepository {
     fun attemptAuthorization(
@@ -33,9 +37,19 @@ interface UserRepository {
         intent: Intent,
         authorizationResponse: AuthorizationResponse? = AuthorizationResponse.fromIntent(intent),
         error: AuthorizationException? = AuthorizationException.fromIntent(intent),
-        authorizationResponseCallback: (
-            AuthorizationResponseStates,
-        ) -> Unit = {},
+    ): AuthorizationResponseStates
+
+    suspend fun handleSignUpResponse(
+        intent: Intent,
+        authorizationResponse: AuthorizationResponse?,
+        error: AuthorizationException?,
+    ): AuthorizationResponseStates
+
+    suspend fun createUser(
+        email: String,
+        firstName: String,
+        lastName: String,
+        password: String,
     )
 }
 
@@ -60,6 +74,7 @@ class UserRepositoryImpl @Inject constructor(
     private val googleOauthClient: Lazy<OauthClient>,
     private val userDao: UserDao,
     private val tokenManager: TokenManager,
+    private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : UserRepository {
 
     // Aysnc response is received in the ActivityResultLauncher in the loginScreen
@@ -95,52 +110,75 @@ class UserRepositoryImpl @Inject constructor(
             }
         }
     }
-
     override suspend fun handleAuthorizationResponse(
         intent: Intent,
         authorizationResponse: AuthorizationResponse?,
         error: AuthorizationException?,
-        authorizationResponseCallback: (
-            AuthorizationResponseStates
-        ) -> Unit
-    ) {
-        val asyncResponse = googleOauthClient.value.handleAuthorizationResponse(
-            intent = intent,
-            authorizationResponse = authorizationResponse,
-            error = error,
-        )
-        withContext(Dispatchers.IO) {
-            when (asyncResponse) {
-                is AsyncResponse.Failed<User?> -> {
-                    authorizationResponseCallback(
-                        AuthorizationResponseStates.FailedResponsState(
-                            asyncResponse.message ?: "Failed"
-                        )
-                    )
-                }
-
-                is AsyncResponse.Success<User?> -> {
-                    val user =
-                        userDao.getUserFromGmailSignIn(asyncResponse.data?.name ?: "")?.toUser()
-
-                    if (user != null) {
-                        authorizationResponseCallback(
-                            AuthorizationResponseStates.SuccessResponseState(
-                                email = user.userName,
-                                name = user.name,
+    ): AuthorizationResponseStates {
+        return withContext(dispatcher) {
+            val asyncResponse = googleOauthClient.value.handleAuthorizationResponse(
+                intent = intent,
+                authorizationResponse = authorizationResponse,
+                error = error,
+            )
+            suspendCancellableCoroutine { continuation ->
+                when (asyncResponse) {
+                    is AsyncResponse.Failed<User?> -> {
+                        continuation.resume(
+                            AuthorizationResponseStates.FailedResponsState(
+                                asyncResponse.message ?: "Failed"
                             )
                         )
-                    } else {
-                        // Have user register account.
-                        authorizationResponseCallback(
-                            AuthorizationResponseStates.FirstTimeUserState(
-                                asyncResponse.data!!.userName,
-                                asyncResponse.data.name,
+                    }
+
+                    is AsyncResponse.Success<User?> -> {
+                        val user =
+                            userDao.getUserFromGmailSignIn(asyncResponse.data?.userName ?: "")
+                                ?.toUser()
+
+                        if (user != null) {
+                            continuation.resume(
+                                AuthorizationResponseStates.SuccessResponseState(
+                                    email = user.userName,
+                                    name = user.name,
                                 )
-                        )
+                            )
+                        } else {
+                            // Have user register account.
+                            continuation.resume(
+                                AuthorizationResponseStates.FirstTimeUserState(
+                                    asyncResponse.data!!.userName,
+                                    asyncResponse.data.name,
+                                )
+                            )
+                        }
                     }
                 }
             }
         }
+    }
+
+    override suspend fun handleSignUpResponse(
+        intent: Intent,
+        authorizationResponse: AuthorizationResponse?,
+        error: AuthorizationException?
+    ): AuthorizationResponseStates {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun createUser(
+        email: String,
+        firstName: String,
+        lastName: String,
+        password: String
+    ) {
+        userDao.insertUser(
+            UserEntity(
+                userName = email,
+                name = firstName,
+                lastName = lastName,
+                password = password
+            )
+        )
     }
 }

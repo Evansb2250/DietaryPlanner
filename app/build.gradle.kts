@@ -33,22 +33,12 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
-
-        val myPropert = Properties()
-        myPropert.load(
-            project.file("C:\\Users\\samue\\GoogleLightCalendar\\private_keys.properties")
-                .inputStream()
-        )
-
-        val clientSecret = myPropert.getProperty("client")
-        if (clientSecret != null)
-            buildConfigField("String", "CLIENT_SECRET", "\"$clientSecret\"")
-
     }
 
     buildTypes {
         release {
             isMinifyEnabled = true
+            isDebuggable = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -69,15 +59,19 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.3"
     }
+
     packaging {
         resources {
-            excludes += "META-INF/*"
+            excludes += "META-INF/DEPENDENCIES"
         }
     }
 
 }
 
+
+
 dependencies {
+    implementation("com.google.firebase:firebase-inappmessaging-ktx:20.4.0")
     val lifecycle_version = "2.6.2"
     implementation("io.coil-kt:coil-compose:2.2.2")
 
@@ -86,16 +80,15 @@ dependencies {
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
 
     //Standard Implementations
-    implementation("androidx.core:core-ktx:1.9.0")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
-    implementation("androidx.activity:activity-compose:1.7.2")
-    implementation(platform("androidx.compose:compose-bom:2023.03.00"))
-    implementation("androidx.compose.ui:ui")
-    implementation("androidx.compose.ui:ui-graphics")
-    implementation("androidx.compose.ui:ui-tooling-preview")
+    implementation("androidx.core:core-ktx:1.12.0")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
+    implementation("androidx.activity:activity-compose:1.8.2")
+    implementation("androidx.compose.ui:ui:1.7.0-alpha01")
+    debugImplementation("androidx.compose.ui:ui-tooling:1.6.0")
+    implementation("androidx.compose.ui:ui-tooling-preview:1.6.0")
     implementation("androidx.compose.material3:material3")
     implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("com.google.android.material:material:1.9.0")
+    implementation("com.google.android.material:material:1.11.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
 
     /**
@@ -179,13 +172,12 @@ dependencies {
     //AndroidTestImplementations
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-    androidTestImplementation(platform("androidx.compose:compose-bom:2023.03.00"))
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4")
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.5.4")
 
     //For coroutines
     androidTestImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
-    debugImplementation("androidx.compose.ui:ui-tooling")
-    debugImplementation("androidx.compose.ui:ui-test-manifest")
+    debugImplementation("androidx.compose.ui:ui-tooling:1.5.4")
+    debugImplementation("androidx.compose.ui:ui-test-manifest:1.5.4")
 
     // Mockito
     // Optional -- Mockito framework

@@ -2,19 +2,18 @@ package com.example.googlelightcalendar.core.registration
 
 import android.content.Intent
 import androidx.activity.result.ActivityResultLauncher
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.googlelightcalendar.common.Constants
-import com.example.googlelightcalendar.navigation.components.NavigationDestinations.registerPhysicalScreen
-import com.example.googlelightcalendar.navigation.components.NavigationManger
+import com.example.googlelightcalendar.navigation.components.destinations.GeneralDestinations
+import com.example.googlelightcalendar.navigation.components.navmanagers.AuthNavManager
 import com.example.googlelightcalendar.repo.AuthorizationResponseStates
 import com.example.googlelightcalendar.repo.UserRepository
 import com.example.googlelightcalendar.utils.TextFieldUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -22,7 +21,7 @@ import javax.inject.Inject
 class RegistrationViewModel @Inject constructor(
     val registrationCache: UserRegistrationCache,
     val userRepository: UserRepository,
-    val navigationManger: NavigationManger,
+    val navigationManger: AuthNavManager,
 ) : ViewModel() {
 
     private val googleScopes = arrayOf(
@@ -47,23 +46,23 @@ class RegistrationViewModel @Inject constructor(
     fun signInWithGoogle() {
         userRepository.attemptAuthorization(googleScopes)
     }
+
     fun onStoreCredentials(
         state: InitialRegistrationState.PersonalInformationState
     ) {
         //Change back to state.registrationComplete()
         if (                   //state.registrationComplete()
-            state.registrationComplete()
+            true
         ) {
-            registrationCache.storeKey(RegistrationKeys.FirstName, state.firstName.value)
-            registrationCache.storeKey(RegistrationKeys.LASTNAME, state.lastName.value)
-            registrationCache.storeKey(RegistrationKeys.EMAIL, state.email.value)
-            registrationCache.storeKey(RegistrationKeys.PASSWORD, state.password.value)
-
+            registrationCache.storeKey(RegistrationKeys.FirstName, state.firstName)
+            registrationCache.storeKey(RegistrationKeys.LASTNAME, state.lastName)
+            registrationCache.storeKey(RegistrationKeys.EMAIL, state.email)
+            registrationCache.storeKey(RegistrationKeys.PASSWORD, state.password)
             navigateNextPage()
             reset()
         } else {
             _state.value = InitialRegistrationState.PersonalInformationState(
-                initialFailedLoginState = InitialRegistrationState.Failed(
+                failedLoginState = InitialRegistrationState.Failed(
                     true,
                     "Form not completed"
                 )
@@ -80,78 +79,82 @@ class RegistrationViewModel @Inject constructor(
     }
 
     fun handleAuthorizationResponse(intent: Intent) {
-        viewModelScope.launch(Dispatchers.IO) {
-            userRepository.handleAuthorizationResponse(intent) { serverResponse ->
+        viewModelScope.launch {
+            val serverResponse = userRepository.handleAuthorizationResponse(intent)
 
-                when (serverResponse) {
-                    is AuthorizationResponseStates.FailedResponsState -> {
-                        _state.value = InitialRegistrationState.PersonalInformationState(
-                            initialFailedLoginState = InitialRegistrationState.Failed(
+            when (serverResponse) {
+                is AuthorizationResponseStates.FailedResponsState -> {
+                    _state.update {
+                        InitialRegistrationState.PersonalInformationState(
+                            failedLoginState = InitialRegistrationState.Failed(
                                 isError = true,
                                 errorMessage = "Failed to login into google",
                             )
                         )
                     }
+                }
 
-                    is AuthorizationResponseStates.FirstTimeUserState -> {
-                        _state.value = InitialRegistrationState.PersonalInformationState(
-                            initialFirstName = serverResponse.name,
-                            initialEmail = serverResponse.email
-                        )
-                    }
+                is AuthorizationResponseStates.FirstTimeUserState -> {
+                    _state.value = InitialRegistrationState.PersonalInformationState(
+                        firstName = serverResponse.name,
+                        email = serverResponse.email
+                    )
+                }
 
-                    is AuthorizationResponseStates.SuccessResponseState -> {
-                        _state.value = InitialRegistrationState.PersonalInformationState(
-                            initialFirstName = serverResponse.name,
-                            initialEmail = serverResponse.email
-                        )
-                    }
+                is AuthorizationResponseStates.SuccessResponseState -> {
+                    _state.value = InitialRegistrationState.PersonalInformationState(
+                        firstName = serverResponse.name,
+                        email = serverResponse.email
+                    )
                 }
             }
         }
     }
 
+    fun updatePersonalInformation(state: InitialRegistrationState.PersonalInformationState) {
+        _state.update {
+            state
+        }
+    }
 
     private fun navigateNextPage() {
-        navigationManger.navigate(registerPhysicalScreen)
+        navigationManger.navigate(GeneralDestinations.RegisterDetailsDestination)
     }
 
     fun reset() {
         // reset needed
-        _state.value = InitialRegistrationState.PersonalInformationState()
+        _state.update {
+            InitialRegistrationState.PersonalInformationState(
+                password = ""
+            )
+        }
     }
 }
 
 
 sealed class InitialRegistrationState {
     data class PersonalInformationState(
-        private val initialFirstName: String = "",
-        private val initialLastName: String = "",
-        private val initialEmail: String = "",
-        private val initialPassword: String = "",
-        private val initialFailedLoginState: Failed = Failed()
+        val firstName: String = "",
+        val lastName: String = "",
+        val email: String = "",
+        val password: String = "",
+        val failedLoginState: Failed = Failed()
     ) : InitialRegistrationState() {
 
-        var firstName = mutableStateOf(initialFirstName)
-        var lastName = mutableStateOf(initialLastName)
-        var email = mutableStateOf(initialEmail)
-        var password = mutableStateOf(initialPassword)
-        var failedSignUp = mutableStateOf(initialFailedLoginState)
-
         fun containsValidFirstName(): Boolean {
-            return TextFieldUtils.isValidName(firstName.value)
+            return TextFieldUtils.isValidName(firstName)
         }
 
         fun containsValidLastName(): Boolean {
-            return TextFieldUtils.isValidName(lastName.value)
+            return TextFieldUtils.isValidName(lastName)
         }
 
         fun containsValidEmail(): Boolean {
-            return TextFieldUtils.isValidEmail(email.value)
+            return TextFieldUtils.isValidEmail(email)
         }
 
         fun containsValidPassword(): Boolean {
-            return TextFieldUtils.isValidPassword(password.value)
+            return TextFieldUtils.isValidPassword(password)
         }
 
         fun registrationComplete(): Boolean {

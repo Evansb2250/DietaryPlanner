@@ -1,15 +1,13 @@
 package com.example.googlelightcalendar.core.viewmodels.login
 
-import androidx.compose.runtime.mutableStateOf
 import com.example.googlelightcalendar.utils.TextFieldUtils
 
 sealed class LoginScreenStates {
     data class LoginScreenState(
-        private val initialUserName: String = "",
-        private val initialPassword: String = "",
+        val email: String = "",
+        val password: String = "",
+        val containsIncompleteCredentials: Boolean = false,
     ) : LoginScreenStates() {
-        var email = mutableStateOf(initialUserName)
-        var password = mutableStateOf(initialPassword)
 
         fun containsValidCredentials(): Boolean {
             return isValidPassword() && isValidEmail()
@@ -17,11 +15,11 @@ sealed class LoginScreenStates {
 
         fun isValidPassword(): Boolean {
             //checks to see if it contains the same letters
-            return TextFieldUtils.isValidPassword(password = password.value)
+            return TextFieldUtils.isValidPassword(password = password)
         }
 
         fun isValidEmail(): Boolean {
-            return TextFieldUtils.isValidEmail(email.value)
+            return TextFieldUtils.isValidEmail(email)
         }
     }
 
