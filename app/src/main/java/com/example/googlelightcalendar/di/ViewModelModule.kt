@@ -29,19 +29,6 @@ object ViewModelModule {
     }
 
     @Provides
-    fun providesRegistrationViewMode(
-        registrationCache: UserRegistrationCache,
-        userRepository: UserRepository,
-        navigationManger: AuthNavManager,
-    ): RegistrationViewModel {
-        return RegistrationViewModel(
-            registrationCache = registrationCache,
-            userRepository = userRepository,
-            navigationManger = navigationManger,
-        )
-    }
-
-    @Provides
     fun providesRegisterGoalViewModel(
         navigationManger: AuthNavManager,
         userRegistrationCache: UserRegistrationCache,

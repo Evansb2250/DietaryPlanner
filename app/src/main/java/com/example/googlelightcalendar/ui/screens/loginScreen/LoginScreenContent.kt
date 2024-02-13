@@ -100,7 +100,11 @@ fun LoginScreenContent(
                         loginState.password,
                     )
                 } else {
-                    updateLoginState(loginState.copy(containsIncompleteCredentials = true))
+                    updateLoginState(
+                        LoginScreenStates.LoginScreenState(
+                            containsIncompleteCredentials = true
+                        )
+                    )
                 }
             },
         )

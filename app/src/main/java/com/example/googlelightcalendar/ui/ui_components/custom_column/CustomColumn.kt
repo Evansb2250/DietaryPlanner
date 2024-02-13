@@ -51,10 +51,9 @@ fun AppColumnContainer(
         )
         Column(
             modifier = modifier
-                .fillMaxWidth()
                 .fillMaxSize()
                 .padding(
-                    padding
+                    sidePadding
                 )
                 .background(
                     color = containerColor,

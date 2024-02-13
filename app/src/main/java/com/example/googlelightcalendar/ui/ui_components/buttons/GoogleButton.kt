@@ -17,12 +17,13 @@ import com.example.googlelightcalendar.R
 
 @Composable
 fun GoogleButton(
+    modifier: Modifier = Modifier,
     onClick: () -> Unit,
     shape: Shape = RoundedCornerShape(8.dp)
 ) {
     OutlinedButton(
         shape = shape,
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .height(
                 height = 52.dp

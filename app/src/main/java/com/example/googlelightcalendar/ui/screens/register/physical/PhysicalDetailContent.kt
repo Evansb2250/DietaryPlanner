@@ -46,9 +46,9 @@ fun PhysicalDetailContent(
     navToRegisterGoals: (PhysicalDetailState.PhysicalDetails) -> Unit = {},
     retry: () -> Unit = {},
 ) {
+
     AppColumnContainer(
         modifier = Modifier
-            .padding(20.dp)
             .fillMaxSize(),
         disableBackPress = false,
     ) {
@@ -82,7 +82,8 @@ fun PhysicalDetailContent(
         )
 
         Text(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth(),
             text = "Date of Birth - MM/DD/YYYY",
             textAlign = TextAlign.Start,
             color = Color.White,
@@ -101,7 +102,8 @@ fun PhysicalDetailContent(
         ) {
 
             CustomOutlineTextField(
-                modifier = Modifier.weight(5f),
+                modifier = Modifier
+                    .weight(5f),
                 value = state.userWeight.value.weight,
                 onValueChange = { weight ->
                     state.updateWeight(

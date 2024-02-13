@@ -6,6 +6,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
@@ -30,6 +31,12 @@ fun LoginScreen(
         }
     )
 ) {
+//When user exits the screen I want to clear the state.
+    DisposableEffect(key1 = Unit) {
+        onDispose {
+            loginViewModel.resetLoginScreenState()
+        }
+    }
 
     LaunchedEffect(key1 = Unit) {
         loginViewModel.registerAuthLauncher(

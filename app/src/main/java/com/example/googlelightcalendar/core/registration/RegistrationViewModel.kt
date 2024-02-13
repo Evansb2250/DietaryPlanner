@@ -2,9 +2,6 @@ package com.example.googlelightcalendar.core.registration
 
 import android.content.Intent
 import androidx.activity.result.ActivityResultLauncher
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.googlelightcalendar.common.Constants
@@ -61,12 +58,11 @@ class RegistrationViewModel @Inject constructor(
             registrationCache.storeKey(RegistrationKeys.LASTNAME, state.lastName)
             registrationCache.storeKey(RegistrationKeys.EMAIL, state.email)
             registrationCache.storeKey(RegistrationKeys.PASSWORD, state.password)
-
             navigateNextPage()
             reset()
         } else {
             _state.value = InitialRegistrationState.PersonalInformationState(
-                initialFailedLoginState = InitialRegistrationState.Failed(
+                failedLoginState = InitialRegistrationState.Failed(
                     true,
                     "Form not completed"
                 )
@@ -90,7 +86,7 @@ class RegistrationViewModel @Inject constructor(
                 is AuthorizationResponseStates.FailedResponsState -> {
                     _state.update {
                         InitialRegistrationState.PersonalInformationState(
-                            initialFailedLoginState = InitialRegistrationState.Failed(
+                            failedLoginState = InitialRegistrationState.Failed(
                                 isError = true,
                                 errorMessage = "Failed to login into google",
                             )
@@ -100,21 +96,26 @@ class RegistrationViewModel @Inject constructor(
 
                 is AuthorizationResponseStates.FirstTimeUserState -> {
                     _state.value = InitialRegistrationState.PersonalInformationState(
-                        initialFirstName = serverResponse.name,
-                        initialEmail = serverResponse.email
+                        firstName = serverResponse.name,
+                        email = serverResponse.email
                     )
                 }
 
                 is AuthorizationResponseStates.SuccessResponseState -> {
                     _state.value = InitialRegistrationState.PersonalInformationState(
-                        initialFirstName = serverResponse.name,
-                        initialEmail = serverResponse.email
+                        firstName = serverResponse.name,
+                        email = serverResponse.email
                     )
                 }
             }
         }
     }
 
+    fun updatePersonalInformation(state: InitialRegistrationState.PersonalInformationState) {
+        _state.update {
+            state
+        }
+    }
 
     private fun navigateNextPage() {
         navigationManger.navigate(GeneralDestinations.RegisterDetailsDestination)
@@ -122,25 +123,23 @@ class RegistrationViewModel @Inject constructor(
 
     fun reset() {
         // reset needed
-        _state.value = InitialRegistrationState.PersonalInformationState()
+        _state.update {
+            InitialRegistrationState.PersonalInformationState(
+                password = ""
+            )
+        }
     }
 }
 
 
 sealed class InitialRegistrationState {
     data class PersonalInformationState(
-        private val initialFirstName: String = "",
-        private val initialLastName: String = "",
-        private val initialEmail: String = "",
-        private val initialPassword: String = "",
-        private val initialFailedLoginState: Failed = Failed()
+        val firstName: String = "",
+        val lastName: String = "",
+        val email: String = "",
+        val password: String = "",
+        val failedLoginState: Failed = Failed()
     ) : InitialRegistrationState() {
-
-        var firstName by mutableStateOf(initialFirstName)
-        var lastName by mutableStateOf(initialLastName)
-        var email by mutableStateOf(initialEmail)
-        var password by mutableStateOf(initialPassword)
-        var failedSignUp by mutableStateOf(initialFailedLoginState)
 
         fun containsValidFirstName(): Boolean {
             return TextFieldUtils.isValidName(firstName)

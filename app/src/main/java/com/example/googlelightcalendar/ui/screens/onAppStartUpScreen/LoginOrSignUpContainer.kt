@@ -1,4 +1,4 @@
-package com.example.googlelightcalendar.ui.screens.loginScreen
+package com.example.googlelightcalendar.ui.screens.onAppStartUpScreen
 
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -10,6 +10,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import com.example.googlelightcalendar.ui.screens.loginScreen.LoginScreen
 import com.example.googlelightcalendar.ui.screens.register.RegistrationScreen
 import com.example.googlelightcalendar.ui.ui_components.header.LoginOrSignUpTabAndHeader
 

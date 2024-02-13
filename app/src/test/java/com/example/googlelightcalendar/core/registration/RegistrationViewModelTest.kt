@@ -48,10 +48,10 @@ class RegistrationViewModelTest {
     @Test
     fun `OnStoreCredentials completed credentials Success`() {
         val state = PersonalInformationState(
-            initialFirstName = "Samuel",
-            initialLastName = "Brandenburg",
-            initialEmail = "sam@gmail.com",
-            initialPassword = "2312421213"
+            firstName = "Samuel",
+            lastName = "Brandenburg",
+            email = "sam@gmail.com",
+            password = "2312421213"
         )
 
         val viewModel = spy(
@@ -104,40 +104,40 @@ class RegistrationViewModelTest {
         @JvmStatic
         fun providesFailedPersonInformationState(): Stream<PersonalInformationState> = Stream.of(
                 PersonalInformationState(
-                        initialFirstName = "Samuel",
-                        initialLastName = "Brandenburg",
-                        initialEmail = "",
-                        initialPassword = "2312421213"
+                        firstName = "Samuel",
+                        lastName = "Brandenburg",
+                        email = "",
+                        password = "2312421213"
                 ),
                 PersonalInformationState(
-                        initialFirstName = "Samuel",
-                        initialLastName = "Brandenburg",
-                        initialEmail = "",
-                        initialPassword = ""
+                        firstName = "Samuel",
+                        lastName = "Brandenburg",
+                        email = "",
+                        password = ""
                 ),
                 PersonalInformationState(
-                        initialFirstName = "Samuel",
-                        initialLastName = "",
-                        initialEmail = "",
-                        initialPassword = ""
+                        firstName = "Samuel",
+                        lastName = "",
+                        email = "",
+                        password = ""
                 ),
                 PersonalInformationState(
-                        initialFirstName = "",
-                        initialLastName = "Brandenburg",
-                        initialEmail = "",
-                        initialPassword = "2312421213"
+                        firstName = "",
+                        lastName = "Brandenburg",
+                        email = "",
+                        password = "2312421213"
                 ),
                 PersonalInformationState(
-                        initialFirstName = "",
-                        initialLastName = "Brandenburg",
-                        initialEmail = "samuelebrandenburg12@gmail.com",
-                        initialPassword = ""
+                        firstName = "",
+                        lastName = "Brandenburg",
+                        email = "samuelebrandenburg12@gmail.com",
+                        password = ""
                 ),
                 PersonalInformationState(
-                        initialFirstName = "Samuel",
-                        initialLastName = "Brandenburg",
-                        initialEmail = "samuelebrandenburg12",
-                        initialPassword = "2312421213"
+                        firstName = "Samuel",
+                        lastName = "Brandenburg",
+                        email = "samuelebrandenburg12",
+                        password = "2312421213"
                 )
 
 

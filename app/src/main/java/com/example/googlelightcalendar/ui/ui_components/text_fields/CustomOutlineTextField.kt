@@ -18,6 +18,7 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.googlelightcalendar.common.imageHolder
+import com.example.googlelightcalendar.common.roundedShapeDp
 import com.example.googlelightcalendar.ui.theme.appColor
 
 @Composable
@@ -29,7 +30,7 @@ fun CustomOutlineTextField(
     enabled: Boolean = true,
     readOnly: Boolean = false,
     leadingIcon: imageHolder? = null,
-    shape: Shape = RoundedCornerShape(4.dp),
+    shape: Shape = RoundedCornerShape(roundedShapeDp),
     trailingIcon: @Composable () -> Unit = {},
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default ,
     textStyle: androidx.compose.ui.text.TextStyle = LocalTextStyle.current,
@@ -76,6 +77,7 @@ fun CustomOutlineTextField(
         trailingIcon = trailingIcon,
         maxLines = 1,
         readOnly = readOnly,
+        singleLine = true,
         enabled = enabled,
         shape = shape,
         colors = colors,

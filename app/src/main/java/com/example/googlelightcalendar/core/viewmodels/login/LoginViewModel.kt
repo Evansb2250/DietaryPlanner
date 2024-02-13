@@ -37,6 +37,10 @@ class LoginViewModel @Inject constructor(
 //        Constants.CALENDAR_READ_ONLY,
     )
 
+
+    init {
+    }
+
     private val _state: MutableStateFlow<LoginScreenStates> = MutableStateFlow(
         LoginScreenStates.LoginScreenState()
     )
@@ -93,21 +97,27 @@ class LoginViewModel @Inject constructor(
             )
             when (response) {
                 is AsyncResponse.Failed -> {
-                    _state.value = LoginScreenStates.LoginError(
-                        message = response.message ?: "Unkown error occurred"
-                    )
+                    _state.update {
+                        LoginScreenStates.LoginError(
+                            message = response.message ?: "Unkown error occurred"
+                        )
+                    }
                 }
 
                 is AsyncResponse.Success -> {
                     if (response.data != null) {
-                        _state.value = LoginScreenStates.UserSignedInState(
-                            email = response.data.userName,
-                            name = response.data.name,
-                        )
+                        _state.update {
+                            LoginScreenStates.UserSignedInState(
+                                email = response.data.userName,
+                                name = response.data.name,
+                            )
+                        }
                     } else {
-                        _state.value = LoginScreenStates.LoginError(
-                            message = "Unknown User"
-                        )
+                        _state.update {
+                            LoginScreenStates.LoginError(
+                                message = "Unknown User"
+                            )
+                        }
                     }
                 }
 
@@ -128,7 +138,7 @@ class LoginViewModel @Inject constructor(
 
     fun handleAuthorizationResponse(intent: Intent) {
         viewModelScope.launch(dispatcher) {
-           val serverResponse = userRepository.handleAuthorizationResponse(intent)
+            val serverResponse = userRepository.handleAuthorizationResponse(intent)
             when (serverResponse) {
                 is AuthorizationResponseStates.FailedResponsState -> {
                     _state.update {

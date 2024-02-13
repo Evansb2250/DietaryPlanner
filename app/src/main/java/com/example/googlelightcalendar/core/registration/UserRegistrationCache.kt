@@ -37,17 +37,6 @@ enum class RegistrationKeys(
 class UserRegistrationCacheImpl @Inject constructor() : UserRegistrationCache {
     private val registrationCache = hashMapOf<String, String>()
 
-    private val firstName: String = "First name: ${registrationCache[RegistrationKeys.FirstName.key] ?: ""} "
-    private val lastName: String = "Last name: ${registrationCache[RegistrationKeys.LASTNAME.key] ?: ""} "
-    private val email: String = "Email: ${registrationCache[RegistrationKeys.EMAIL.key] ?: ""} "
-    private val birthdate: String = "Birthday: ${registrationCache[RegistrationKeys.BIRTHDATE.key] ?: ""} "
-    private val gender: String = "Gender: ${registrationCache[RegistrationKeys.GENDER.key]}"
-    private val weight: String = "Weight:${registrationCache[RegistrationKeys.WEIGHT.key]} ${registrationCache[RegistrationKeys.WEIGHTUNIT.key]} "
-    private val height: String = "Height: ${registrationCache[RegistrationKeys.HEIGHT.key]} ${registrationCache[RegistrationKeys.HEIGHTUNIT.key]}"
-    private val goal: String = "Goal: ${registrationCache[RegistrationKeys.GoalType.key]} "
-    private val target: String = "Target weight: ${registrationCache[RegistrationKeys.TargetWeight.key]}"
-    private val weeklyTarget: String = "${registrationCache[RegistrationKeys.GoalType.key]}  Weekly Target: ${registrationCache[RegistrationKeys.WeeklyTarget.key]} ${registrationCache[RegistrationKeys.WEIGHTUNIT.key]}  per week"
-    private val accomplishGoalByDate: String = "Accomplish Goal By: ${registrationCache[RegistrationKeys.AccomplishGoalByDate.key]}"
 
     override fun storeKey(key: RegistrationKeys, value: String) {
         registrationCache.put(key.key, value)
@@ -66,22 +55,39 @@ class UserRegistrationCacheImpl @Inject constructor() : UserRegistrationCache {
         registrationCache.clear()
     }
 
-    override fun printToList(): List<String> = mutableListOf(
-        firstName,
-        lastName,
-        email,
-        birthdate,
-        gender,
-        weight,
-        height,
-        goal,
-        accomplishGoalByDate
-    ).apply {
-        if (registrationCache[RegistrationKeys.WeeklyTarget.key] != null && registrationCache[RegistrationKeys.WeeklyTarget.key]?.trim() != "null") {
-            this.add(8, target)
-            this.add(9, weeklyTarget)
+    override fun printToList(): List<String> {
+        val firstName = "First name: ${registrationCache[RegistrationKeys.FirstName.key] ?: ""} "
+        val lastName = "Last name: ${registrationCache[RegistrationKeys.LASTNAME.key] ?: ""} "
+        val email = "Email: ${registrationCache[RegistrationKeys.EMAIL.key] ?: ""} "
+        val birthdate = "Birthday: ${registrationCache[RegistrationKeys.BIRTHDATE.key] ?: ""} "
+        val gender= "Gender: ${registrationCache[RegistrationKeys.GENDER.key]}"
+        val weight= "Weight:${registrationCache[RegistrationKeys.WEIGHT.key]} ${registrationCache[RegistrationKeys.WEIGHTUNIT.key]} "
+        val height= "Height: ${registrationCache[RegistrationKeys.HEIGHT.key]} ${registrationCache[RegistrationKeys.HEIGHTUNIT.key]}"
+        val goal= "Goal: ${registrationCache[RegistrationKeys.GoalType.key]} "
+        val target= "Target weight: ${registrationCache[RegistrationKeys.TargetWeight.key]}"
+        val weeklyTarget = "${registrationCache[RegistrationKeys.GoalType.key]}  Weekly Target: ${registrationCache[RegistrationKeys.WeeklyTarget.key]} ${registrationCache[RegistrationKeys.WEIGHTUNIT.key]}  per week"
+        val accomplishGoalByDate = "Accomplish Goal By: ${registrationCache[RegistrationKeys.AccomplishGoalByDate.key]}"
+
+        return mutableListOf(
+            firstName,
+            lastName,
+            email,
+            birthdate,
+            gender,
+            weight,
+            height,
+            goal,
+            accomplishGoalByDate
+        ).apply {
+            if (registrationCache[RegistrationKeys.WeeklyTarget.key] != null && registrationCache[RegistrationKeys.WeeklyTarget.key]?.trim() != "null") {
+                this.add(8, target)
+                this.add(9, weeklyTarget)
+            }
         }
     }
+
+
+
 
 }
 

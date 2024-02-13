@@ -6,7 +6,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.googlelightcalendar.navigation.components.destinations.GeneralDestinations
-import com.example.googlelightcalendar.ui.screens.loginScreen.LoginOrSignUpContainer
+import com.example.googlelightcalendar.ui.screens.onAppStartUpScreen.LoginOrSignUpContainer
 import com.example.googlelightcalendar.ui.screens.mainScreen.MainScreen
 /*
  * User can either go to the Login or Registration screen from onAppStartUp. Switching between the two screen is done by a tab and logic and no navigation is used.

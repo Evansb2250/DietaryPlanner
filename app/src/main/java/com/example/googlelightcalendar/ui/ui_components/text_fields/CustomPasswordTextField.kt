@@ -22,6 +22,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.example.googlelightcalendar.R
+import com.example.googlelightcalendar.common.roundedShapeDp
 import com.example.googlelightcalendar.ui.theme.appColor
 
 @Composable
@@ -29,19 +30,11 @@ fun CustomPasswordTextField(
     value: String,
     onValueChange: (String) -> Unit,
     textColor: Color = appColor,
-    modifier: Modifier = Modifier
-        .fillMaxWidth()
-        .height(
-            60.dp
-        )
-        .background(
-            Color.White,
-            RoundedCornerShape(5.dp)
-        ),
+    modifier: Modifier = Modifier,
     unFocusBorderColor: Color = Color.White,
     backGroundColor: Color = Color.White,
     onFocusBorderColor: Color = Color.White,
-    shape: Shape = RoundedCornerShape(4.dp),
+    shape: Shape = RoundedCornerShape(roundedShapeDp),
 ) {
     var showPassword: Boolean by rememberSaveable {
         mutableStateOf(false)
@@ -88,7 +81,15 @@ fun CustomPasswordTextField(
             )
 
         },
-        modifier = modifier,
+        modifier = modifier
+            .fillMaxWidth()
+            .height(
+                60.dp
+            )
+            .background(
+                Color.White,
+                shape,
+            ),
         maxLines = 1,
         shape = shape,
         colors = OutlinedTextFieldDefaults.colors(
