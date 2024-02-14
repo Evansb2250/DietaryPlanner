@@ -10,7 +10,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.googlelightcalendar"
+    namespace = "com.example.chooseu"
     compileSdk = 34
 
     testOptions{
@@ -21,7 +21,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.example.googlelightcalendar"
+        applicationId = "com.example.chooseu"
         minSdk = 26
         targetSdk = 34
         versionCode = 1
@@ -178,6 +178,9 @@ dependencies {
     androidTestImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
     debugImplementation("androidx.compose.ui:ui-tooling:1.5.4")
     debugImplementation("androidx.compose.ui:ui-test-manifest:1.5.4")
+
+    //AppWrite Android SDK
+    implementation("io.appwrite:sdk-for-android:4.0.1")
 
     // Mockito
     // Optional -- Mockito framework
