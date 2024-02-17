@@ -15,7 +15,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.chooseu.common.sidePadding
 import com.example.chooseu.core.diary.DiaryScreenViewModel
 import com.example.chooseu.core.diary.states.DiaryScreenStates
-import com.example.chooseu.core.toolBarStates.ToolBarState
+import com.example.chooseu.core.toolbar_states.ToolBarState
 import com.example.chooseu.ui.theme.appColor
 import com.example.chooseu.ui.ui_components.mealItem.MealItem
 import com.example.chooseu.ui.ui_components.toolbar.ChooseUToolBar

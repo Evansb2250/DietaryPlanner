@@ -1,4 +1,4 @@
-package com.example.chooseu.core.dispatcherProvider
+package com.example.chooseu.core.dispatcher_provider
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers

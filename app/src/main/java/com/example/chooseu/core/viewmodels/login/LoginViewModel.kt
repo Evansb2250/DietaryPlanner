@@ -97,7 +97,7 @@ class LoginViewModel @Inject constructor(
     ) {
         viewModelScope.launch {
             try{
-               Appwrite.onRegister(userName, password)
+       //        Appwrite.onRegister(userName, password)
             } catch (e: Exception){
                 e.printStackTrace()
             }

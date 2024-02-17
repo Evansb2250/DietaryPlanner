@@ -16,7 +16,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.chooseu.R
 import com.example.chooseu.common.sidePadding
 import com.example.chooseu.core.diary.searchFood.FoodSearchViewModel
-import com.example.chooseu.core.toolBarStates.ToolBarState
+import com.example.chooseu.core.toolbar_states.ToolBarState
 import com.example.chooseu.ui.ui_components.custom_column.AppColumnContainer
 import com.example.chooseu.ui.ui_components.toolbar.ChooseUToolBar
 

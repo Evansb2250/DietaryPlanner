@@ -30,7 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.chooseu.R
 import com.example.chooseu.core.profile_screen.ProfileViewModel
-import com.example.chooseu.core.toolBarStates.ToolBarState
+import com.example.chooseu.core.toolbar_states.ToolBarState
 import com.example.chooseu.ui.theme.appColor
 import com.example.chooseu.ui.ui_components.custom_layout.CustomRowLayout
 import com.example.chooseu.ui.ui_components.toolbar.ChooseUToolBar

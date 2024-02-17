@@ -1,4 +1,4 @@
-package com.example.chooseu.core.toolBarStates
+package com.example.chooseu.core.toolbar_states
 
 import androidx.annotation.DrawableRes
 import com.example.chooseu.navigation.components.destinations.GeneralDestinations

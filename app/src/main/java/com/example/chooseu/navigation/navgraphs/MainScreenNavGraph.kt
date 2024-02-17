@@ -4,7 +4,7 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.material3.Scaffold
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import com.example.chooseu.core.toolBarStates.ToolBarState
+import com.example.chooseu.core.toolbar_states.ToolBarState
 import com.example.chooseu.navigation.components.destinations.BottomNavBarDestinations
 import com.example.chooseu.navigation.components.destinations.GeneralDestinations
 import com.example.chooseu.ui.screens.food_diary.DiaryScreen

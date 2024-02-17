@@ -1,7 +1,7 @@
 package com.example.chooseu.di
 
-import com.example.chooseu.core.dispatcherProvider.DispatcherProvider
-import com.example.chooseu.core.dispatcherProvider.DispatcherProviderImp
+import com.example.chooseu.core.dispatcher_provider.DispatcherProvider
+import com.example.chooseu.core.dispatcher_provider.DispatcherProviderImp
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

@@ -18,8 +18,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.example.chooseu.core.toolBarStates.LeadingIcon
-import com.example.chooseu.core.toolBarStates.ToolBarState
+import com.example.chooseu.core.toolbar_states.LeadingIcon
+import com.example.chooseu.core.toolbar_states.ToolBarState
 import com.example.chooseu.navigation.components.destinations.GeneralDestinations
 import com.example.chooseu.ui.theme.appColor
 

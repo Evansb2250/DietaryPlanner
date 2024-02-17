@@ -14,6 +14,7 @@ import com.example.chooseu.core.app.AppViewModel
 import com.example.chooseu.navigation.components.destinations.GeneralDestinations
 import com.example.chooseu.navigation.navgraphs.OnAppStartNavGraph
 import com.example.chooseu.navigation.navgraphs.RegisterUserNavGraph
+import com.example.chooseu.core.on_startup.state.LastSignInState
 import com.example.chooseu.ui.theme.appColor
 import com.example.chooseu.ui.ui_components.NavManagerStateObserver
 import com.example.chooseu.ui.ui_components.dialog.ExitAppDialog
@@ -21,6 +22,7 @@ import com.example.chooseu.ui.ui_components.dialog.ExitAppDialog
 @RequiresApi(Build.VERSION_CODES.P)
 @Composable
 fun App(
+    lastSignInState: LastSignInState,
     viewModel: AppViewModel = hiltViewModel(),
     navControl: NavHostController = rememberNavController(),
     closeApp: () -> Unit,
@@ -29,6 +31,7 @@ fun App(
     BackHandler {
         viewModel.showExitDialog()
     }
+
 
     if (viewModel.showExitAppNotification) {
         ExitAppDialog(
@@ -67,7 +70,7 @@ fun App(
                 color = appColor
             ),
         navController = navControl,
-        startDestination = GeneralDestinations.OnAppStartUpDestination.destination,
+        startDestination = viewModel.getStartDestination(lastSignInState),
     ) {
         OnAppStartNavGraph()
         RegisterUserNavGraph()
