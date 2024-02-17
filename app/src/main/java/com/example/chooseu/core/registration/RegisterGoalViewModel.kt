@@ -73,6 +73,8 @@ class RegisterGoalViewModel @Inject constructor(
     }
 
     private fun returnToLoginScreen(){
+        //clear cache
+        userRegistrationCache.clearCache()
         navManager.navigate(GeneralDestinations.OnAppStartUpDestination)
     }
     fun initiateAccountCreation(

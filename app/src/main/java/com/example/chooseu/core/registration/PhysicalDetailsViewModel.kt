@@ -50,6 +50,14 @@ class PhysicalDetailsViewModel @Inject constructor(
         )
     }
 
+    fun cancelRegistration(){
+        navigationManger.navigate(
+            GeneralDestinations.OnAppStartUpDestination
+        )
+        // removes all the data
+        cache.clearCache()
+    }
+
     fun reset() {
         _state.value = PhysicalDetailState.PhysicalDetails()
     }
