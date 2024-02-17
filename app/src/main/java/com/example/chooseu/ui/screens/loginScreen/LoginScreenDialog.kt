@@ -1,7 +1,9 @@
 package com.example.chooseu.ui.screens.loginScreen
 
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.window.Dialog
 import com.example.chooseu.core.viewmodels.login.LoginScreenStates
 import com.example.chooseu.ui.screens.loginScreen.preview.LoginScreenPreviewProvider
 import com.example.chooseu.ui.ui_components.dialog.ErrorAlertDialog
@@ -12,26 +14,37 @@ fun LoginScreenDialog(
     state: LoginScreenStates,
     resetLoginScreen: () -> Unit = {},
     navigateToHomeScreen: (userEmail: String) -> Unit = {},
-){
-    if (state is LoginScreenStates.LoginError) {
-        ErrorAlertDialog(
-            title = "Login Failed",
-            error = state.message,
-            onDismiss = resetLoginScreen
-        )
+) {
+    when (state) {
+        LoginScreenStates.Loading -> {
+            Dialog(
+                onDismissRequest = { /*TODO*/ },
+                content = {
+                    CircularProgressIndicator()
+                }
+            )
+        }
 
-    } else if (
-        state is LoginScreenStates.RegistrationRequiredState
-    ) {
-        ErrorAlertDialog(
-            title = "Need to Register User",
-            error = "feature isn't implemnented",
-            onDismiss = resetLoginScreen
-        )
-    } else if (
-        state is LoginScreenStates.UserSignedInState
-    ) {
-        navigateToHomeScreen(state.email)
+        is LoginScreenStates.LoginError -> {
+            ErrorAlertDialog(
+                title = "Login Failed",
+                error = state.message,
+                onDismiss = resetLoginScreen
+            )
+        }
+
+        is LoginScreenStates.RegistrationRequiredState -> {
+            ErrorAlertDialog(
+                title = "Need to Register User",
+                error = "feature isn't implemnented",
+                onDismiss = resetLoginScreen
+            )
+        }
+
+        is LoginScreenStates.UserSignedInState -> {
+            navigateToHomeScreen(state.email)
+        }
+
+        else -> {}
     }
-
 }

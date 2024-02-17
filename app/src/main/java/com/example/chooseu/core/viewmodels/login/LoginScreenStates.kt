@@ -23,6 +23,7 @@ sealed class LoginScreenStates {
         }
     }
 
+    object Loading: LoginScreenStates()
     data class RegistrationRequiredState(
         val email: String,
     ) : LoginScreenStates()

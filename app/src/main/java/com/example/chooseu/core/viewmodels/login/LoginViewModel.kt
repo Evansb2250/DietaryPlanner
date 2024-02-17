@@ -87,6 +87,11 @@ class LoginViewModel @Inject constructor(
         userName: String,
         password: String,
     ) {
+
+        _state.update {
+            LoginScreenStates.Loading
+        }
+
         viewModelScope.launch(dispatcher) {
             try {
                 val response = userRepository.signIn(userName, password)
