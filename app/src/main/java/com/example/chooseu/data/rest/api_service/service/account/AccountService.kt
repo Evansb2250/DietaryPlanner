@@ -26,9 +26,14 @@ class AccountService(client: Client) {
         }
     }
 
-    suspend fun register(email: String, password: String): User<Map<String, Any>>? {
+    suspend fun register(email: String, password: String, name: String): User<Map<String, Any>>? {
         return try {
-            account.create(ID.unique(), email, password)
+            account.create(
+                userId = ID.unique(),
+                email = email,
+                password = password,
+                name = name,
+                )
             login(email, password)
         } catch (e: AppwriteException) {
             null

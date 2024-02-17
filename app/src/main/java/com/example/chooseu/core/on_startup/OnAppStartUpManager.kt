@@ -1,26 +1,35 @@
 package com.example.chooseu.core.on_startup
 
-import androidx.lifecycle.MutableLiveData
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import com.example.chooseu.core.dispatcher_provider.DispatcherProvider
 import com.example.chooseu.core.on_startup.state.LastSignInState
 import com.example.chooseu.data.rest.api_service.service.account.AccountService
+import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class OnAppStartUpManager(
+class OnAppStartUpManager @Inject constructor(
     private val accountService: AccountService,
+    private val dispatcher: DispatcherProvider,
 ) {
 
-    private var _isLoadingData = MutableLiveData<Boolean>(true)
-    val isLoadingData = _isLoadingData
-    var lastLoginState: LastSignInState = LastSignInState.NotLoggedIn
+    private var _finishedLoading = mutableStateOf(false)
+    val isfinishedLoading = _finishedLoading
+
+    var lastLoginState: LastSignInState by mutableStateOf(LastSignInState.NotLoggedIn)
         private set
 
     suspend fun fetchSignState() {
-        val user = accountService.getLoggedIn()
+            withContext(dispatcher.io) {
+                val user = accountService.getLoggedIn()
 
-        if (user != null) {
-            lastLoginState = LastSignInState.AlreadyLoggedIn(user.id)
-        } else {
-            lastLoginState = LastSignInState.NotLoggedIn
-        }
-        isLoadingData.postValue(false)
+                if (user != null) {
+                    lastLoginState = LastSignInState.AlreadyLoggedIn(user.id)
+                } else {
+                    lastLoginState = LastSignInState.NotLoggedIn
+                }
+            }
+            _finishedLoading.value  = true
     }
 }

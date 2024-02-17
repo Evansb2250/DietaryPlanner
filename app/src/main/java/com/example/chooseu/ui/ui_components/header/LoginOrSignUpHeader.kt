@@ -35,7 +35,7 @@ fun LoginOrSignUpTabAndHeader(
             .background(Color.Black),
     ) {
         Image(
-            painter = painterResource(id = R.drawable.chooseuloginlogo),
+            painter = painterResource(id = R.drawable.choose_u_login_logo),
             contentDescription = "",
             modifier = Modifier.fillMaxWidth()
         )

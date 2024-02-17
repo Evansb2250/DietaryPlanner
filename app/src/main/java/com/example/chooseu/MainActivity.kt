@@ -7,43 +7,42 @@ import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
-import com.example.chooseu.common.Appwrite
 import com.example.chooseu.core.on_startup.OnAppStartUpManager
 import com.example.chooseu.ui.theme.GoogleLightCalendarTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
+    @Inject
+    lateinit var onAppStartUpManager: OnAppStartUpManager
+
     @RequiresApi(Build.VERSION_CODES.P)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Appwrite.init(this)
         this.actionBar?.hide()
+        val splashScreen = installSplashScreen()
 
-         val onAppStartUp = OnAppStartUpManager(Appwrite.account)
-
-         var keepScreenOn = true
 
         lifecycleScope.launch {
-            onAppStartUp.fetchSignState()
+            onAppStartUpManager.fetchSignState()
         }
-
-        installSplashScreen().setKeepOnScreenCondition {
-            onAppStartUp.isLoadingData.observe(this) {
-                keepScreenOn = it
-            }
-            keepScreenOn
-        }
-
 
         setContent {
             GoogleLightCalendarTheme {
-                App(
-                    lastSignInState = onAppStartUp.lastLoginState,
-                    closeApp = this::finish
-                )
+                splashScreen.setKeepOnScreenCondition {
+                       !onAppStartUpManager.isfinishedLoading.value
+                }
+
+                if(onAppStartUpManager.isfinishedLoading.value){
+                    App(
+                        lastSignInState = onAppStartUpManager.lastLoginState,
+                        //calls the Finish function to close app
+                        closeApp = this::finish
+                    )
+                }
             }
         }
     }

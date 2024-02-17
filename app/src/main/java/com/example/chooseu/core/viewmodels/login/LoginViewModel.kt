@@ -5,15 +5,12 @@ import android.content.Intent
 import androidx.activity.result.ActivityResultLauncher
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.chooseu.common.Appwrite
 import com.example.chooseu.common.Constants
 import com.example.chooseu.navigation.components.destinations.GeneralDestinations
 import com.example.chooseu.navigation.components.navmanagers.AuthNavManager
-import com.example.chooseu.repo.AuthorizationResponseStates
 import com.example.chooseu.repo.UserRepository
 import com.example.chooseu.utils.AsyncResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
@@ -40,11 +37,6 @@ class LoginViewModel @Inject constructor(
 //        Constants.CALENDAR_EVENTS,
 //        Constants.CALENDAR_READ_ONLY,
     )
-
-
-    init {
-        Appwrite.init(context)
-    }
 
     private val _state: MutableStateFlow<LoginScreenStates> = MutableStateFlow(
         LoginScreenStates.LoginScreenState()
@@ -95,46 +87,40 @@ class LoginViewModel @Inject constructor(
         userName: String,
         password: String,
     ) {
-        viewModelScope.launch {
-            try{
-       //        Appwrite.onRegister(userName, password)
-            } catch (e: Exception){
+        viewModelScope.launch(dispatcher) {
+            try {
+                val response = userRepository.signIn(userName, password)
+                when (response) {
+                    is AsyncResponse.Failed -> {
+                        _state.update {
+                            LoginScreenStates.LoginError(
+                                message = response.message ?: "Unkown error occurred"
+                            )
+                        }
+                    }
+
+                    is AsyncResponse.Success -> {
+                        if (response.data != null) {
+                            _state.update {
+                                LoginScreenStates.UserSignedInState(
+                                    email = response.data.userName,
+                                    name = response.data.name,
+                                )
+                            }
+                        } else {
+                            _state.update {
+                                LoginScreenStates.LoginError(
+                                    message = "Unknown User"
+                                )
+                            }
+                        }
+                    }
+
+                    else -> {}
+                }
+            } catch (e: Exception) {
                 e.printStackTrace()
             }
-
-
-//            val response = userRepository.signIn(
-//                userName,
-//                password,
-//            )
-//            when (response) {
-//                is AsyncResponse.Failed -> {
-//                    _state.update {
-//                        LoginScreenStates.LoginError(
-//                            message = response.message ?: "Unkown error occurred"
-//                        )
-//                    }
-//                }
-//
-//                is AsyncResponse.Success -> {
-//                    if (response.data != null) {
-//                        _state.update {
-//                            LoginScreenStates.UserSignedInState(
-//                                email = response.data.userName,
-//                                name = response.data.name,
-//                            )
-//                        }
-//                    } else {
-//                        _state.update {
-//                            LoginScreenStates.LoginError(
-//                                message = "Unknown User"
-//                            )
-//                        }
-//                    }
-//                }
-//
-//                else -> {}
-//            }
         }
     }
 
@@ -149,37 +135,38 @@ class LoginViewModel @Inject constructor(
     }
 
     fun handleAuthorizationResponse(intent: Intent) {
-        viewModelScope.launch(dispatcher) {
-            val serverResponse = userRepository.handleAuthorizationResponse(intent)
-            when (serverResponse) {
-                is AuthorizationResponseStates.FailedResponsState -> {
-                    _state.update {
-                        LoginScreenStates.LoginError(
-                            message = serverResponse.message,
-                        )
-                    }
-                }
-
-                is AuthorizationResponseStates.FirstTimeUserState -> {
-                    _state.update {
-                        LoginScreenStates.RegistrationRequiredState(
-                            email = serverResponse.email,
-                        )
-                    }
-                }
-
-                is AuthorizationResponseStates.SuccessResponseState -> {
-                    _state.update {
-                        LoginScreenStates.UserSignedInState(
-                            serverResponse.email,
-                            serverResponse.name,
-                        )
-                    }
-                }
-
-                else -> {}
-            }
-        }
+        //TODOD("Code Depreciated AppWrite functionality will replace it")
+//        viewModelScope.launch(dispatcher) {
+//            val serverResponse = userRepository.handleAuthorizationResponse(intent)
+//            when (serverResponse) {
+//                is AuthorizationResponseStates.FailedResponsState -> {
+//                    _state.update {
+//                        LoginScreenStates.LoginError(
+//                            message = serverResponse.message,
+//                        )
+//                    }
+//                }
+//
+//                is AuthorizationResponseStates.FirstTimeUserState -> {
+//                    _state.update {
+//                        LoginScreenStates.RegistrationRequiredState(
+//                            email = serverResponse.email,
+//                        )
+//                    }
+//                }
+//
+//                is AuthorizationResponseStates.SuccessResponseState -> {
+//                    _state.update {
+//                        LoginScreenStates.UserSignedInState(
+//                            serverResponse.email,
+//                            serverResponse.name,
+//                        )
+//                    }
+//                }
+//
+//                else -> {}
+//            }
+//        }
     }
 
     fun updateLoginState(loginScreenState: LoginScreenStates.LoginScreenState) {

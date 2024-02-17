@@ -4,13 +4,12 @@ import android.content.Intent
 import androidx.activity.result.ActivityResultLauncher
 import com.example.chooseu.auth.OauthClient
 import com.example.chooseu.core.TokenManager
+import com.example.chooseu.core.dispatcher_provider.DispatcherProvider
 import com.example.chooseu.data.database.dao.UserDao
-import com.example.chooseu.data.database.models.UserEntity
 import com.example.chooseu.data.database.models.toUser
+import com.example.chooseu.data.rest.api_service.service.account.AccountService
 import com.example.chooseu.domain.User
 import com.example.chooseu.utils.AsyncResponse
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import net.openid.appauth.AuthorizationException
@@ -32,6 +31,8 @@ interface UserRepository {
         userName: String,
         password: String,
     ): AsyncResponse<User?>
+
+    suspend fun signOut()
 
     suspend fun handleAuthorizationResponse(
         intent: Intent,
@@ -73,8 +74,9 @@ sealed class AuthorizationResponseStates {
 class UserRepositoryImpl @Inject constructor(
     private val googleOauthClient: Lazy<OauthClient>,
     private val userDao: UserDao,
+    private val accountService: AccountService,
     private val tokenManager: TokenManager,
-    private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
+    private val dispatcherProvider: DispatcherProvider,
 ) : UserRepository {
 
     // Aysnc response is received in the ActivityResultLauncher in the loginScreen
@@ -89,33 +91,44 @@ class UserRepositoryImpl @Inject constructor(
         googleOauthClient.value.registerAuthLauncher(launcher)
     }
 
-    override suspend fun signIn(userName: String, password: String): AsyncResponse<User?> {
-        val result = userDao.getUser(
-            userName,
-            password
-        )
+    override suspend fun signIn(userName: String, password: String): AsyncResponse<User?> =
+        withContext(dispatcherProvider.io) {
+            //
+            accountService.login(email = userName, password)
 
-        return when (result) {
-            null -> {
-                AsyncResponse.Failed(
-                    data = null,
-                    message = "Incorrect credentials"
-                )
-            }
+            val result = accountService.getLoggedIn()
 
-            else -> {
-                AsyncResponse.Success(
-                    data = result.toUser(),
-                )
+            return@withContext when (result) {
+                null -> {
+                    AsyncResponse.Failed(
+                        data = null,
+                        message = "Incorrect credentials"
+                    )
+                }
+
+                else -> {
+                    AsyncResponse.Success(
+                        data = User(
+                            result.email,
+                            ""
+                        ),
+                    )
+                }
             }
         }
+
+    override suspend fun signOut() {
+        withContext(dispatcherProvider.io) {
+            accountService.logout()
+        }
     }
+
     override suspend fun handleAuthorizationResponse(
         intent: Intent,
         authorizationResponse: AuthorizationResponse?,
         error: AuthorizationException?,
     ): AuthorizationResponseStates {
-        return withContext(dispatcher) {
+        return withContext(dispatcherProvider.io) {
             val asyncResponse = googleOauthClient.value.handleAuthorizationResponse(
                 intent = intent,
                 authorizationResponse = authorizationResponse,
@@ -172,13 +185,12 @@ class UserRepositoryImpl @Inject constructor(
         lastName: String,
         password: String
     ) {
-        userDao.insertUser(
-            UserEntity(
-                userName = email,
-                name = firstName,
-                lastName = lastName,
-                password = password
+        withContext(dispatcherProvider.io) {
+            accountService.register(
+                email = email,
+                password = password,
+                name = "$firstName $lastName"
             )
-        )
+        }
     }
 }

@@ -24,6 +24,10 @@ class Constants {
         val URL_API_CALL = "https://www.googleapis.com/drive/v2/files"
         val URL_LOGOUT = "https://accounts.google.com/o/oauth2/revoke?token="
 
+        // AppWrite info
+        const val appwriteEndPoint = "https://cloud.appwrite.io/v1"
+        const val appWriteProjectId = "65cc071f270d4688d790"
+
         val URL_LOGOUT_REDIRECT = "com.ptruiz.authtest:/logout"
     }
 }
