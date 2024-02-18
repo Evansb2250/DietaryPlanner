@@ -5,6 +5,8 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.chooseu.common.Constants
+import com.example.chooseu.core.registration.cache.keys.RegistrationKeys
+import com.example.chooseu.core.registration.cache.UserRegistrationCache
 import com.example.chooseu.navigation.components.destinations.GeneralDestinations
 import com.example.chooseu.navigation.components.navmanagers.AuthNavManager
 import com.example.chooseu.repo.AuthorizationResponseStates
@@ -51,11 +53,11 @@ class RegistrationViewModel @Inject constructor(
         state: InitialRegistrationState.PersonalInformationState
     ) {
         //Change back to state.registrationComplete()
-        if (                   //state.registrationComplete()
-            true
+        if (
+            state.registrationComplete()
         ) {
             registrationCache.storeKey(RegistrationKeys.FirstName, state.firstName)
-            registrationCache.storeKey(RegistrationKeys.LASTNAME, state.lastName)
+            registrationCache.storeKey(RegistrationKeys.WEIGHT_METRIC, state.lastName)
             registrationCache.storeKey(RegistrationKeys.EMAIL, state.email)
             registrationCache.storeKey(RegistrationKeys.PASSWORD, state.password)
             navigateNextPage()

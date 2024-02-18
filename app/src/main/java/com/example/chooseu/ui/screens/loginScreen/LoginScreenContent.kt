@@ -21,7 +21,7 @@ import com.example.chooseu.ui.screens.loginScreen.preview.LoginScreenPreviewProv
 import com.example.chooseu.ui.ui_components.buttons.GoogleButton
 import com.example.chooseu.ui.ui_components.buttons.StandardButton
 import com.example.chooseu.ui.ui_components.custom_column.AppColumnContainer
-import com.example.chooseu.ui.ui_components.dialog.ErrorAlertDialog
+import com.example.chooseu.ui.ui_components.dialog.ErrorDialog
 import com.example.chooseu.ui.ui_components.divider.CustomDividerText
 import com.example.chooseu.ui.ui_components.text_fields.CustomOutlineTextField
 import com.example.chooseu.ui.ui_components.text_fields.CustomPasswordTextField
@@ -47,7 +47,7 @@ fun LoginScreenContent(
         verticalArrangement = Arrangement.Top
     ) {
         if (loginState.containsIncompleteCredentials) {
-            ErrorAlertDialog(
+            ErrorDialog(
                 title = "Invalid Credentials",
                 error = "please fill in the required information",
                 onDismiss = {

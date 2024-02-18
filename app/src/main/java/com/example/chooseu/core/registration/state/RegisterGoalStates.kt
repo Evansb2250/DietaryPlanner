@@ -5,12 +5,21 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import com.example.chooseu.utils.DateUtil
-import java.lang.NumberFormatException
 import java.time.LocalDate
 import java.time.ZoneId
 import java.time.temporal.ChronoUnit
 
 sealed class RegisterGoalStates {
+
+    object Loading : RegisterGoalStates()
+
+    object AccountCreated: RegisterGoalStates()
+    data class CreationError(val message: String) : RegisterGoalStates()
+    data class AccountComfirmationState(val registrationInfoList: List<String>) :
+        RegisterGoalStates() {
+    }
+
+
     data class GoalSelectionState(
         val initialWeight: UnitsOfWeight?,
         val initialErrorState: ErrorState = ErrorState(),
@@ -149,9 +158,5 @@ sealed class RegisterGoalStates {
         val goals = listOf(
             GoalStates.WeightLoss, GoalStates.WeightGain, GoalStates.TrackCalories
         )
-    }
-
-    data class AccountComfirmationState(val registrationInfoList: List<String>) :
-        RegisterGoalStates() {
     }
 }

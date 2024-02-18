@@ -8,8 +8,8 @@ import com.example.chooseu.auth.OAuthStateHandler
 import com.example.chooseu.auth.OauthClientImp
 import com.example.chooseu.core.GoogleTokenManagerImpl
 import com.example.chooseu.core.TokenManager
-import com.example.chooseu.core.registration.UserRegistrationCache
-import com.example.chooseu.core.registration.UserRegistrationCacheImpl
+import com.example.chooseu.core.registration.cache.UserRegistrationCache
+import com.example.chooseu.core.registration.cache.UserRegistrationCacheImpl
 import com.example.chooseu.navigation.components.navmanagers.AuthNavManager
 import com.example.chooseu.navigation.components.navmanagers.AppNavManager
 import dagger.Module

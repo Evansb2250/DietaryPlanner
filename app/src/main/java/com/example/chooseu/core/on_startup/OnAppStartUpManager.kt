@@ -6,6 +6,7 @@ import androidx.compose.runtime.setValue
 import com.example.chooseu.core.dispatcher_provider.DispatcherProvider
 import com.example.chooseu.core.on_startup.state.LastSignInState
 import com.example.chooseu.data.rest.api_service.service.account.AccountService
+import com.example.chooseu.utils.AsyncResponse
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
@@ -22,12 +23,15 @@ class OnAppStartUpManager @Inject constructor(
 
     suspend fun fetchSignState() {
             withContext(dispatcher.io) {
-                val user = accountService.getLoggedIn()
+                val response = accountService.getLoggedIn()
 
-                if (user != null) {
-                    lastLoginState = LastSignInState.AlreadyLoggedIn(user.id)
-                } else {
-                    lastLoginState = LastSignInState.NotLoggedIn
+                when(response){
+                    is AsyncResponse.Failed -> {
+                        lastLoginState = LastSignInState.NotLoggedIn
+                    }
+                    is AsyncResponse.Success -> {
+                        lastLoginState = LastSignInState.AlreadyLoggedIn(response.data!!.id)
+                    }
                 }
             }
             _finishedLoading.value  = true

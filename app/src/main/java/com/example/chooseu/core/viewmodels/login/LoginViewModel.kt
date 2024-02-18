@@ -140,7 +140,7 @@ class LoginViewModel @Inject constructor(
     }
 
     fun handleAuthorizationResponse(intent: Intent) {
-        //TODOD("Code Depreciated AppWrite functionality will replace it")
+        //TODO("Code Depreciated AppWrite functionality will replace it")
 //        viewModelScope.launch(dispatcher) {
 //            val serverResponse = userRepository.handleAuthorizationResponse(intent)
 //            when (serverResponse) {

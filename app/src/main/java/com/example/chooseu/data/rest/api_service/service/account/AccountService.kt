@@ -1,5 +1,6 @@
 package com.example.chooseu.data.rest.api_service.service.account
 
+import com.example.chooseu.utils.AsyncResponse
 import io.appwrite.Client
 import io.appwrite.ID
 import io.appwrite.models.User
@@ -9,34 +10,51 @@ import io.appwrite.services.Account
 class AccountService(client: Client) {
     private val account = Account(client)
 
-    suspend fun getLoggedIn(): User<Map<String, Any>>? {
+    suspend fun getLoggedIn(): AsyncResponse<User<Map<String, Any>>?> {
         return try {
-            account.get()
+            AsyncResponse.Success(
+                data = account.get()
+            )
         } catch (e: AppwriteException) {
-            null
+            AsyncResponse.Failed(
+                data = null,
+                message = e.message,
+            )
         }
     }
 
-    suspend fun login(email: String, password: String): User<Map<String, Any>>? {
+    suspend fun login(email: String, password: String): AsyncResponse<User<Map<String, Any>>?> {
         return try {
             account.createEmailSession(email, password)
             getLoggedIn()
         } catch (e: AppwriteException) {
-            null
+            AsyncResponse.Failed(
+                data = null,
+                message = e.message,
+            )
         }
     }
 
-    suspend fun register(email: String, password: String, name: String): User<Map<String, Any>>? {
+    suspend fun register(
+        userId: String,
+        email: String,
+        password: String,
+        name: String
+    ): AsyncResponse<User<Map<String, Any>>?> {
         return try {
-            account.create(
-                userId = ID.unique(),
-                email = email,
-                password = password,
-                name = name,
+            AsyncResponse.Success(
+                data = account.create(
+                    userId = ID.unique(),
+                    email = email,
+                    password = password,
+                    name = name,
                 )
-            login(email, password)
+            )
         } catch (e: AppwriteException) {
-            null
+            AsyncResponse.Failed(
+                data = null,
+                message = e.message,
+            )
         }
     }
 

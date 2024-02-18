@@ -31,7 +31,6 @@ fun RegisterGoalsContent(
     state: RegisterGoalStates.GoalSelectionState,
     onCreateAccount: (RegisterGoalStates.GoalSelectionState) -> Unit = {},
 ) {
-
     AppColumnContainer(
         modifier = Modifier
             .fillMaxSize(),

@@ -17,7 +17,7 @@ import com.example.chooseu.screens.register.previews.RegistrationScreenPreview
 import com.example.chooseu.ui.ui_components.buttons.GoogleButton
 import com.example.chooseu.ui.ui_components.buttons.StandardButton
 import com.example.chooseu.ui.ui_components.custom_column.AppColumnContainer
-import com.example.chooseu.ui.ui_components.dialog.ErrorAlertDialog
+import com.example.chooseu.ui.ui_components.dialog.ErrorDialog
 import com.example.chooseu.ui.ui_components.divider.CustomDividerText
 import com.example.chooseu.ui.ui_components.text_fields.CustomOutlineTextField
 import com.example.chooseu.ui.ui_components.text_fields.CustomPasswordTextField
@@ -44,7 +44,7 @@ fun RegistrationScreenContent(
     ) {
 
         if (registrationState.failedLoginState.isError) {
-            ErrorAlertDialog(
+            ErrorDialog(
                 title = "Error",
                 error = registrationState.failedLoginState.errorMessage ?: "unkown",
                 onDismiss = onReset

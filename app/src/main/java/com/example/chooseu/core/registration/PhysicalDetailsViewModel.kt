@@ -1,6 +1,8 @@
 package com.example.chooseu.core.registration
 
 import androidx.lifecycle.ViewModel
+import com.example.chooseu.core.registration.cache.keys.RegistrationKeys
+import com.example.chooseu.core.registration.cache.UserRegistrationCache
 import com.example.chooseu.core.registration.state.ErrorState
 import com.example.chooseu.core.registration.state.PhysicalDetailState
 import com.example.chooseu.navigation.components.destinations.GeneralDestinations
@@ -23,11 +25,11 @@ class PhysicalDetailsViewModel @Inject constructor(
     fun storePhysicalDetailsInCache(
         data: PhysicalDetailState.PhysicalDetails
     ) {
-        if (true) {
+        if (data.completedForm()) {
             cache.storeKey(RegistrationKeys.GENDER, data.selectedGender.value.gender)
             cache.storeKey(RegistrationKeys.BIRTHDATE, data.birthDate.value)
             cache.storeKey(RegistrationKeys.HEIGHT, data.userHeight.value.height)
-            cache.storeKey(RegistrationKeys.HEIGHTUNIT, data.userHeight.value.heightType.type)
+            cache.storeKey(RegistrationKeys.HEIGHT_METRIC, data.userHeight.value.heightType.type)
             cache.storeKey(RegistrationKeys.WEIGHT, data.userWeight.value.weight)
             cache.storeKey(RegistrationKeys.WEIGHTUNIT, data.userWeight.value.weightType.type)
 

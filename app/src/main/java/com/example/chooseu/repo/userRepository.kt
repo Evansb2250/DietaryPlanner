@@ -5,11 +5,14 @@ import androidx.activity.result.ActivityResultLauncher
 import com.example.chooseu.auth.OauthClient
 import com.example.chooseu.core.TokenManager
 import com.example.chooseu.core.dispatcher_provider.DispatcherProvider
+import com.example.chooseu.core.registration.cache.keys.RegistrationKeys
+import com.example.chooseu.core.registration.state.RegisterGoalStates
 import com.example.chooseu.data.database.dao.UserDao
 import com.example.chooseu.data.database.models.toUser
 import com.example.chooseu.data.rest.api_service.service.account.AccountService
 import com.example.chooseu.domain.User
 import com.example.chooseu.utils.AsyncResponse
+import io.appwrite.ID
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import net.openid.appauth.AuthorizationException
@@ -47,11 +50,8 @@ interface UserRepository {
     ): AuthorizationResponseStates
 
     suspend fun createUser(
-        email: String,
-        firstName: String,
-        lastName: String,
-        password: String,
-    )
+        userInfo: Map<String, String>,
+    ): AsyncResponse<RegisterGoalStates>
 }
 
 sealed class AuthorizationResponseStates {
@@ -98,18 +98,18 @@ class UserRepositoryImpl @Inject constructor(
 
             val result = accountService.getLoggedIn()
 
-            return@withContext when (result) {
-                null -> {
+            when (result) {
+                is AsyncResponse.Failed -> {
                     AsyncResponse.Failed(
                         data = null,
-                        message = "Incorrect credentials"
+                        message = result.message ?: "Failed to Login",
                     )
                 }
 
-                else -> {
+                is AsyncResponse.Success -> {
                     AsyncResponse.Success(
                         data = User(
-                            result.email,
+                            result.data!!.email,
                             ""
                         ),
                     )
@@ -179,18 +179,72 @@ class UserRepositoryImpl @Inject constructor(
         TODO("Not yet implemented")
     }
 
-    override suspend fun createUser(
-        email: String,
-        firstName: String,
-        lastName: String,
-        password: String
-    ) {
+
+    override suspend fun createUser(userInfo: Map<String, String>): AsyncResponse<RegisterGoalStates> =
         withContext(dispatcherProvider.io) {
-            accountService.register(
-                email = email,
-                password = password,
-                name = "$firstName $lastName"
-            )
+            return@withContext try {
+                //Don't remove throws error if any of the fields in the map is null
+                checkUserInfo(userInfo)
+
+                //User Id that we need to add for an account and User table
+                val userID = ID.unique()
+
+                //if we are able to create an account, we will get a User object
+                val response = accountService.register(
+                    userId = userID,
+                    email = userInfo[RegistrationKeys.EMAIL.key]!!,
+                    name = "${userInfo[RegistrationKeys.FirstName.key]} ${userInfo[RegistrationKeys.WEIGHT_METRIC.key]}",
+                    password = userInfo[RegistrationKeys.PASSWORD.key]!!,
+                )
+
+                when (response) {
+                    is AsyncResponse.Failed -> {
+                        AsyncResponse.Failed(
+                            data = RegisterGoalStates.CreationError(
+                                "couln't create account"
+                            ),
+                            message = null
+                        )
+                    }
+
+                    is AsyncResponse.Success -> {
+                        //add it to the database
+                        AsyncResponse.Success(data = RegisterGoalStates.AccountCreated)
+                    }
+                }
+            } catch (e: IllegalArgumentException) {
+                AsyncResponse.Failed(
+                    data = RegisterGoalStates.CreationError(
+                        e.message ?: "couln't create account"
+                    ),
+                    message = null
+                )
+            }
         }
+
+    //Throws IllegalArgumentException if any field isn't completed.
+    fun checkUserInfo(userInfo: Map<String, String>) {
+        val email = userInfo[RegistrationKeys.EMAIL.key]
+        val password = userInfo[RegistrationKeys.PASSWORD.key]
+        val firstName = userInfo[RegistrationKeys.FirstName.key]
+        val lastName = userInfo[RegistrationKeys.WEIGHT_METRIC.key]
+
+        val gender = userInfo[RegistrationKeys.GENDER.key]
+        val height = userInfo[RegistrationKeys.HEIGHT.key]
+        val heightMetric = userInfo[RegistrationKeys.HEIGHT_METRIC.key]
+        val weight = userInfo[RegistrationKeys.WEIGHT.key]
+        val weightMetric = userInfo[RegistrationKeys.WEIGHT_METRIC.key]
+
+
+        // Check if any of the fields is null or empty using require
+        require(!email.isNullOrEmpty()) { "Email cannot be null or empty" }
+        require(!password.isNullOrEmpty()) { "Password cannot be null or empty" }
+        require(!firstName.isNullOrEmpty()) { "First name cannot be null or empty" }
+        require(!lastName.isNullOrEmpty()) { "Last name cannot be null or empty" }
+        require(!gender.isNullOrEmpty()) { "gender cannot be null or empty" }
+        require(!height.isNullOrEmpty()) { "height cannot be null or empty" }
+        require(!heightMetric.isNullOrEmpty()) { "heightMetric cannot be null or empty" }
+        require(!weight.isNullOrEmpty()) { "weight cannot be null or empty" }
+        require(!weightMetric.isNullOrEmpty()) { "weightMetric cannot be null or empty" }
     }
 }

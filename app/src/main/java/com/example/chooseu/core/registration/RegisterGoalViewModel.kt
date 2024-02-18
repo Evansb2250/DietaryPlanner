@@ -4,16 +4,20 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.chooseu.core.dispatcher_provider.DispatcherProvider
+import com.example.chooseu.core.registration.cache.UserRegistrationCache
+import com.example.chooseu.core.registration.cache.keys.RegistrationKeys
 import com.example.chooseu.core.registration.state.ErrorState
 import com.example.chooseu.core.registration.state.RegisterGoalStates
 import com.example.chooseu.core.registration.state.UnitsOfWeight
 import com.example.chooseu.navigation.components.destinations.GeneralDestinations
 import com.example.chooseu.navigation.components.navmanagers.AuthNavManager
 import com.example.chooseu.repo.UserRepository
+import com.example.chooseu.utils.AsyncResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -27,12 +31,32 @@ class RegisterGoalViewModel @Inject constructor(
 ) : ViewModel() {
 
 
-    private var _state: MutableStateFlow<RegisterGoalStates>
-    var state: StateFlow<RegisterGoalStates>
+    private var _state: MutableStateFlow<RegisterGoalStates> = getGoalState()
+    var state: StateFlow<RegisterGoalStates> = _state.asStateFlow()
         private set
 
-    init {
-        val userWeight = when (
+    fun initiateAccountCreation(
+
+    ) {
+        _state.update {
+            RegisterGoalStates.Loading
+        }
+
+        viewModelScope.launch(dispatcherProvider.main) {
+            val response: AsyncResponse<RegisterGoalStates> =
+                userRepository.createUser(userRegistrationCache.getCache())
+
+            _state.update {
+                when (response) {
+                    is AsyncResponse.Failed -> response.data as RegisterGoalStates
+                    is AsyncResponse.Success -> response.data!!
+                }
+            }
+        }
+    }
+
+    fun getUserWeight(): UnitsOfWeight? {
+        return when (
             userRegistrationCache.getKey(RegistrationKeys.WEIGHTUNIT)
         ) {
             UnitsOfWeight.Kilo.type -> UnitsOfWeight.Kilo
@@ -41,8 +65,11 @@ class RegisterGoalViewModel @Inject constructor(
                 null
             }
         }
+    }
 
-        _state = if (userWeight != null) {
+    fun getGoalState(): MutableStateFlow<RegisterGoalStates> {
+        val userWeight = getUserWeight()
+        return if (userWeight != null) {
             MutableStateFlow(
                 RegisterGoalStates.GoalSelectionState(
                     initialWeight = userWeight
@@ -59,28 +86,13 @@ class RegisterGoalViewModel @Inject constructor(
                 )
             )
         }
-
-        state = _state.asStateFlow()
     }
 
-    fun createAccount() {
-        val userName = userRegistrationCache.getKey(RegistrationKeys.EMAIL) ?: ""
-        val password = userRegistrationCache.getKey(RegistrationKeys.PASSWORD) ?: ""
-        val firstName = userRegistrationCache.getKey(RegistrationKeys.FirstName) ?: ""
-        val lastName = userRegistrationCache.getKey(RegistrationKeys.LASTNAME) ?: ""
-
-        viewModelScope.launch(dispatcherProvider.main) {
-            userRepository.createUser(
-                email = userName,
-                firstName = firstName,
-                lastName = lastName,
-                password = password,
-            )
-            returnToLoginScreen()
-        }
+    fun retry() {
+        _state.update { getGoalState().value }
     }
 
-    private fun returnToLoginScreen() {
+    fun returnToLoginScreen() {
         //clear cache
         userRegistrationCache.clearCache()
         navManager.navigate(GeneralDestinations.OnAppStartUpDestination)
@@ -91,30 +103,15 @@ class RegisterGoalViewModel @Inject constructor(
     ) {
         try {
             userRegistrationCache.storeKey(
-                RegistrationKeys.GoalType,
-                data.selectedGoal.value.toString()
+                mapOf(
+                    RegistrationKeys.GoalType.key to data.selectedGoal.value.toString(),
+                    RegistrationKeys.TargetWeight.key to data.initialTargetWeight.toString(),
+                    RegistrationKeys.AccomplishGoalByDate.key to data.dateToAccomplishGoalBy.value,
+                    RegistrationKeys.WeeklyTarget.key to data.weeklyGoalIntensity.value?.targetPerWeekInPounds.toString(),
+                    RegistrationKeys.TargetWeight.key to data.targetWeight.value.weight,
+                    RegistrationKeys.WEIGHTUNIT.key to data.targetWeight.value.weightType.type,
+                )
             )
-            userRegistrationCache.storeKey(
-                RegistrationKeys.TargetWeight,
-                data.initialTargetWeight ?: ""
-            )
-            userRegistrationCache.storeKey(
-                RegistrationKeys.AccomplishGoalByDate,
-                data.dateToAccomplishGoalBy.value
-            )
-            userRegistrationCache.storeKey(
-                RegistrationKeys.WeeklyTarget,
-                data.weeklyGoalIntensity.value?.targetPerWeekInPounds.toString()
-            )
-            userRegistrationCache.storeKey(
-                RegistrationKeys.TargetWeight,
-                data.targetWeight.value.weight
-            )
-            userRegistrationCache.storeKey(
-                RegistrationKeys.WEIGHTUNIT,
-                data.targetWeight.value.weightType.type
-            )
-
             _state.value =
                 RegisterGoalStates.AccountComfirmationState(userRegistrationCache.printToList())
         } catch (e: NullPointerException) {
@@ -122,5 +119,3 @@ class RegisterGoalViewModel @Inject constructor(
         }
     }
 }
-
-

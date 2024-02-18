@@ -1,12 +1,11 @@
 package com.example.chooseu.ui.screens.loginScreen
 
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.PreviewParameter
-import androidx.compose.ui.window.Dialog
 import com.example.chooseu.core.viewmodels.login.LoginScreenStates
 import com.example.chooseu.ui.screens.loginScreen.preview.LoginScreenPreviewProvider
-import com.example.chooseu.ui.ui_components.dialog.ErrorAlertDialog
+import com.example.chooseu.ui.ui_components.dialog.ErrorDialog
+import com.example.chooseu.ui.ui_components.dialog.LoadingDialog
 
 @Composable
 fun LoginScreenDialog(
@@ -17,16 +16,11 @@ fun LoginScreenDialog(
 ) {
     when (state) {
         LoginScreenStates.Loading -> {
-            Dialog(
-                onDismissRequest = { /*TODO*/ },
-                content = {
-                    CircularProgressIndicator()
-                }
-            )
+            LoadingDialog()
         }
 
         is LoginScreenStates.LoginError -> {
-            ErrorAlertDialog(
+            ErrorDialog(
                 title = "Login Failed",
                 error = state.message,
                 onDismiss = resetLoginScreen
@@ -34,7 +28,7 @@ fun LoginScreenDialog(
         }
 
         is LoginScreenStates.RegistrationRequiredState -> {
-            ErrorAlertDialog(
+            ErrorDialog(
                 title = "Need to Register User",
                 error = "feature isn't implemnented",
                 onDismiss = resetLoginScreen

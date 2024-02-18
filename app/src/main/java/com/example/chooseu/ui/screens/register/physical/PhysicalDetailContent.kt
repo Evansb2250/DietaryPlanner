@@ -33,7 +33,7 @@ import com.example.chooseu.screens.register.previews.PhysicalDetailPreview
 import com.example.chooseu.ui.ui_components.buttons.StandardButton
 import com.example.chooseu.ui.ui_components.calendar.DateSelector
 import com.example.chooseu.ui.ui_components.custom_column.AppColumnContainer
-import com.example.chooseu.ui.ui_components.dialog.ErrorAlertDialog
+import com.example.chooseu.ui.ui_components.dialog.ErrorDialog
 import com.example.chooseu.ui.ui_components.menu.CustomDropDownMenu
 import com.example.chooseu.ui.ui_components.text_fields.CustomOutlineTextField
 
@@ -55,7 +55,7 @@ fun PhysicalDetailContent(
         if (
             state.errorState.isError
         ) {
-            ErrorAlertDialog(
+            ErrorDialog(
                 title = "Error",
                 error = state.errorState.message ?: "Error detected",
                 onDismiss = retry
