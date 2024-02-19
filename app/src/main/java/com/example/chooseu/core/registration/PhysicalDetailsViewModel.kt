@@ -7,6 +7,7 @@ import com.example.chooseu.core.registration.state.ErrorState
 import com.example.chooseu.core.registration.state.PhysicalDetailState
 import com.example.chooseu.navigation.components.destinations.GeneralDestinations
 import com.example.chooseu.navigation.components.navmanagers.AuthNavManager
+import com.example.chooseu.repo.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -17,6 +18,7 @@ import javax.inject.Inject
 class PhysicalDetailsViewModel @Inject constructor(
     val navigationManger: AuthNavManager,
     private val cache: UserRegistrationCache,
+    private val userRepository: UserRepository,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(PhysicalDetailState.PhysicalDetails())

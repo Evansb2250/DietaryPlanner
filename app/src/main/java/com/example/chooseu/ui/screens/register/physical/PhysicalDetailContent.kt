@@ -266,7 +266,7 @@ fun PhysicalDetailContent(
                     Alignment.End
                 )
                 .fillMaxWidth(),
-            text = "Next 2/3",
+            text = "Create Account",
             onClick = {
                 navToRegisterGoals(state)
             },
