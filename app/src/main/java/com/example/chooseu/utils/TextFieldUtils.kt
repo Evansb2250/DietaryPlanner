@@ -38,7 +38,6 @@ object TextFieldUtils {
             TextVerificationStates.Invalid("Password must be more than 5 characters")
         }
 
-
     }
 
 }
