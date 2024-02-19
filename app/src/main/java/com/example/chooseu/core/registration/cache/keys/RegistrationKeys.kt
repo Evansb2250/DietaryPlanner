@@ -8,7 +8,7 @@ enum class RegistrationKeys(
         label = "First Name:",
         key = "firstName",
     ),
-    WEIGHT_METRIC(
+    LastName(
         label = "Last Name:",
         key = "lastName",
     ),

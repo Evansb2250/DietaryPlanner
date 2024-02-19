@@ -1,25 +1,44 @@
 package com.example.chooseu.utils
 
+sealed class TextVerificationStates() {
+    object Passed : TextVerificationStates()
+    data class Invalid(val errorMessage: String) : TextVerificationStates()
+}
+
 object TextFieldUtils {
     fun isValidEmail(
         email: String
-    ): Boolean {
+    ): TextVerificationStates {
         val regex = Regex("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}\$")
-        return regex.matches(email)
+        return if (regex.matches(email)) {
+            TextVerificationStates.Passed
+        } else {
+            TextVerificationStates.Invalid("invalid email")
+        }
     }
 
     fun isValidName(
         name: String,
-    ) : Boolean {
-        return name.length > 3
+    ): TextVerificationStates {
+        return if (name.length >= 2) {
+            TextVerificationStates.Passed
+        } else {
+            TextVerificationStates.Invalid("Names must be more than 3 characters")
+        }
     }
 
     fun isValidPassword(
         password: String
-    ): Boolean {
+    ): TextVerificationStates {
         //checks to see if it contains the same letters
         val passwordRegex = Regex("(.)\\1+")
-        return password.length > 6 && !passwordRegex.matches(password)
+        return if (password.length >= 6 && !passwordRegex.matches(password)){
+            TextVerificationStates.Passed
+        }else{
+            TextVerificationStates.Invalid("Password must be more than 5 characters")
+        }
+
+
     }
 
 }

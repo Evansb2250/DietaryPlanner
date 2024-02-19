@@ -10,6 +10,7 @@ import com.example.chooseu.navigation.components.destinations.GeneralDestination
 import com.example.chooseu.navigation.components.navmanagers.AuthNavManager
 import com.example.chooseu.repo.UserRepository
 import com.example.chooseu.utils.AsyncResponse
+import com.example.chooseu.utils.TextVerificationStates
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineExceptionHandler
@@ -84,17 +85,32 @@ class LoginViewModel @Inject constructor(
     }
 
     fun signInManually(
-        userName: String,
+        loginState: LoginScreenStates.LoginScreenState,
+    ) {
+        when (val result = loginState.containsValidCredentials()) {
+            is TextVerificationStates.Invalid -> {
+                _state.update {
+                    LoginScreenStates.LoginError(result.errorMessage)
+                }
+            }
+
+            TextVerificationStates.Passed -> {
+                signIn(loginState.email, loginState.password)
+            }
+        }
+    }
+
+
+    private fun signIn(
+        email: String,
         password: String,
     ) {
-
         _state.update {
             LoginScreenStates.Loading
         }
-
         viewModelScope.launch(dispatcher) {
             try {
-                val response = userRepository.signIn(userName, password)
+                val response = userRepository.signIn(email, password)
                 when (response) {
                     is AsyncResponse.Failed -> {
                         _state.update {
@@ -127,7 +143,9 @@ class LoginViewModel @Inject constructor(
                 e.printStackTrace()
             }
         }
+
     }
+
 
     fun resetLoginScreenState() {
         _state.update {
@@ -140,38 +158,6 @@ class LoginViewModel @Inject constructor(
     }
 
     fun handleAuthorizationResponse(intent: Intent) {
-        //TODO("Code Depreciated AppWrite functionality will replace it")
-//        viewModelScope.launch(dispatcher) {
-//            val serverResponse = userRepository.handleAuthorizationResponse(intent)
-//            when (serverResponse) {
-//                is AuthorizationResponseStates.FailedResponsState -> {
-//                    _state.update {
-//                        LoginScreenStates.LoginError(
-//                            message = serverResponse.message,
-//                        )
-//                    }
-//                }
-//
-//                is AuthorizationResponseStates.FirstTimeUserState -> {
-//                    _state.update {
-//                        LoginScreenStates.RegistrationRequiredState(
-//                            email = serverResponse.email,
-//                        )
-//                    }
-//                }
-//
-//                is AuthorizationResponseStates.SuccessResponseState -> {
-//                    _state.update {
-//                        LoginScreenStates.UserSignedInState(
-//                            serverResponse.email,
-//                            serverResponse.name,
-//                        )
-//                    }
-//                }
-//
-//                else -> {}
-//            }
-//        }
     }
 
     fun updateLoginState(loginScreenState: LoginScreenStates.LoginScreenState) {

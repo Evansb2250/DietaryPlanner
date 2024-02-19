@@ -3,6 +3,7 @@ package com.example.chooseu.di
 import android.content.Context
 import com.example.chooseu.common.Constants
 import com.example.chooseu.data.rest.api_service.service.account.AccountService
+import com.example.chooseu.data.rest.api_service.service.user.UserService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -29,4 +30,10 @@ object AppWriteModule {
     fun providesAccountService(
         appWriteClient: Client,
     ): AccountService = AccountService(appWriteClient)
+
+    @Singleton
+    @Provides
+    fun provideUserService(
+        appWriteClient: Client,
+    ): UserService = UserService(appWriteClient)
 }

@@ -1,6 +1,7 @@
 package com.example.chooseu.core.viewmodels.login
 
 import com.example.chooseu.utils.TextFieldUtils
+import com.example.chooseu.utils.TextVerificationStates
 
 sealed class LoginScreenStates {
     data class LoginScreenState(
@@ -9,21 +10,24 @@ sealed class LoginScreenStates {
         val containsIncompleteCredentials: Boolean = false,
     ) : LoginScreenStates() {
 
-        fun containsValidCredentials(): Boolean {
-            return isValidPassword() && isValidEmail()
+        fun containsValidCredentials(): TextVerificationStates {
+            return listOf(
+                isValidEmail(),
+                isValidPassword()
+            ).firstOrNull { it is TextVerificationStates.Invalid } ?: TextVerificationStates.Passed
         }
 
-        fun isValidPassword(): Boolean {
+        fun isValidPassword(): TextVerificationStates {
             //checks to see if it contains the same letters
             return TextFieldUtils.isValidPassword(password = password)
         }
 
-        fun isValidEmail(): Boolean {
+        fun isValidEmail(): TextVerificationStates {
             return TextFieldUtils.isValidEmail(email)
         }
     }
 
-    object Loading: LoginScreenStates()
+    object Loading : LoginScreenStates()
     data class RegistrationRequiredState(
         val email: String,
     ) : LoginScreenStates()

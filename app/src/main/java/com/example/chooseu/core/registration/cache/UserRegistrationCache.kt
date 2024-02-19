@@ -50,7 +50,7 @@ class UserRegistrationCacheImpl @Inject constructor() : UserRegistrationCache {
     override fun printToList(): List<String> {
         return mutableListOf(
             "${RegistrationKeys.FirstName.label} ${registrationCache[RegistrationKeys.FirstName.key]}",
-            "${RegistrationKeys.WEIGHT_METRIC.label} ${registrationCache[RegistrationKeys.WEIGHT_METRIC.key]}",
+            "${RegistrationKeys.LastName.label} ${registrationCache[RegistrationKeys.LastName.key]}",
             "${RegistrationKeys.EMAIL.label} ${registrationCache[RegistrationKeys.EMAIL.key]}",
             "${RegistrationKeys.BIRTHDATE.label} ${registrationCache[RegistrationKeys.BIRTHDATE.key]}",
             "${RegistrationKeys.GENDER.label} ${registrationCache[RegistrationKeys.GENDER.key]}",

@@ -36,7 +36,7 @@ fun LoginScreenContent(
     @PreviewParameter(LoginScreenPreviewProvider::class)
     loginState: LoginScreenStates.LoginScreenState,
     updateLoginState: (LoginScreenStates.LoginScreenState) -> Unit = {},
-    signInManually: (userName: String, password: String) -> Unit = { _, _ -> },
+    signInManually: (LoginScreenStates.LoginScreenState) -> Unit = { },
     initiateGoogleSignIn: () -> Unit = {},
 ) {
 
@@ -94,18 +94,9 @@ fun LoginScreenContent(
         StandardButton(
             text = "Log in",
             onClick = {
-                if (loginState.containsValidCredentials()) {
                     signInManually(
-                        loginState.email,
-                        loginState.password,
+                        loginState,
                     )
-                } else {
-                    updateLoginState(
-                        LoginScreenStates.LoginScreenState(
-                            containsIncompleteCredentials = true
-                        )
-                    )
-                }
             },
         )
 

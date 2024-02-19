@@ -5,6 +5,7 @@ import com.example.chooseu.core.GoogleTokenManagerImpl
 import com.example.chooseu.core.dispatcher_provider.DispatcherProvider
 import com.example.chooseu.data.database.GoogleLightCalenderDatabase
 import com.example.chooseu.data.rest.api_service.service.account.AccountService
+import com.example.chooseu.data.rest.api_service.service.user.UserService
 import com.example.chooseu.repo.UserRepository
 import com.example.chooseu.repo.UserRepositoryImpl
 import dagger.Module
@@ -25,6 +26,7 @@ object RepositoryModule {
         tokenManager: GoogleTokenManagerImpl,
         database: GoogleLightCalenderDatabase,
         dispatcherProvider: DispatcherProvider,
+        userService: UserService,
     ): UserRepository {
         return UserRepositoryImpl(
             googleOauthClient = lazy { googleOauthClient },
@@ -32,6 +34,7 @@ object RepositoryModule {
             accountService = accountService,
             tokenManager = tokenManager,
             dispatcherProvider = dispatcherProvider,
+            userService = userService,
         )
     }
 }

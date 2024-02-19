@@ -12,6 +12,7 @@ import com.example.chooseu.navigation.components.navmanagers.AuthNavManager
 import com.example.chooseu.repo.AuthorizationResponseStates
 import com.example.chooseu.repo.UserRepository
 import com.example.chooseu.utils.TextFieldUtils
+import com.example.chooseu.utils.TextVerificationStates
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -53,22 +54,23 @@ class RegistrationViewModel @Inject constructor(
         state: InitialRegistrationState.PersonalInformationState
     ) {
         //Change back to state.registrationComplete()
-        if (
-            state.registrationComplete()
-        ) {
-            registrationCache.storeKey(RegistrationKeys.FirstName, state.firstName)
-            registrationCache.storeKey(RegistrationKeys.WEIGHT_METRIC, state.lastName)
-            registrationCache.storeKey(RegistrationKeys.EMAIL, state.email)
-            registrationCache.storeKey(RegistrationKeys.PASSWORD, state.password)
-            navigateNextPage()
-            reset()
-        } else {
-            _state.value = InitialRegistrationState.PersonalInformationState(
-                failedLoginState = InitialRegistrationState.Failed(
-                    true,
-                    "Form not completed"
+        when (val result = state.registrationComplete()) {
+            is TextVerificationStates.Invalid -> {
+                _state.value = InitialRegistrationState.PersonalInformationState(
+                    failedLoginState = InitialRegistrationState.Failed(
+                        true,
+                        result.errorMessage
+                    )
                 )
-            )
+            }
+            TextVerificationStates.Passed -> {
+                registrationCache.storeKey(RegistrationKeys.FirstName, state.firstName)
+                registrationCache.storeKey(RegistrationKeys.LastName, state.lastName)
+                registrationCache.storeKey(RegistrationKeys.EMAIL, state.email)
+                registrationCache.storeKey(RegistrationKeys.PASSWORD, state.password)
+                navigateNextPage()
+                reset()
+            }
         }
     }
 
@@ -143,27 +145,31 @@ sealed class InitialRegistrationState {
         val failedLoginState: Failed = Failed()
     ) : InitialRegistrationState() {
 
-        fun containsValidFirstName(): Boolean {
-            return TextFieldUtils.isValidName(firstName)
+        fun containsValidFirstName(): TextVerificationStates {
+            return TextFieldUtils.isValidName(firstName.trim())
         }
 
-        fun containsValidLastName(): Boolean {
+        fun containsValidLastName(): TextVerificationStates {
             return TextFieldUtils.isValidName(lastName)
         }
 
-        fun containsValidEmail(): Boolean {
+        fun containsValidEmail(): TextVerificationStates {
             return TextFieldUtils.isValidEmail(email)
         }
 
-        fun containsValidPassword(): Boolean {
+        fun containsValidPassword(): TextVerificationStates {
             return TextFieldUtils.isValidPassword(password)
         }
 
-        fun registrationComplete(): Boolean {
-            return containsValidEmail() &&
-                    containsValidPassword() &&
-                    containsValidLastName() &&
-                    containsValidFirstName()
+        fun registrationComplete(): TextVerificationStates {
+            return listOf(
+                containsValidEmail(),
+                containsValidPassword(),
+                containsValidLastName(),
+                containsValidFirstName(),
+            )
+                .firstOrNull() { it is TextVerificationStates.Invalid }
+                ?: TextVerificationStates.Passed
         }
     }
 

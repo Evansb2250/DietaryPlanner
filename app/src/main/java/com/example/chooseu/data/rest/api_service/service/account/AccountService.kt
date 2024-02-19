@@ -42,13 +42,16 @@ class AccountService(client: Client) {
         name: String
     ): AsyncResponse<User<Map<String, Any>>?> {
         return try {
+          val account =  account.create(
+                userId = ID.unique(),
+                email = email,
+                password = password,
+                name = name,
+            )
+            login(email, password)
+
             AsyncResponse.Success(
-                data = account.create(
-                    userId = ID.unique(),
-                    email = email,
-                    password = password,
-                    name = name,
-                )
+                data = account
             )
         } catch (e: AppwriteException) {
             AsyncResponse.Failed(
