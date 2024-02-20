@@ -21,6 +21,7 @@ import net.openid.appauth.AuthorizationResponse
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.coroutines.resume
+import io.appwrite.models.User as AppWriteUser
 
 @Singleton
 class UserRepositoryImpl @Inject constructor(
@@ -32,12 +33,15 @@ class UserRepositoryImpl @Inject constructor(
     private val userService: UserService,
 ) : UserRepository {
 
+    @Deprecated("App Write will take care of this")
+
     // Aysnc response is received in the ActivityResultLauncher in the loginScreen
     override fun attemptAuthorization(
         authorizationScopes: Array<String>
     ) {
         googleOauthClient.value.attemptAuthorization(authorizationScopes)
     }
+    @Deprecated("App Write will take care of this")
 
     //Registers the googleOauthClient to the activity launcher the googleOauthClient is a singleton, and it survives while mainActivity is alive.
     override fun registerAuthLauncher(launcher: ActivityResultLauncher<Intent>) {
@@ -75,6 +79,7 @@ class UserRepositoryImpl @Inject constructor(
             accountService.logout()
         }
     }
+    @Deprecated("App Write will take care of this")
 
     override suspend fun handleAuthorizationResponse(
         intent: Intent,
@@ -123,6 +128,7 @@ class UserRepositoryImpl @Inject constructor(
             }
         }
     }
+    @Deprecated("App Write will take care of this")
 
     override suspend fun handleSignUpResponse(
         intent: Intent,
@@ -142,62 +148,16 @@ class UserRepositoryImpl @Inject constructor(
                 //User Id that we need to add for an account and User table
                 val userID = ID.unique()
 
-
                 //if we are able to create an account, we will get a User object
-                val createUserRequestStatus = accountService.register(
+                val registerUserResponse = accountService.registerUser(
                     userId = userID,
                     email = userInfo[RegistrationKeys.EMAIL.key]!!,
                     name = "${userInfo[RegistrationKeys.FirstName.key]} ${userInfo[RegistrationKeys.LastName.key]}",
                     password = userInfo[RegistrationKeys.PASSWORD.key]!!,
                 )
 
-                when (createUserRequestStatus) {
-                    is AsyncResponse.Failed -> {
-                        AsyncResponse.Failed(
-                            data = RegisterGoalStates.CreationError(
-                                "couln't create account"
-                            ),
-                            message = null
-                        )
-                    }
+                handleUserRegistrationResponse(registerUserResponse, userInfo)
 
-                    is AsyncResponse.Success -> {
-                        //have to start a session to add data
-                    val fetchedUserRequest = accountService.login(
-                            email = userInfo[RegistrationKeys.EMAIL.key]!!,
-                            password = userInfo[RegistrationKeys.PASSWORD.key]!!
-                        )
-
-                        when(fetchedUserRequest) {
-                            is AsyncResponse.Failed -> {
-                                AsyncResponse.Failed(
-                                    data = RegisterGoalStates.CreationError(
-                                        fetchedUserRequest.message ?: "couln't create account"
-                                    ),
-                                    message = null
-                                )
-                            }
-                            is AsyncResponse.Success -> {
-                                //add it to the database
-                                userService.add(
-                                    userId = fetchedUserRequest.data!!.id,
-                                    firstName = userInfo[RegistrationKeys.FirstName.key]!!,
-                                    lastName = userInfo[RegistrationKeys.LastName.key]!!,
-                                    birthDate = userInfo[RegistrationKeys.BIRTHDATE.key]!!,
-                                    height = userInfo[RegistrationKeys.HEIGHT.key]!!.toDouble(),
-                                    heightMetric = userInfo[RegistrationKeys.HEIGHT_METRIC.key]!!,
-                                    weight = userInfo[RegistrationKeys.WEIGHT.key]!!.toDouble(),
-                                    weightMetric = userInfo[RegistrationKeys.WEIGHTUNIT.key]!!,
-                                    email = userInfo[RegistrationKeys.EMAIL.key]!!,
-                                    gender = userInfo[RegistrationKeys.GENDER.key]!!,
-                                )
-                                //end Session
-                                accountService.logout()
-                                AsyncResponse.Success(data = RegisterGoalStates.AccountCreated)
-                            }
-                        }
-                    }
-                }
             } catch (e: IllegalArgumentException) {
                 AsyncResponse.Failed(
                     data = RegisterGoalStates.CreationError(
@@ -214,6 +174,42 @@ class UserRepositoryImpl @Inject constructor(
                 )
             }
         }
+
+
+    private suspend fun handleUserRegistrationResponse(
+        registerUserStatus: AsyncResponse<AppWriteUser<Map<String, Any>>?>,
+        userInfo: Map<String, String>
+    ):  AsyncResponse<RegisterGoalStates>{
+       return when (registerUserStatus) {
+            is AsyncResponse.Failed -> {
+                AsyncResponse.Failed(
+                    data = RegisterGoalStates.CreationError(
+                        registerUserStatus.message ?: "Couldn't create account"
+                    ),
+                    message = null
+                )
+            }
+
+            is AsyncResponse.Success -> {
+                //add it to the database
+                userService.add(
+                    userId = registerUserStatus.data!!.id,
+                    firstName = userInfo[RegistrationKeys.FirstName.key]!!,
+                    lastName = userInfo[RegistrationKeys.LastName.key]!!,
+                    birthDate = userInfo[RegistrationKeys.BIRTHDATE.key]!!,
+                    height = userInfo[RegistrationKeys.HEIGHT.key]!!.toDouble(),
+                    heightMetric = userInfo[RegistrationKeys.HEIGHT_METRIC.key]!!,
+                    weight = userInfo[RegistrationKeys.WEIGHT.key]!!.toDouble(),
+                    weightMetric = userInfo[RegistrationKeys.WEIGHTUNIT.key]!!,
+                    email = userInfo[RegistrationKeys.EMAIL.key]!!,
+                    gender = userInfo[RegistrationKeys.GENDER.key]!!,
+                )
+                //end Session
+                accountService.logout()
+                AsyncResponse.Success(data = RegisterGoalStates.AccountCreated)
+            }
+        }
+    }
 
     //Throws IllegalArgumentException if any field isn't completed.
     fun checkUserInfo(userInfo: Map<String, String>) {

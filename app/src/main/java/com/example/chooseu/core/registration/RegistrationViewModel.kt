@@ -82,37 +82,8 @@ class RegistrationViewModel @Inject constructor(
         )
     }
 
+    @Deprecated("App Write will take care of this")
     fun handleAuthorizationResponse(intent: Intent) {
-        viewModelScope.launch {
-            val serverResponse = userRepository.handleAuthorizationResponse(intent)
-
-            when (serverResponse) {
-                is AuthorizationResponseStates.FailedResponsState -> {
-                    _state.update {
-                        InitialRegistrationState.PersonalInformationState(
-                            failedLoginState = InitialRegistrationState.Failed(
-                                isError = true,
-                                errorMessage = "Failed to login into google",
-                            )
-                        )
-                    }
-                }
-
-                is AuthorizationResponseStates.FirstTimeUserState -> {
-                    _state.value = InitialRegistrationState.PersonalInformationState(
-                        firstName = serverResponse.name,
-                        email = serverResponse.email
-                    )
-                }
-
-                is AuthorizationResponseStates.SuccessResponseState -> {
-                    _state.value = InitialRegistrationState.PersonalInformationState(
-                        firstName = serverResponse.name,
-                        email = serverResponse.email
-                    )
-                }
-            }
-        }
     }
 
     fun updatePersonalInformation(state: InitialRegistrationState.PersonalInformationState) {
