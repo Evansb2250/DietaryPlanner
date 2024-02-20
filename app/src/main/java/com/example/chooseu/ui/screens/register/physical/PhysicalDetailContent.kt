@@ -34,6 +34,8 @@ import com.example.chooseu.ui.ui_components.buttons.StandardButton
 import com.example.chooseu.ui.ui_components.calendar.DateSelector
 import com.example.chooseu.ui.ui_components.custom_column.AppColumnContainer
 import com.example.chooseu.ui.ui_components.dialog.ErrorDialog
+import com.example.chooseu.ui.ui_components.dialog.GenericAlertDialog
+import com.example.chooseu.ui.ui_components.dialog.LoadingDialog
 import com.example.chooseu.ui.ui_components.menu.CustomDropDownMenu
 import com.example.chooseu.ui.ui_components.text_fields.CustomOutlineTextField
 
@@ -42,11 +44,62 @@ import com.example.chooseu.ui.ui_components.text_fields.CustomOutlineTextField
 @Preview
 fun PhysicalDetailContent(
     @PreviewParameter(PhysicalDetailPreview::class)
-    state: PhysicalDetailState.PhysicalDetails,
-    navToRegisterGoals: (PhysicalDetailState.PhysicalDetails) -> Unit = {},
+    state: PhysicalDetailState,
+    createAccount: (PhysicalDetailState.PhysicalDetails) -> Unit = {},
     retry: () -> Unit = {},
 ) {
 
+    AppColumnContainer(
+        modifier = Modifier
+            .fillMaxSize(),
+        disableBackPress = false,
+    ) {
+
+        when (state) {
+            PhysicalDetailState.Loading -> {
+                AppColumnContainer(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    disableBackPress = false,
+                ) {
+                    LoadingDialog()
+                }
+            }
+            is PhysicalDetailState.PhysicalDetails -> {
+                PhysicalDetailFormScreen(
+                    state,
+                    createAccount = createAccount,
+                    retry = retry,
+                )
+            }
+
+            PhysicalDetailState.Success ->  {
+                AppColumnContainer(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    disableBackPress = false,
+                ) {
+                    GenericAlertDialog(
+                        title = {Text("Congratulations")}
+                    ) {
+
+                    }
+                }
+            }
+        }
+
+
+    }
+}
+
+
+
+@Composable
+private fun PhysicalDetailFormScreen(
+    state: PhysicalDetailState.PhysicalDetails,
+    createAccount: (PhysicalDetailState.PhysicalDetails) -> Unit = {},
+    retry: () -> Unit = {},
+) {
     AppColumnContainer(
         modifier = Modifier
             .fillMaxSize(),
@@ -268,9 +321,8 @@ fun PhysicalDetailContent(
                 .fillMaxWidth(),
             text = "Create Account",
             onClick = {
-                navToRegisterGoals(state)
+                createAccount(state)
             },
         )
     }
-
 }

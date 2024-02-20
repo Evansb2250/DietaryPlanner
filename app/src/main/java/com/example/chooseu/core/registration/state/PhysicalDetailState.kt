@@ -40,6 +40,8 @@ data class ErrorState(
 
 
 sealed class PhysicalDetailState {
+    object Loading: PhysicalDetailState()
+    object Success: PhysicalDetailState()
     data class PhysicalDetails(
         val errorState: ErrorState = ErrorState(),
         private val initialGenders: Genders = Genders.UNSPECIFIED,

@@ -1,6 +1,7 @@
 package com.example.chooseu.core.registration
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.chooseu.core.registration.cache.keys.RegistrationKeys
 import com.example.chooseu.core.registration.cache.UserRegistrationCache
 import com.example.chooseu.core.registration.state.ErrorState
@@ -8,9 +9,12 @@ import com.example.chooseu.core.registration.state.PhysicalDetailState
 import com.example.chooseu.navigation.components.destinations.GeneralDestinations
 import com.example.chooseu.navigation.components.navmanagers.AuthNavManager
 import com.example.chooseu.repo.UserRepository
+import com.example.chooseu.utils.AsyncResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
@@ -21,7 +25,7 @@ class PhysicalDetailsViewModel @Inject constructor(
     private val userRepository: UserRepository,
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow(PhysicalDetailState.PhysicalDetails())
+    private val _state: MutableStateFlow<PhysicalDetailState> = MutableStateFlow(PhysicalDetailState.PhysicalDetails())
     val state = _state.asStateFlow()
 
     fun storePhysicalDetailsInCache(
@@ -35,9 +39,7 @@ class PhysicalDetailsViewModel @Inject constructor(
             cache.storeKey(RegistrationKeys.WEIGHT, data.userWeight.value.weight)
             cache.storeKey(RegistrationKeys.WEIGHTUNIT, data.userWeight.value.weightType.type)
 
-            navToRegisterGoals()
-
-            reset()
+            createAccount()
         } else {
             _state.value = PhysicalDetailState.PhysicalDetails(
                 errorState = ErrorState(
@@ -48,13 +50,32 @@ class PhysicalDetailsViewModel @Inject constructor(
         }
     }
 
-    private fun navToRegisterGoals() {
-        navigationManger.navigate(
-            navigation = GeneralDestinations.RegisterGoalsDestination,
-        )
+    fun createAccount() {
+        _state.update { 
+            PhysicalDetailState.Loading
+        }
+        viewModelScope.launch {
+            val result = userRepository.createUser(cache.getCache())
+            when (result) {
+                is AsyncResponse.Failed -> {
+                    _state.update {
+                        PhysicalDetailState.PhysicalDetails(
+                            errorState = ErrorState(
+                                isError = true,
+                                message = result.message
+                            )
+                        )
+                    }
+                }
+
+                is AsyncResponse.Success -> {
+                    navigateToLoginScreen()
+                }
+            }
+        }
     }
 
-    fun cancelRegistration(){
+    fun navigateToLoginScreen() {
         navigationManger.navigate(
             GeneralDestinations.OnAppStartUpDestination
         )

@@ -15,12 +15,12 @@ fun PhysicalDetailScreen(
 
     BackHandler {
         //clears cache and navigates to the loginScreen.
-        viewModel.cancelRegistration()
+        viewModel.navigateToLoginScreen()
     }
 
     PhysicalDetailContent(
         state = viewModel.state.collectAsState(Dispatchers.Main.immediate).value,
-        navToRegisterGoals = viewModel::storePhysicalDetailsInCache,
+        createAccount = viewModel::storePhysicalDetailsInCache,
         retry = viewModel::reset,
     )
 }

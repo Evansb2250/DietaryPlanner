@@ -142,15 +142,16 @@ class UserRepositoryImpl @Inject constructor(
                 //User Id that we need to add for an account and User table
                 val userID = ID.unique()
 
+
                 //if we are able to create an account, we will get a User object
-                val response = accountService.register(
+                val createUserRequestStatus = accountService.register(
                     userId = userID,
                     email = userInfo[RegistrationKeys.EMAIL.key]!!,
                     name = "${userInfo[RegistrationKeys.FirstName.key]} ${userInfo[RegistrationKeys.LastName.key]}",
                     password = userInfo[RegistrationKeys.PASSWORD.key]!!,
                 )
 
-                when (response) {
+                when (createUserRequestStatus) {
                     is AsyncResponse.Failed -> {
                         AsyncResponse.Failed(
                             data = RegisterGoalStates.CreationError(
@@ -162,16 +163,16 @@ class UserRepositoryImpl @Inject constructor(
 
                     is AsyncResponse.Success -> {
                         //have to start a session to add data
-                    val serverResponse =   accountService.login(
+                    val fetchedUserRequest = accountService.login(
                             email = userInfo[RegistrationKeys.EMAIL.key]!!,
                             password = userInfo[RegistrationKeys.PASSWORD.key]!!
                         )
 
-                        when(serverResponse) {
+                        when(fetchedUserRequest) {
                             is AsyncResponse.Failed -> {
                                 AsyncResponse.Failed(
                                     data = RegisterGoalStates.CreationError(
-                                        serverResponse.message ?: "couln't create account"
+                                        fetchedUserRequest.message ?: "couln't create account"
                                     ),
                                     message = null
                                 )
@@ -179,9 +180,10 @@ class UserRepositoryImpl @Inject constructor(
                             is AsyncResponse.Success -> {
                                 //add it to the database
                                 userService.add(
-                                    userId = serverResponse.data!!.id,
+                                    userId = fetchedUserRequest.data!!.id,
                                     firstName = userInfo[RegistrationKeys.FirstName.key]!!,
                                     lastName = userInfo[RegistrationKeys.LastName.key]!!,
+                                    birthDate = userInfo[RegistrationKeys.BIRTHDATE.key]!!,
                                     height = userInfo[RegistrationKeys.HEIGHT.key]!!.toDouble(),
                                     heightMetric = userInfo[RegistrationKeys.HEIGHT_METRIC.key]!!,
                                     weight = userInfo[RegistrationKeys.WEIGHT.key]!!.toDouble(),
