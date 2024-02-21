@@ -59,7 +59,7 @@ class AccountService(client: Client) {
                 password = password,
                 name = name,
             )
-
+            // Must start a session to enter the users information in the User Table
             startSession(email, password)
 
             AsyncResponse.Success(
