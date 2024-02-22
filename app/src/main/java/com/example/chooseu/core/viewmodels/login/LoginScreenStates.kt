@@ -32,10 +32,7 @@ sealed class LoginScreenStates {
         val email: String,
     ) : LoginScreenStates()
 
-    data class UserSignedInState(
-        val email: String,
-        val name: String,
-    ) : LoginScreenStates()
+    object UserSignedInState: LoginScreenStates()
 
     data class LoginError(val message: String) : LoginScreenStates()
 }

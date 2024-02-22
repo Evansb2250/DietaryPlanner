@@ -27,7 +27,7 @@ class ProfileViewModel @Inject constructor(
 
     fun logout(){
         viewModelScope.launch(dispatcherProvider.main) {
-            userRepository.signOut()
+            userRepository.clearPrefsAndSignOut()
             authNavManager.navigate(
                 GeneralDestinations.OnAppStartUpDestination
             )

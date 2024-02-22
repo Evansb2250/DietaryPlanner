@@ -10,7 +10,7 @@ import com.auth0.android.jwt.JWT
 import com.example.chooseu.common.Constants
 import com.example.chooseu.common.Constants.Companion.CLIENT_SECRET
 import com.example.chooseu.core.TokenManager
-import com.example.chooseu.domain.User
+import com.example.chooseu.domain.CurrentUser
 import com.example.chooseu.utils.AsyncResponse
 import com.example.chooseu.utils.TokenUtil.getTokenType
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier
@@ -47,7 +47,7 @@ interface OauthClient {
         intent: Intent,
         authorizationResponse: AuthorizationResponse?,
         error: AuthorizationException?,
-    ): AsyncResponse<User?>
+    ): AsyncResponse<CurrentUser?>
 }
 
 
@@ -138,7 +138,7 @@ class OauthClientImp @Inject constructor(
         intent: Intent,
         authorizationResponse: AuthorizationResponse?,
         error: AuthorizationException?
-    ): AsyncResponse<User?> {
+    ): AsyncResponse<CurrentUser?> {
 
         oauthState.updateAuthState(AuthState(authorizationResponse, error))
 
@@ -166,7 +166,7 @@ class OauthClientImp @Inject constructor(
                 }
 
                 return AsyncResponse.Success(
-                    data = User(
+                    data = CurrentUser(
                         userName = googleEmail,
                         name = name ?: ""
                     )

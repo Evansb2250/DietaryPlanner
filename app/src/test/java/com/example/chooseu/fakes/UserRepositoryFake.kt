@@ -5,7 +5,7 @@ import androidx.activity.result.ActivityResultLauncher
 import com.example.chooseu.auth.OauthClient
 import com.example.chooseu.data.database.dao.UserDao
 import com.example.chooseu.data.database.models.toUser
-import com.example.chooseu.domain.User
+import com.example.chooseu.domain.CurrentUser
 import com.example.chooseu.repo.AuthorizationResponseStates
 import com.example.chooseu.repo.UserRepository
 import com.example.chooseu.utils.AsyncResponse
@@ -24,7 +24,7 @@ class UserRepositoryFake(
         oauthClient.registerAuthLauncher(launcher)
     }
 
-    override suspend fun signIn(userName: String, password: String): AsyncResponse<User?> {
+    override suspend fun signIn(userName: String, password: String): AsyncResponse<CurrentUser?> {
         val result = userDaoFake.getUser(userName, password)
 
         return when (result) {

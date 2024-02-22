@@ -14,13 +14,13 @@ class UserService(client: Client) {
 
     private val databases = Databases(client)
 
-    suspend fun fetch(userId: String): List<Document<Map<String, Any>>> {
+    suspend fun fetchUserDetails(userId: String): Document<Map<String, Any>> {
         return databases.listDocuments(
             ideaDatabaseId,
             userCollectionId,
             listOf(Query.equal("userId", "${userId}"), Query.limit(10))
             //    listOf(Query.orderDesc("\$createdAt"), Query.limit(10))
-        ).documents
+        ).documents.first()
     }
 
     suspend fun add(

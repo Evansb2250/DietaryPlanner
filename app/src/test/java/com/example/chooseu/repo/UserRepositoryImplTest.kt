@@ -10,7 +10,7 @@ import com.example.chooseu.core.GoogleTokenManagerImpl
 import com.example.chooseu.core.TokenManager
 import com.example.chooseu.data.database.dao.UserDao
 import com.example.chooseu.data.database.models.UserEntity
-import com.example.chooseu.domain.User
+import com.example.chooseu.domain.CurrentUser
 import com.example.chooseu.fakes.OAuthClientFake
 import com.example.chooseu.fakes.TokenManagerFakeImpl
 import com.example.chooseu.fakes.UserDaoFake
@@ -100,7 +100,7 @@ class UserRepositoryImplTest {
         )
         val result = repository.signIn("dsa", "ds")
 
-        assertThat(result).isEqualTo(AsyncResponse.Failed<User?>(null, "Incorrect credentials"))
+        assertThat(result).isEqualTo(AsyncResponse.Failed<CurrentUser?>(null, "Incorrect credentials"))
     }
 
 
@@ -109,9 +109,9 @@ class UserRepositoryImplTest {
         userDao.insertUser(
             UserEntity("block@example", "dsa", "123", password = "")
         )
-        val result: AsyncResponse<User?> = repository.signIn("block@example", "123")
+        val result: AsyncResponse<CurrentUser?> = repository.signIn("block@example", "123")
 
-        assertThat(result).isEqualTo(AsyncResponse.Success<User?>(data = User("block@example", "dsa") ))
+        assertThat(result).isEqualTo(AsyncResponse.Success<CurrentUser?>(data = CurrentUser("block@example", "dsa") ))
     }
 
     @Test

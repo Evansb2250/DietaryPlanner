@@ -19,15 +19,15 @@ sealed class GeneralDestinations(
     )
 
     object RegisterDetailsDestination : GeneralDestinations(
-        destination = "registerPhysicalScreen/",
+        destination = "registerPhysicalScreen",
     )
 
     object RegisterGoalsDestination : GeneralDestinations(
-        destination = "registerGoalScreen/",
+        destination = "registerGoalScreen",
     )
 
     object MainScreenDestinations : GeneralDestinations(
-        destination = "mainScreen/{userId}",
+        destination = "mainScreen",
     )
 
     object NotificationDestination : GeneralDestinations(

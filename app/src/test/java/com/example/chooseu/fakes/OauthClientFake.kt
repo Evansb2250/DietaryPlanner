@@ -4,7 +4,7 @@ import android.content.ActivityNotFoundException
 import android.content.Intent
 import androidx.activity.result.ActivityResultLauncher
 import com.example.chooseu.auth.OauthClient
-import com.example.chooseu.domain.User
+import com.example.chooseu.domain.CurrentUser
 import com.example.chooseu.utils.AsyncResponse
 import net.openid.appauth.AuthorizationException
 import net.openid.appauth.AuthorizationResponse
@@ -32,11 +32,11 @@ data class OAuthClientFake(
         intent: Intent,
         authorizationResponse: AuthorizationResponse?,
         error: AuthorizationException?
-    ): AsyncResponse<User?> {
+    ): AsyncResponse<CurrentUser?> {
         return if(this.emailAddress == null){
             AsyncResponse.Failed(data = null, message = "failed Oauth process")
         }else {
-            AsyncResponse.Success(User(this.emailAddress ?: "default", ""))
+            AsyncResponse.Success(CurrentUser(this.emailAddress ?: "default", ""))
         }
     }
 

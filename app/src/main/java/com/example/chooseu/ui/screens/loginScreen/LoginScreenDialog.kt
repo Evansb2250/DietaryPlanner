@@ -12,7 +12,7 @@ fun LoginScreenDialog(
     @PreviewParameter(LoginScreenPreviewProvider::class)
     state: LoginScreenStates,
     resetLoginScreen: () -> Unit = {},
-    navigateToHomeScreen: (userEmail: String) -> Unit = {},
+    navigateToHomeScreen: () -> Unit = {},
 ) {
     when (state) {
         LoginScreenStates.Loading -> {
@@ -36,7 +36,7 @@ fun LoginScreenDialog(
         }
 
         is LoginScreenStates.UserSignedInState -> {
-            navigateToHomeScreen(state.email)
+            navigateToHomeScreen()
         }
 
         else -> {}

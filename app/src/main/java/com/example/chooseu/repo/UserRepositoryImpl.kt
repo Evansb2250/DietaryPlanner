@@ -2,7 +2,11 @@ package com.example.chooseu.repo
 
 import android.content.Intent
 import androidx.activity.result.ActivityResultLauncher
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.edit
 import com.example.chooseu.auth.OauthClient
+import com.example.chooseu.common.DataStoreKeys
 import com.example.chooseu.core.TokenManager
 import com.example.chooseu.core.dispatcher_provider.DispatcherProvider
 import com.example.chooseu.core.registration.cache.keys.RegistrationKeys
@@ -11,9 +15,15 @@ import com.example.chooseu.data.database.dao.UserDao
 import com.example.chooseu.data.database.models.toUser
 import com.example.chooseu.data.rest.api_service.service.account.AccountService
 import com.example.chooseu.data.rest.api_service.service.user.UserService
-import com.example.chooseu.domain.User
+import com.example.chooseu.domain.CurrentUser
 import com.example.chooseu.utils.AsyncResponse
+import com.example.chooseu.utils.DataStoreUtil.clearUserData
+import com.example.chooseu.utils.DataStoreUtil.storeUserData
+import com.example.chooseu.utils.DataStoreUtil.toCurrentUser
 import io.appwrite.ID
+import io.appwrite.exceptions.AppwriteException
+import io.appwrite.models.User
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import net.openid.appauth.AuthorizationException
@@ -28,10 +38,14 @@ class UserRepositoryImpl @Inject constructor(
     private val googleOauthClient: Lazy<OauthClient>,
     private val userDao: UserDao,
     private val accountService: AccountService,
+    private val dataStore: DataStore<Preferences>,
     private val tokenManager: TokenManager,
     private val dispatcherProvider: DispatcherProvider,
     private val userService: UserService,
 ) : UserRepository {
+
+    val currentUser: Flow<CurrentUser?> = dataStore.toCurrentUser()
+
 
     @Deprecated("App Write will take care of this")
 
@@ -41,6 +55,7 @@ class UserRepositoryImpl @Inject constructor(
     ) {
         googleOauthClient.value.attemptAuthorization(authorizationScopes)
     }
+
     @Deprecated("App Write will take care of this")
 
     //Registers the googleOauthClient to the activity launcher the googleOauthClient is a singleton, and it survives while mainActivity is alive.
@@ -48,37 +63,53 @@ class UserRepositoryImpl @Inject constructor(
         googleOauthClient.value.registerAuthLauncher(launcher)
     }
 
-    override suspend fun signIn(userName: String, password: String): AsyncResponse<User?> =
+    override suspend fun signIn(userName: String, password: String): AsyncResponse<Unit> =
         withContext(dispatcherProvider.io) {
-            //
-            accountService.login(email = userName, password)
+            try {
+                val result = handleLoggedInResponse(accountService.login(email = userName, password))
 
-            val result = accountService.getLoggedIn()
-
-            when (result) {
-                is AsyncResponse.Failed -> {
-                    AsyncResponse.Failed(
-                        data = null,
-                        message = result.message ?: "Failed to Login",
-                    )
+                //if storing information failed we want to log the user out of the session
+                if (result is AsyncResponse.Failed) {
+                    clearPrefsAndSignOut()
                 }
 
-                is AsyncResponse.Success -> {
-                    AsyncResponse.Success(
-                        data = User(
-                            result.data!!.email,
-                            ""
-                        ),
-                    )
-                }
+                result
+            } catch (e: AppwriteException) {
+                AsyncResponse.Failed(
+                    data = null,
+                    message = e.message,
+                )
             }
         }
 
-    override suspend fun signOut() {
+    private suspend fun handleLoggedInResponse(result: AsyncResponse<User<Map<String, Any>>?>): AsyncResponse<Unit> =
+        when (result) {
+            is AsyncResponse.Failed -> {
+                AsyncResponse.Failed(
+                    data = null,
+                    message = result.message ?: "Failed to Login",
+                )
+            }
+
+            is AsyncResponse.Success -> {
+                storeUserData(result.data)
+            }
+        }
+
+    //all I want to know if logging in, getting the user data and storing it was successful.
+    private suspend fun storeUserData(userData: User<Map<String, Any>>?): AsyncResponse<Unit> {
+        val doc = userService.fetchUserDetails(userData!!.id)
+        return dataStore.storeUserData(doc)
+    }
+
+
+    override suspend fun clearPrefsAndSignOut() {
         withContext(dispatcherProvider.io) {
+            dataStore.clearUserData()
             accountService.logout()
         }
     }
+
     @Deprecated("App Write will take care of this")
 
     override suspend fun handleAuthorizationResponse(
@@ -94,7 +125,7 @@ class UserRepositoryImpl @Inject constructor(
             )
             suspendCancellableCoroutine { continuation ->
                 when (asyncResponse) {
-                    is AsyncResponse.Failed<User?> -> {
+                    is AsyncResponse.Failed<CurrentUser?> -> {
                         continuation.resume(
                             AuthorizationResponseStates.FailedResponsState(
                                 asyncResponse.message ?: "Failed"
@@ -102,7 +133,7 @@ class UserRepositoryImpl @Inject constructor(
                         )
                     }
 
-                    is AsyncResponse.Success<User?> -> {
+                    is AsyncResponse.Success<CurrentUser?> -> {
                         val user =
                             userDao.getUserFromGmailSignIn(asyncResponse.data?.userName ?: "")
                                 ?.toUser()
@@ -128,6 +159,7 @@ class UserRepositoryImpl @Inject constructor(
             }
         }
     }
+
     @Deprecated("App Write will take care of this")
 
     override suspend fun handleSignUpResponse(
@@ -165,7 +197,7 @@ class UserRepositoryImpl @Inject constructor(
                     ),
                     message = null
                 )
-            }catch (e: NullPointerException){
+            } catch (e: NullPointerException) {
                 AsyncResponse.Failed(
                     data = RegisterGoalStates.CreationError(
                         e.message ?: "couln't create account"
@@ -179,8 +211,8 @@ class UserRepositoryImpl @Inject constructor(
     private suspend fun handleUserRegistrationResponse(
         registerUserStatus: AsyncResponse<AppWriteUser<Map<String, Any>>?>,
         userInfo: Map<String, String>
-    ):  AsyncResponse<RegisterGoalStates>{
-       return when (registerUserStatus) {
+    ): AsyncResponse<RegisterGoalStates> {
+        return when (registerUserStatus) {
             is AsyncResponse.Failed -> {
                 AsyncResponse.Failed(
                     data = RegisterGoalStates.CreationError(
@@ -204,8 +236,8 @@ class UserRepositoryImpl @Inject constructor(
                     email = userInfo[RegistrationKeys.EMAIL.key]!!,
                     gender = userInfo[RegistrationKeys.GENDER.key]!!,
                 )
-                //end Session
-                accountService.logout()
+                //used to end session, but no data is saved in dataStore
+                clearPrefsAndSignOut()
                 AsyncResponse.Success(data = RegisterGoalStates.AccountCreated)
             }
         }

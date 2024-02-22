@@ -21,7 +21,6 @@ import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun MainScreen(
-    userId: String,
     vm: BottomNavViewModel = hiltViewModel(),
     navController: NavHostController = rememberNavController()
 ) {
@@ -33,12 +32,8 @@ fun MainScreen(
     //needed to check the current destination on BackPress because it isn't tracked through the flow.
     val destinations = navController.currentBackStackEntryAsState().value?.destination
 
-    LaunchedEffect(key1 = destinations ){
+    LaunchedEffect(key1 = destinations) {
         vm.updateBottomBarTab(route = null, currentScreen = destinations?.route)
-    }
-
-    LaunchedEffect(key1 = userId) {
-        vm.resetNavBarTab()
     }
 
     LaunchedEffect(
@@ -62,16 +57,14 @@ fun MainScreen(
             color = appColor,
         ),
         bottomBar = {
-            if (vm.isVisible){
+            if (vm.isVisible) {
                 ChooseUBottomBar(
                     tabs = vm.navigationsTabs,
                     tabPosition = vm.selectedOption,
                     onClick = { item ->
                         vm.navigate(
                             item,
-                            arguments = mapOf(
-                                "userID" to userId
-                            )
+                            arguments = emptyMap()
                         )
                     }
                 )

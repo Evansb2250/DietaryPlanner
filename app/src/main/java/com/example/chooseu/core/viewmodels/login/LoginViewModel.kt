@@ -13,7 +13,6 @@ import com.example.chooseu.utils.AsyncResponse
 import com.example.chooseu.utils.TextVerificationStates
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -27,7 +26,6 @@ class LoginViewModel @Inject constructor(
     private val navigationManager: AuthNavManager,
     private val userRepository: UserRepository,
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
-    private val context: Context,
 ) : ViewModel() {
 
     private val googleScopes = arrayOf(
@@ -48,20 +46,10 @@ class LoginViewModel @Inject constructor(
         userRepository.attemptAuthorization(googleScopes)
     }
 
-    private val coroutineExceptionHandler = CoroutineExceptionHandler { _, exception ->
-        _state.value = LoginScreenStates.LoginError(
-            message = exception.message ?: "Unexpected Error"
-        )
-    }
-
     fun navigateToHomeScreen(
-        email: String
     ) {
         navigationManager.navigate(
             navigation = GeneralDestinations.MainScreenDestinations,
-            arguments = mapOf(
-                "userId" to email
-            ),
         )
         resetLoginScreenState()
     }
@@ -84,14 +72,12 @@ class LoginViewModel @Inject constructor(
         )
     }
 
-    fun signInManually(
+    fun attemptSignIn(
         loginState: LoginScreenStates.LoginScreenState,
     ) {
         when (val result = loginState.containsValidCredentials()) {
             is TextVerificationStates.Invalid -> {
-                _state.update {
-                    LoginScreenStates.LoginError(result.errorMessage)
-                }
+                setErrorState(result.errorMessage)
             }
 
             TextVerificationStates.Passed -> {
@@ -101,44 +87,22 @@ class LoginViewModel @Inject constructor(
     }
 
 
+    fun setErrorState(errorMessage: String){
+        _state.update {
+            LoginScreenStates.LoginError(errorMessage)
+        }
+    }
+
     private fun signIn(
         email: String,
         password: String,
     ) {
-        _state.update {
-            LoginScreenStates.Loading
-        }
+        setStateToLoading()
+
         viewModelScope.launch(dispatcher) {
             try {
                 val response = userRepository.signIn(email, password)
-                when (response) {
-                    is AsyncResponse.Failed -> {
-                        _state.update {
-                            LoginScreenStates.LoginError(
-                                message = response.message ?: "Unkown error occurred"
-                            )
-                        }
-                    }
-
-                    is AsyncResponse.Success -> {
-                        if (response.data != null) {
-                            _state.update {
-                                LoginScreenStates.UserSignedInState(
-                                    email = response.data.userName,
-                                    name = response.data.name,
-                                )
-                            }
-                        } else {
-                            _state.update {
-                                LoginScreenStates.LoginError(
-                                    message = "Unknown User"
-                                )
-                            }
-                        }
-                    }
-
-                    else -> {}
-                }
+                handleSignInResponse(response)
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -146,6 +110,31 @@ class LoginViewModel @Inject constructor(
 
     }
 
+    private fun handleSignInResponse(response: AsyncResponse<Unit>) {
+        when (response) {
+            is AsyncResponse.Failed -> {
+                _state.update {
+                    LoginScreenStates.LoginError(
+                        message = response.message ?: "Unkown error occurred"
+                    )
+                }
+            }
+
+            is AsyncResponse.Success -> {
+                _state.update {
+                    LoginScreenStates.UserSignedInState
+                }
+            }
+
+            else -> {}
+        }
+    }
+
+    fun setStateToLoading() {
+        _state.update {
+            LoginScreenStates.Loading
+        }
+    }
 
     fun resetLoginScreenState() {
         _state.update {

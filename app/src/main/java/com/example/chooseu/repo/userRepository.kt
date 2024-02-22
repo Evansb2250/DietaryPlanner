@@ -3,7 +3,6 @@ package com.example.chooseu.repo
 import android.content.Intent
 import androidx.activity.result.ActivityResultLauncher
 import com.example.chooseu.core.registration.state.RegisterGoalStates
-import com.example.chooseu.domain.User
 import com.example.chooseu.utils.AsyncResponse
 import net.openid.appauth.AuthorizationException
 import net.openid.appauth.AuthorizationResponse
@@ -20,9 +19,9 @@ interface UserRepository {
     suspend fun signIn(
         userName: String,
         password: String,
-    ): AsyncResponse<User?>
+    ): AsyncResponse<Unit>
 
-    suspend fun signOut()
+    suspend fun clearPrefsAndSignOut()
 
     suspend fun handleAuthorizationResponse(
         intent: Intent,

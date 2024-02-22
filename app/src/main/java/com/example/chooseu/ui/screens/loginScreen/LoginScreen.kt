@@ -58,7 +58,7 @@ fun LoginScreen(
     LoginScreenContent(
         modifier = modifier,
         loginState = if (state is LoginScreenStates.LoginScreenState) state else LoginScreenStates.LoginScreenState(),
-        signInManually = loginViewModel::signInManually,
+        signInManually = loginViewModel::attemptSignIn,
         initiateGoogleSignIn = loginViewModel::signInWithGoogle,
         updateLoginState = loginViewModel::updateLoginState,
     )

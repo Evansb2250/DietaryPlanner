@@ -2,7 +2,7 @@ package com.example.chooseu.data.database.models
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.example.chooseu.domain.User
+import com.example.chooseu.domain.CurrentUser
 
 @Entity
 data class UserEntity(
@@ -13,8 +13,16 @@ data class UserEntity(
     val password: String
 )
 
-
-fun UserEntity.toUser(): User = User(
+//TODO("I need to delete this won't be storing user data in room")
+fun UserEntity.toUser(): CurrentUser = CurrentUser(
     userName = this.userName,
     name = this.name,
+    lastName = "",
+    gender = "",
+    email = "",
+    birthdate = "",
+    heightMetric = "",
+    height = 0.0,
+    weightMetric = "",
+    weight = 0.0,
 )

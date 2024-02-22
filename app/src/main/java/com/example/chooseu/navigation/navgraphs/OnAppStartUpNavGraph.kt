@@ -32,6 +32,6 @@ fun NavGraphBuilder.OnAppStartNavGraph() {
     composable(
         route = GeneralDestinations.MainScreenDestinations.destination,
     ) {
-        MainScreen(userId = "")
+        MainScreen()
     }
 }

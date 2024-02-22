@@ -23,12 +23,10 @@ object ViewModelModule {
     fun providesLoginViewModel(
         userRepository: UserRepository,
         navigationManger: AuthNavManager,
-        @ApplicationContext context: Context,
     ): LoginViewModel {
         return LoginViewModel(
             navigationManager = navigationManger,
             userRepository = userRepository,
-            context = context,
         )
     }
 

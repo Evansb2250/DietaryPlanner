@@ -11,7 +11,7 @@ import com.example.chooseu.core.viewmodels.login.LoginScreenStates
 import com.example.chooseu.core.viewmodels.login.LoginViewModel
 import com.example.chooseu.data.database.dao.UserDao
 import com.example.chooseu.data.database.models.UserEntity
-import com.example.chooseu.domain.User
+import com.example.chooseu.domain.CurrentUser
 import com.example.chooseu.domain.toUserEntity
 import com.example.chooseu.fakes.OAuthClientFake
 import com.example.chooseu.fakes.UserDaoFake
@@ -50,7 +50,7 @@ class LoginViewModelTest {
     ) {
 
         userDaoFake.insertUser(
-            User(
+            CurrentUser(
                 userName = emailInRoom,
                 name = ""
             ).toUserEntity()
@@ -190,7 +190,7 @@ class LoginViewModelTest {
                 UserEntity("Sam", "", lastName = "", password = "132")
             )
 
-            loginViewModel.signInManually("Sam", "1232")
+            loginViewModel.attemptSignIn("Sam", "1232")
 
             val loginViewModelState = awaitItem()
 
@@ -237,7 +237,7 @@ class LoginViewModelTest {
                 UserEntity("Sam", "", lastName = "", password = "1232")
             )
 
-            loginViewModel.signInManually("Sam", "1232")
+            loginViewModel.attemptSignIn("Sam", "1232")
 
             val loginViewModelState = awaitItem()
 
