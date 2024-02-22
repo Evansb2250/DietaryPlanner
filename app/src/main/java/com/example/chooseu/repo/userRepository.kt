@@ -3,11 +3,15 @@ package com.example.chooseu.repo
 import android.content.Intent
 import androidx.activity.result.ActivityResultLauncher
 import com.example.chooseu.core.registration.state.RegisterGoalStates
+import com.example.chooseu.domain.CurrentUser
 import com.example.chooseu.utils.AsyncResponse
+import kotlinx.coroutines.flow.Flow
 import net.openid.appauth.AuthorizationException
 import net.openid.appauth.AuthorizationResponse
 
 interface UserRepository {
+
+    val currentUser: Flow<CurrentUser?>
     fun attemptAuthorization(
         authorizationScopes: Array<String>
     )

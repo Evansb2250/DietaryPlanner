@@ -12,6 +12,7 @@ import com.example.chooseu.core.NotificationViewModel
 import com.example.chooseu.core.TOSViewModel
 import com.example.chooseu.core.toolbar_states.ToolBarState
 import com.example.chooseu.navigation.components.destinations.ProfileDestinations
+import com.example.chooseu.ui.screens.account_screen.AccountScreen
 import com.example.chooseu.ui.ui_components.ScreenUnavailable
 import com.example.chooseu.ui.ui_components.custom_column.AppColumnContainer
 import com.example.chooseu.ui.ui_components.toolbar.ChooseUToolBar
@@ -20,24 +21,7 @@ fun NavGraphBuilder.ProfileNavGraph() {
     composable(
         route = ProfileDestinations.Account.destination
     ) {
-        val accountViewModel: AccountViewModel = hiltViewModel()
-        Scaffold(
-            topBar = {
-                ChooseUToolBar(
-                    toolBarState = ToolBarState.Navigated(
-                        "Account"
-                    ),
-                    navigateBack = accountViewModel::onBackPress,
-                    navigateToActionDestination = {}
-                )
-            }
-        ) { it ->
-            AppColumnContainer(
-                modifier = Modifier.padding(it),
-            ) {
-                ScreenUnavailable()
-            }
-        }
+        AccountScreen()
     }
 
     composable(

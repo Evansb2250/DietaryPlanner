@@ -44,7 +44,7 @@ class UserRepositoryImpl @Inject constructor(
     private val userService: UserService,
 ) : UserRepository {
 
-    val currentUser: Flow<CurrentUser?> = dataStore.toCurrentUser()
+    override val currentUser: Flow<CurrentUser?> = dataStore.toCurrentUser()
 
 
     @Deprecated("App Write will take care of this")

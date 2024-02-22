@@ -13,7 +13,6 @@ import androidx.compose.ui.unit.dp
 import com.example.chooseu.core.profile_screen.states.ProfileScreenStates
 import com.example.chooseu.core.toolbar_states.ToolBarState
 import com.example.chooseu.navigation.components.destinations.GeneralDestinations
-import com.example.chooseu.ui.theme.appColor
 import com.example.chooseu.ui.ui_components.buttons.SignOutButton
 import com.example.chooseu.ui.ui_components.toolbar.ChooseUToolBar
 
