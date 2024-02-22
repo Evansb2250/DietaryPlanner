@@ -1,4 +1,4 @@
-package com.example.chooseu.data.rest.api_service.service.user
+package com.example.chooseu.data.rest.api_service.service.user_table
 
 import io.appwrite.Client
 import io.appwrite.ID
@@ -6,7 +6,7 @@ import io.appwrite.Query
 import io.appwrite.models.Document
 import io.appwrite.services.Databases
 
-class UserService(client: Client) {
+class UserRemoteDbService(client: Client) {
     companion object {
         private const val ideaDatabaseId = "65cc1767ac6f56d136eb"
         private const val userCollectionId = "UserTable"

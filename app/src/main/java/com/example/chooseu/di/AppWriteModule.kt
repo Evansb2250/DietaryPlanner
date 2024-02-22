@@ -3,7 +3,7 @@ package com.example.chooseu.di
 import android.content.Context
 import com.example.chooseu.common.Constants
 import com.example.chooseu.data.rest.api_service.service.account.AccountService
-import com.example.chooseu.data.rest.api_service.service.user.UserService
+import com.example.chooseu.data.rest.api_service.service.user_table.UserRemoteDbService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -35,5 +35,5 @@ object AppWriteModule {
     @Provides
     fun provideUserService(
         appWriteClient: Client,
-    ): UserService = UserService(appWriteClient)
+    ): UserRemoteDbService = UserRemoteDbService(appWriteClient)
 }

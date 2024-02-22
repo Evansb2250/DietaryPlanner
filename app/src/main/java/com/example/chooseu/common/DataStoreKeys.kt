@@ -15,4 +15,5 @@ object DataStoreKeys {
     val USER_HEIGHT = doublePreferencesKey("height")
     val USER_WEIGHT_METRIC = stringPreferencesKey("weightMetric")
     val USER_WEIGHT = doublePreferencesKey("weight")
+    val USER_DOC_ID = stringPreferencesKey("user_doc_id")
 }

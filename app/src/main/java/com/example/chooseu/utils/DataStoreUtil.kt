@@ -5,6 +5,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import com.example.chooseu.common.DataStoreKeys.USER_BIRTH_DATE
+import com.example.chooseu.common.DataStoreKeys.USER_DOC_ID
 import com.example.chooseu.common.DataStoreKeys.USER_EMAIL
 import com.example.chooseu.common.DataStoreKeys.USER_FIRST_NAME
 import com.example.chooseu.common.DataStoreKeys.USER_GENDER
@@ -67,6 +68,7 @@ object DataStoreUtil {
         return try {
             this.edit { preferences ->
                 // Map preferences to CurrentUser
+                preferences[USER_DOC_ID] = userData.id
                 preferences[USER_ID] = userData.data[USER_ID.name] as String
                 preferences[USER_FIRST_NAME] = userData.data[USER_FIRST_NAME.name] as String
                 preferences[USER_LAST_NAME] = userData.data[USER_LAST_NAME.name] as String
@@ -87,23 +89,24 @@ object DataStoreUtil {
     }
 
 
-    suspend fun DataStore<Preferences>.clearUserData(){
+    suspend fun DataStore<Preferences>.clearUserData() {
         try {
             this.edit { preferences ->
                 // Map preferences to CurrentUser
+                preferences[USER_DOC_ID] = ""
                 preferences[USER_ID] = ""
                 preferences[USER_SESSION_EXPIRATION] = ""
                 preferences[USER_FIRST_NAME] = ""
-                preferences[USER_LAST_NAME]= ""
+                preferences[USER_LAST_NAME] = ""
                 preferences[USER_GENDER] = ""
                 preferences[USER_EMAIL] = ""
-                preferences[USER_BIRTH_DATE] =""
+                preferences[USER_BIRTH_DATE] = ""
                 preferences[USER_HEIGHT_METRIC] = ""
                 preferences[USER_HEIGHT] = 0.0
-                preferences[USER_WEIGHT_METRIC] =""
+                preferences[USER_WEIGHT_METRIC] = ""
                 preferences[USER_WEIGHT] = 0.0
             }
-        }catch (e: Exception){
+        } catch (e: Exception) {
 
         }
     }

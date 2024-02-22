@@ -14,7 +14,7 @@ import com.example.chooseu.core.registration.state.RegisterGoalStates
 import com.example.chooseu.data.database.dao.UserDao
 import com.example.chooseu.data.database.models.toUser
 import com.example.chooseu.data.rest.api_service.service.account.AccountService
-import com.example.chooseu.data.rest.api_service.service.user.UserService
+import com.example.chooseu.data.rest.api_service.service.user_table.UserRemoteDbService
 import com.example.chooseu.domain.CurrentUser
 import com.example.chooseu.utils.AsyncResponse
 import com.example.chooseu.utils.DataStoreUtil.clearUserData
@@ -42,7 +42,7 @@ class UserRepositoryImpl @Inject constructor(
     private val dataStore: DataStore<Preferences>,
     private val tokenManager: TokenManager,
     private val dispatcherProvider: DispatcherProvider,
-    private val userService: UserService,
+    private val userService: UserRemoteDbService,
 ) : UserRepository {
 
     override val currentUser: Flow<CurrentUser?> = dataStore.toCurrentUser()
