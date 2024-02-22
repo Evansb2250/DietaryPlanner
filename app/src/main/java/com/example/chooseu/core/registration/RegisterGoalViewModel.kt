@@ -8,7 +8,7 @@ import com.example.chooseu.core.registration.cache.UserRegistrationCache
 import com.example.chooseu.core.registration.cache.keys.RegistrationKeys
 import com.example.chooseu.core.registration.state.ErrorState
 import com.example.chooseu.core.registration.state.RegisterGoalStates
-import com.example.chooseu.core.registration.state.UnitsOfWeight
+import com.example.chooseu.core.registration.state.WeightMetric
 import com.example.chooseu.navigation.components.destinations.GeneralDestinations
 import com.example.chooseu.navigation.components.navmanagers.AuthNavManager
 import com.example.chooseu.repo.UserRepository
@@ -55,12 +55,12 @@ class RegisterGoalViewModel @Inject constructor(
         }
     }
 
-    fun getUserWeight(): UnitsOfWeight? {
+    fun getUserWeight(): WeightMetric? {
         return when (
             userRegistrationCache.getKey(RegistrationKeys.WEIGHTUNIT)
         ) {
-            UnitsOfWeight.Kilo.type -> UnitsOfWeight.Kilo
-            UnitsOfWeight.Pounds.type -> UnitsOfWeight.Pounds
+            WeightMetric.Kilo.type -> WeightMetric.Kilo
+            WeightMetric.Pounds.type -> WeightMetric.Pounds
             else -> {
                 null
             }

@@ -1,14 +1,17 @@
 package com.example.chooseu.data.rest.api_service.service.user_table
 
+import com.example.chooseu.utils.AsyncResponse
+import com.google.gson.JsonObject
 import io.appwrite.Client
 import io.appwrite.ID
 import io.appwrite.Query
+import io.appwrite.exceptions.AppwriteException
 import io.appwrite.models.Document
 import io.appwrite.services.Databases
 
 class UserRemoteDbService(client: Client) {
     companion object {
-        private const val ideaDatabaseId = "65cc1767ac6f56d136eb"
+        private const val userDatabaseId = "65cc1767ac6f56d136eb"
         private const val userCollectionId = "UserTable"
     }
 
@@ -16,7 +19,7 @@ class UserRemoteDbService(client: Client) {
 
     suspend fun fetchUserDetails(userId: String): Document<Map<String, Any>> {
         return databases.listDocuments(
-            ideaDatabaseId,
+            userDatabaseId,
             userCollectionId,
             listOf(Query.equal("userId", "${userId}"), Query.limit(10))
             //    listOf(Query.orderDesc("\$createdAt"), Query.limit(10))
@@ -36,7 +39,7 @@ class UserRemoteDbService(client: Client) {
         gender: String
     ): Document<Map<String, Any>> {
         return databases.createDocument(
-            ideaDatabaseId,
+            userDatabaseId,
             userCollectionId,
             ID.unique(),
             mapOf(
@@ -54,9 +57,27 @@ class UserRemoteDbService(client: Client) {
         )
     }
 
+    suspend fun updateDocument(
+        documentId: String,
+        data: JsonObject
+    ): AsyncResponse<Document<Map<String, Any>>> {
+        return try {
+            AsyncResponse.Success(
+                data = databases.updateDocument(
+                    userDatabaseId,
+                    userCollectionId,
+                    documentId = documentId,
+                    data = data,
+                )
+            )
+        } catch (e: AppwriteException) {
+            AsyncResponse.Failed(data = null, message = e.message)
+        }
+    }
+
     suspend fun remove(id: String) {
         databases.deleteDocument(
-            ideaDatabaseId,
+            userDatabaseId,
             userCollectionId,
             id
         )

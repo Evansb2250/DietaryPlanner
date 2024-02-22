@@ -38,7 +38,7 @@ object RepositoryModule {
             accountService = accountService,
             tokenManager = tokenManager,
             dispatcherProvider = dispatcherProvider,
-            userService = userService,
+            userRemoteDbService = userService,
         )
     }
 }

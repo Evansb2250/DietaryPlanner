@@ -3,9 +3,9 @@ package com.example.chooseu.core
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import com.example.chooseu.core.registration.Genders
-import com.example.chooseu.core.registration.state.HeightUnits
+import com.example.chooseu.core.registration.state.HeightMetric
 import com.example.chooseu.core.registration.state.PhysicalDetailState
-import com.example.chooseu.core.registration.state.UnitsOfWeight
+import com.example.chooseu.core.registration.state.WeightMetric
 import com.example.chooseu.core.registration.state.UserHeight
 import com.example.chooseu.core.registration.state.UserWeight
 import org.junit.jupiter.api.Test
@@ -108,17 +108,17 @@ class PhysicalDetailStateTest {
     companion object {
         val validHeightFeet = UserHeight(
             height = "6",
-            heightType = HeightUnits.Feet,
+            heightType = HeightMetric.Feet,
         )
 
         val validHeightCentimeters = UserHeight(
             height = "11",
-            heightType = HeightUnits.Centimeter,
+            heightType = HeightMetric.Centimeter,
         )
 
         val validWeightPounds = UserWeight(
             weight = "160",
-            weightType = UnitsOfWeight.Pounds,
+            weightType = WeightMetric.Pounds,
         )
         val validWeightKilo = UserWeight(
 
@@ -160,29 +160,29 @@ class PhysicalDetailStateTest {
 
         data class HeightUnitState(
             val unit: String,
-            val expectedUnits: HeightUnits,
+            val expectedUnits: HeightMetric,
         )
 
         @JvmStatic
         fun provideHeightUnits(): Stream<HeightUnitState> = Stream.of(
             HeightUnitState(
                 "",
-                HeightUnits.Feet,
+                HeightMetric.Feet,
             ),
             HeightUnitState(
-                HeightUnits.Feet.type,
-                HeightUnits.Feet,
+                HeightMetric.Feet.type,
+                HeightMetric.Feet,
             ),
 
             HeightUnitState(
-                HeightUnits.Centimeter.type,
-                HeightUnits.Centimeter,
+                HeightMetric.Centimeter.type,
+                HeightMetric.Centimeter,
             ),
         )
 
         data class WeightUnitState(
             val unit: String,
-            val expectedWeightType: UnitsOfWeight,
+            val expectedWeightType: WeightMetric,
         )
 
         @JvmStatic
@@ -190,22 +190,22 @@ class PhysicalDetailStateTest {
             //Default weight
             WeightUnitState(
                 unit = "",
-                expectedWeightType = UnitsOfWeight.Kilo
+                expectedWeightType = WeightMetric.Kilo
             ),
             WeightUnitState(
-                unit = UnitsOfWeight.Kilo.type,
-                expectedWeightType = UnitsOfWeight.Kilo
+                unit = WeightMetric.Kilo.type,
+                expectedWeightType = WeightMetric.Kilo
             ),
             WeightUnitState(
-                unit = UnitsOfWeight.Pounds.type,
-                expectedWeightType = UnitsOfWeight.Pounds
+                unit = WeightMetric.Pounds.type,
+                expectedWeightType = WeightMetric.Pounds
             ),
         )
 
 
         data class HeightTestArgs(
             val height: String,
-            val heightType: HeightUnits,
+            val heightType: HeightMetric,
             val expectedResult: Boolean,
         )
 
@@ -213,52 +213,52 @@ class PhysicalDetailStateTest {
         fun providesHeightTestArgs(): Stream<HeightTestArgs> = Stream.of(
             HeightTestArgs(
                 height = "5.9",
-                heightType = HeightUnits.Feet,
+                heightType = HeightMetric.Feet,
                 expectedResult = true
             ),
             HeightTestArgs(
                 height = "-2.9",
-                heightType = HeightUnits.Feet,
+                heightType = HeightMetric.Feet,
                 expectedResult = false
             ),
             HeightTestArgs(
                 height = "20.9",
-                heightType = HeightUnits.Feet,
+                heightType = HeightMetric.Feet,
                 expectedResult = false
             ),
             HeightTestArgs(
                 height = "10.9",
-                heightType = HeightUnits.Feet,
+                heightType = HeightMetric.Feet,
                 expectedResult = false
             ),
             HeightTestArgs(
                 height = "10.9",
-                heightType = HeightUnits.Centimeter,
+                heightType = HeightMetric.Centimeter,
                 expectedResult = true
             ),
             HeightTestArgs(
                 height = "12",
-                heightType = HeightUnits.Centimeter,
+                heightType = HeightMetric.Centimeter,
                 expectedResult = true
             ),
             HeightTestArgs(
                 height = "13",
-                heightType = HeightUnits.Centimeter,
+                heightType = HeightMetric.Centimeter,
                 expectedResult = true,
             ),
             HeightTestArgs(
                 height = "-1.9",
-                heightType = HeightUnits.Centimeter,
+                heightType = HeightMetric.Centimeter,
                 expectedResult = false
             ),
             HeightTestArgs(
                 height = "0.9",
-                heightType = HeightUnits.Centimeter,
+                heightType = HeightMetric.Centimeter,
                 expectedResult = true
             ),
             HeightTestArgs(
                 height = "-0.9",
-                heightType = HeightUnits.Centimeter,
+                heightType = HeightMetric.Centimeter,
                 expectedResult = false
             ),
         )
@@ -266,7 +266,7 @@ class PhysicalDetailStateTest {
 
         data class WeightTestArgs(
             val weight: String,
-            val weightType: UnitsOfWeight,
+            val weightType: WeightMetric,
             val expectedResult: Boolean
         )
 
@@ -274,42 +274,42 @@ class PhysicalDetailStateTest {
         fun providesWeightTestArgs(): Stream<WeightTestArgs> = Stream.of(
             WeightTestArgs(
                 weight = "130",
-                weightType = UnitsOfWeight.Pounds,
+                weightType = WeightMetric.Pounds,
                 expectedResult = true
             ),
             WeightTestArgs(
                 weight = "530",
-                weightType = UnitsOfWeight.Pounds,
+                weightType = WeightMetric.Pounds,
                 expectedResult = true
             ),
             WeightTestArgs(
                 weight = "636",
-                weightType = UnitsOfWeight.Pounds,
+                weightType = WeightMetric.Pounds,
                 expectedResult = true
             ),
             WeightTestArgs(
                 weight = "0",
-                weightType = UnitsOfWeight.Pounds,
+                weightType = WeightMetric.Pounds,
                 expectedResult = false
             ),
             WeightTestArgs(
                 weight = "60",
-                weightType = UnitsOfWeight.Pounds,
+                weightType = WeightMetric.Pounds,
                 expectedResult = false
             ),
             WeightTestArgs(
                 weight = "60",
-                weightType = UnitsOfWeight.Kilo,
+                weightType = WeightMetric.Kilo,
                 expectedResult = true
             ),
             WeightTestArgs(
                 weight = "20",
-                weightType = UnitsOfWeight.Kilo,
+                weightType = WeightMetric.Kilo,
                 expectedResult = false
             ),
             WeightTestArgs(
                 weight = "639",
-                weightType = UnitsOfWeight.Kilo,
+                weightType = WeightMetric.Kilo,
                 expectedResult = false
             ),
         )

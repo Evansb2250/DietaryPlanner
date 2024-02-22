@@ -2,7 +2,9 @@ package com.example.chooseu.repo
 
 import android.content.Intent
 import androidx.activity.result.ActivityResultLauncher
+import com.example.chooseu.core.registration.state.HeightMetric
 import com.example.chooseu.core.registration.state.RegisterGoalStates
+import com.example.chooseu.core.registration.state.WeightMetric
 import com.example.chooseu.domain.CurrentUser
 import com.example.chooseu.utils.AsyncResponse
 import kotlinx.coroutines.flow.Flow
@@ -42,4 +44,12 @@ interface UserRepository {
     suspend fun createUser(
         userInfo: Map<String, String>,
     ): AsyncResponse<RegisterGoalStates>
+
+    suspend fun updateUserInfo(
+        documentId: String,
+        weight: Double,
+        weightMetric: WeightMetric,
+        height: Double,
+        heightMetric: HeightMetric,
+    ): UpdateResult
 }

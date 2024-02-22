@@ -21,7 +21,7 @@ sealed class RegisterGoalStates {
 
 
     data class GoalSelectionState(
-        val initialWeight: UnitsOfWeight?,
+        val initialWeight: WeightMetric?,
         val initialErrorState: ErrorState = ErrorState(),
         val initialTargetWeight: String? = null,
         val accomplishGoalByDate: String? = null,
@@ -37,7 +37,7 @@ sealed class RegisterGoalStates {
         var targetWeight = mutableStateOf(initialWeight.let { weightUnit ->
             UserWeight(
                 weight = "",
-                weightType = weightUnit ?: UnitsOfWeight.NotSelected,
+                weightType = weightUnit ?: WeightMetric.NotSelected,
             )
         })
 

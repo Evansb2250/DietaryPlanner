@@ -8,29 +8,29 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
-val heightUnits = listOf(HeightUnits.Feet, HeightUnits.Centimeter)
+val heightUnits = listOf(HeightMetric.Feet, HeightMetric.Centimeter)
 
-sealed class HeightUnits(val type: String) {
-    data object Feet : HeightUnits("ft")
-    data object Centimeter : HeightUnits("cm")
+sealed class HeightMetric(val type: String) {
+    data object Feet : HeightMetric("ft")
+    data object Centimeter : HeightMetric("cm")
 }
 
 data class UserHeight(
     val height: String = "",
-    val heightType: HeightUnits = HeightUnits.Feet,
+    val heightType: HeightMetric = HeightMetric.Feet,
 )
 
 data class UserWeight(
     val weight: String = "",
-    val weightType: UnitsOfWeight = UnitsOfWeight.Kilo
+    val weightType: WeightMetric = WeightMetric.Kilo
 )
 
-val weightUnits = listOf(UnitsOfWeight.Kilo, UnitsOfWeight.Pounds)
-sealed class UnitsOfWeight(val type: String) {
-    data object Pounds : UnitsOfWeight("lb")
-    data object Kilo : UnitsOfWeight("kg")
+val weightUnits = listOf(WeightMetric.Kilo, WeightMetric.Pounds)
+sealed class WeightMetric(val type: String) {
+    data object Pounds : WeightMetric("lb")
+    data object Kilo : WeightMetric("kg")
 
-    data object NotSelected : UnitsOfWeight("")
+    data object NotSelected : WeightMetric("")
 }
 
 data class ErrorState(
@@ -92,9 +92,9 @@ sealed class PhysicalDetailState {
             newMetric: String
         ) {
             val heightMetric = when (newMetric) {
-                HeightUnits.Feet.type -> HeightUnits.Feet
-                HeightUnits.Centimeter.type -> HeightUnits.Centimeter
-                else -> HeightUnits.Feet
+                HeightMetric.Feet.type -> HeightMetric.Feet
+                HeightMetric.Centimeter.type -> HeightMetric.Centimeter
+                else -> HeightMetric.Feet
             }
 
             //reset the height
@@ -114,9 +114,9 @@ sealed class PhysicalDetailState {
             weightUnit: String
         ) {
             val updatedMetric = when (weightUnit) {
-                UnitsOfWeight.Kilo.type -> UnitsOfWeight.Kilo
-                UnitsOfWeight.Pounds.type -> UnitsOfWeight.Pounds
-                else -> UnitsOfWeight.Kilo
+                WeightMetric.Kilo.type -> WeightMetric.Kilo
+                WeightMetric.Pounds.type -> WeightMetric.Pounds
+                else -> WeightMetric.Kilo
             }
             userWeight.value = UserWeight(
                 weight = "",
@@ -130,7 +130,7 @@ sealed class PhysicalDetailState {
         fun containsValidHeight(): Boolean {
             return try {
                 val currentHeight = userHeight.value.height.trim().toDouble()
-                if (userHeight.value.heightType == HeightUnits.Feet) {
+                if (userHeight.value.heightType == HeightMetric.Feet) {
                     currentHeight > 0.0 && currentHeight <= 9.0
                 } else {
                     // Convert height from inches to feet for comparison
@@ -145,7 +145,7 @@ sealed class PhysicalDetailState {
         fun containsValidWeight(): Boolean {
             return try {
                 val currentWeight = userWeight.value.weight.trim().toDouble()
-                if (userWeight.value.weightType == UnitsOfWeight.Kilo) {
+                if (userWeight.value.weightType == WeightMetric.Kilo) {
                     currentWeight > 30 && currentWeight < 635
                 } else {
                     currentWeight > 70 && currentWeight < 1400

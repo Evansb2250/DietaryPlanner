@@ -10,7 +10,9 @@ import com.example.chooseu.common.DataStoreKeys
 import com.example.chooseu.core.TokenManager
 import com.example.chooseu.core.dispatcher_provider.DispatcherProvider
 import com.example.chooseu.core.registration.cache.keys.RegistrationKeys
+import com.example.chooseu.core.registration.state.HeightMetric
 import com.example.chooseu.core.registration.state.RegisterGoalStates
+import com.example.chooseu.core.registration.state.WeightMetric
 import com.example.chooseu.data.database.dao.UserDao
 import com.example.chooseu.data.database.models.toUser
 import com.example.chooseu.data.rest.api_service.service.account.AccountService
@@ -20,8 +22,10 @@ import com.example.chooseu.utils.AsyncResponse
 import com.example.chooseu.utils.DataStoreUtil.clearUserData
 import com.example.chooseu.utils.DataStoreUtil.storeUserData
 import com.example.chooseu.utils.DataStoreUtil.toCurrentUser
+import com.google.gson.JsonObject
 import io.appwrite.ID
 import io.appwrite.exceptions.AppwriteException
+import io.appwrite.models.Document
 import io.appwrite.models.Session
 import io.appwrite.models.User
 import kotlinx.coroutines.flow.Flow
@@ -34,6 +38,12 @@ import javax.inject.Singleton
 import kotlin.coroutines.resume
 import io.appwrite.models.User as AppWriteUser
 
+sealed class UpdateResult {
+    data class Success(val data: String) : UpdateResult()
+    data class Failed(val message: String) : UpdateResult()
+}
+
+
 @Singleton
 class UserRepositoryImpl @Inject constructor(
     private val googleOauthClient: Lazy<OauthClient>,
@@ -42,7 +52,7 @@ class UserRepositoryImpl @Inject constructor(
     private val dataStore: DataStore<Preferences>,
     private val tokenManager: TokenManager,
     private val dispatcherProvider: DispatcherProvider,
-    private val userService: UserRemoteDbService,
+    private val userRemoteDbService: UserRemoteDbService,
 ) : UserRepository {
 
     override val currentUser: Flow<CurrentUser?> = dataStore.toCurrentUser()
@@ -85,7 +95,7 @@ class UserRepositoryImpl @Inject constructor(
             }
         }
 
-    private suspend fun storeSessionExpirationDate(session: AsyncResponse<Session>){
+    private suspend fun storeSessionExpirationDate(session: AsyncResponse<Session>) {
         if (session is AsyncResponse.Success) {
             dataStore.edit {
                 it[DataStoreKeys.USER_SESSION_EXPIRATION] = session.data?.expire ?: ""
@@ -109,7 +119,7 @@ class UserRepositoryImpl @Inject constructor(
 
     //all I want to know if logging in, getting the user data and storing it was successful.
     private suspend fun storeUserData(userData: User<Map<String, Any>>?): AsyncResponse<Unit> {
-        val doc = userService.fetchUserDetails(userData!!.id)
+        val doc = userRemoteDbService.fetchUserDetails(userData!!.id)
         return dataStore.storeUserData(doc)
     }
 
@@ -181,7 +191,6 @@ class UserRepositoryImpl @Inject constructor(
         TODO("Not yet implemented")
     }
 
-
     override suspend fun createUser(userInfo: Map<String, String>): AsyncResponse<RegisterGoalStates> =
         withContext(dispatcherProvider.io) {
             return@withContext try {
@@ -218,6 +227,60 @@ class UserRepositoryImpl @Inject constructor(
             }
         }
 
+    override suspend fun updateUserInfo(
+        documentId: String,
+        weight: Double,
+        weightMetric: WeightMetric,
+        height: Double,
+        heightMetric: HeightMetric
+    ): UpdateResult {
+        val serverResponse = userRemoteDbService.updateDocument(
+            documentId,
+            data = createJsonObject(
+                weight,
+                weightMetric,
+                height,
+                heightMetric
+            ),
+        )
+        return handleUpdateDocumentRequest(serverResponse)
+    }
+
+    private suspend fun handleUpdateDocumentRequest(
+        updateDocumentResponse: AsyncResponse<Document<Map<String, Any>>>
+    ): UpdateResult {
+        return when (updateDocumentResponse) {
+            is AsyncResponse.Failed -> {
+                UpdateResult.Failed(
+                    message = updateDocumentResponse.message ?: "Couldn't update try later"
+                )
+            }
+
+            is AsyncResponse.Success -> {
+                updateDocumentResponse.data?.let { doc ->
+                    dataStore.storeUserData(doc)
+                    val successResult = UpdateResult.Success(data = "data updated")
+                    return successResult
+                }
+
+                return UpdateResult.Failed(message = "Couldn't update document; it was null. Please try later.")
+            }
+        }
+    }
+
+    private fun createJsonObject(
+        weight: Double,
+        weightMetric: WeightMetric,
+        height: Double,
+        heightMetric: HeightMetric
+    ): JsonObject {
+        return JsonObject().apply {
+            addProperty(DataStoreKeys.USER_WEIGHT.name, weight.toString())
+            addProperty(DataStoreKeys.USER_WEIGHT_METRIC.name, weightMetric.type)
+            addProperty(DataStoreKeys.USER_HEIGHT.name, height.toString())
+            addProperty(DataStoreKeys.USER_HEIGHT_METRIC.name, heightMetric.type)
+        }
+    }
 
     private suspend fun handleUserRegistrationResponse(
         registerUserStatus: AsyncResponse<AppWriteUser<Map<String, Any>>?>,
@@ -235,7 +298,7 @@ class UserRepositoryImpl @Inject constructor(
 
             is AsyncResponse.Success -> {
                 //add it to the database
-                userService.add(
+                userRemoteDbService.add(
                     userId = registerUserStatus.data!!.id,
                     firstName = userInfo[RegistrationKeys.FirstName.key]!!,
                     lastName = userInfo[RegistrationKeys.LastName.key]!!,
