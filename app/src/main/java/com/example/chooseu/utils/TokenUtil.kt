@@ -2,6 +2,8 @@ package com.example.chooseu.utils
 
 import com.example.chooseu.auth.Token
 import com.example.chooseu.auth.TokenType
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
 
 object TokenUtil {
     fun getTokenKey(key: Token): String {
@@ -19,6 +21,13 @@ object TokenUtil {
             }
         }
     }
+    fun isTokenExpired(expirationDate: String): Boolean{
+        val formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
+        val tokenDateTime = ZonedDateTime.parse(expirationDate, formatter)
+        val currentDateTime = ZonedDateTime.now()
+        return currentDateTime.isAfter(tokenDateTime)
+    }
+
 
 
     fun getTokenType(token: TokenType): Token {

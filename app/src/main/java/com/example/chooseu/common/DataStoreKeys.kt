@@ -4,7 +4,7 @@ import androidx.datastore.preferences.core.doublePreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 
 object DataStoreKeys {
-    val USER_SESSION_EXPIRATION = stringPreferencesKey("birthDate")
+    val USER_SESSION_EXPIRATION = stringPreferencesKey("expiration")
     val USER_ID = stringPreferencesKey("userId")
     val USER_FIRST_NAME = stringPreferencesKey("firstName")
     val USER_LAST_NAME = stringPreferencesKey("lastName")

@@ -22,6 +22,7 @@ import com.example.chooseu.utils.DataStoreUtil.storeUserData
 import com.example.chooseu.utils.DataStoreUtil.toCurrentUser
 import io.appwrite.ID
 import io.appwrite.exceptions.AppwriteException
+import io.appwrite.models.Session
 import io.appwrite.models.User
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -66,7 +67,9 @@ class UserRepositoryImpl @Inject constructor(
     override suspend fun signIn(userName: String, password: String): AsyncResponse<Unit> =
         withContext(dispatcherProvider.io) {
             try {
-                val result = handleLoggedInResponse(accountService.login(email = userName, password))
+                storeSessionExpirationDate(accountService.login(userName, password))
+
+                val result = handleLoggedInResponse(accountService.getLoggedInUser())
 
                 //if storing information failed we want to log the user out of the session
                 if (result is AsyncResponse.Failed) {
@@ -81,6 +84,14 @@ class UserRepositoryImpl @Inject constructor(
                 )
             }
         }
+
+    private suspend fun storeSessionExpirationDate(session: AsyncResponse<Session>){
+        if (session is AsyncResponse.Success) {
+            dataStore.edit {
+                it[DataStoreKeys.USER_SESSION_EXPIRATION] = session.data?.expire ?: ""
+            }
+        }
+    }
 
     private suspend fun handleLoggedInResponse(result: AsyncResponse<User<Map<String, Any>>?>): AsyncResponse<Unit> =
         when (result) {

@@ -1,6 +1,5 @@
 package com.example.chooseu.core.on_startup
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -10,7 +9,7 @@ import com.example.chooseu.common.DataStoreKeys
 import com.example.chooseu.core.dispatcher_provider.DispatcherProvider
 import com.example.chooseu.core.on_startup.state.LastSignInState
 import com.example.chooseu.data.rest.api_service.service.account.AccountService
-import com.example.chooseu.utils.AsyncResponse
+import com.example.chooseu.utils.TokenUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.withContext
@@ -31,27 +30,28 @@ class OnAppStartUpManager @Inject constructor(
 
     suspend fun fetchSignState() {
         withContext(dispatcher.io) {
-            val storedUserKey = dataStore.data.firstOrNull()?.get(DataStoreKeys.USER_ID)
-
-            Log.d("TestingDataStore", "waiting to find key ${storedUserKey}")
-
-            val response = accountService.getLoggedIn()
-
-            when (response) {
-                is AsyncResponse.Failed -> {
-                    lastLoginState = LastSignInState.NotLoggedIn
-                }
-
-                is AsyncResponse.Success -> {
-                    lastLoginState = LastSignInState.AlreadyLoggedIn(response.data!!.id)
-                }
-            }
+            val pref = dataStore.data.firstOrNull()
+            val experiationDate = pref?.get(DataStoreKeys.USER_SESSION_EXPIRATION)
+            val storedUserKey = pref?.get(DataStoreKeys.USER_ID)
+            setLoginStateOnStartUp(experiationDate, storedUserKey)
         }
         _finishedLoading.value = true
     }
-}
 
 
-suspend fun checkIfUserExist() {
+    fun setLoginStateOnStartUp(
+        experiationDate: String?,
+        storedUserKey: String?,
+    ) {
+        if (
+            !experiationDate.isNullOrEmpty() &&
+            !storedUserKey.isNullOrEmpty() &&
+            !TokenUtil.isTokenExpired(experiationDate)
+        ) {
+            lastLoginState = LastSignInState.AlreadyLoggedIn(storedUserKey)
+        } else {
+            lastLoginState = LastSignInState.NotLoggedIn
+        }
+    }
 
 }

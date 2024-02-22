@@ -61,10 +61,13 @@ object DataStoreUtil {
     }
 
 
-    suspend fun DataStore<Preferences>.storeUserData(userData: Document<Map<String, Any>>): AsyncResponse<Unit> {
+    suspend fun DataStore<Preferences>.storeUserData(
+        userData: Document<Map<String, Any>>
+    ): AsyncResponse<Unit> {
         return try {
             this.edit { preferences ->
                 // Map preferences to CurrentUser
+                preferences[USER_ID] = userData.data[USER_ID.name] as String
                 preferences[USER_FIRST_NAME] = userData.data[USER_FIRST_NAME.name] as String
                 preferences[USER_LAST_NAME] = userData.data[USER_LAST_NAME.name] as String
                 preferences[USER_GENDER] = userData.data[USER_GENDER.name] as String
