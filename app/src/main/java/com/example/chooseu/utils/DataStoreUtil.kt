@@ -76,9 +76,9 @@ object DataStoreUtil {
                 preferences[USER_EMAIL] = userData.data[USER_EMAIL.name] as String
                 preferences[USER_BIRTH_DATE] = userData.data[USER_BIRTH_DATE.name] as String
                 preferences[USER_HEIGHT_METRIC] = userData.data[USER_HEIGHT_METRIC.name] as String
-                preferences[USER_HEIGHT] = userData.data[USER_HEIGHT.name] as Double
+                preferences[USER_HEIGHT] =  userData.data[USER_HEIGHT.name]?.toString()?.toDoubleOrNull() ?: 0.0
                 preferences[USER_WEIGHT_METRIC] = userData.data[USER_WEIGHT_METRIC.name] as String
-                preferences[USER_WEIGHT] = userData.data[USER_WEIGHT.name] as Double
+                preferences[USER_WEIGHT] = userData.data[USER_WEIGHT.name]?.toString()?.toDoubleOrNull() ?: 0.0
             }
             AsyncResponse.Success(data = null)
         } catch (e: ClassCastException) {

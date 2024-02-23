@@ -46,10 +46,9 @@ interface UserRepository {
     ): AsyncResponse<RegisterGoalStates>
 
     suspend fun updateUserInfo(
-        documentId: String,
         weight: Double,
-        weightMetric: WeightMetric,
+        weightMetric: String,
         height: Double,
-        heightMetric: HeightMetric,
+        heightMetric: String,
     ): UpdateResult
 }

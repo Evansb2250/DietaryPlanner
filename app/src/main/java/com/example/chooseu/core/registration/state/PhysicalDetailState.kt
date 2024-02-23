@@ -8,11 +8,11 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
-val heightUnits = listOf(HeightMetric.Feet, HeightMetric.Centimeter)
+val heightUnits = listOf(HeightMetric.Feet, HeightMetric.Inches)
 
 sealed class HeightMetric(val type: String) {
     data object Feet : HeightMetric("ft")
-    data object Centimeter : HeightMetric("cm")
+    data object Inches : HeightMetric("in")
 }
 
 data class UserHeight(
@@ -25,7 +25,7 @@ data class UserWeight(
     val weightType: WeightMetric = WeightMetric.Kilo
 )
 
-val weightUnits = listOf(WeightMetric.Kilo, WeightMetric.Pounds)
+val weightUnits: List<WeightMetric> = listOf(WeightMetric.Kilo, WeightMetric.Pounds)
 sealed class WeightMetric(val type: String) {
     data object Pounds : WeightMetric("lb")
     data object Kilo : WeightMetric("kg")
@@ -93,7 +93,7 @@ sealed class PhysicalDetailState {
         ) {
             val heightMetric = when (newMetric) {
                 HeightMetric.Feet.type -> HeightMetric.Feet
-                HeightMetric.Centimeter.type -> HeightMetric.Centimeter
+                HeightMetric.Inches.type -> HeightMetric.Inches
                 else -> HeightMetric.Feet
             }
 

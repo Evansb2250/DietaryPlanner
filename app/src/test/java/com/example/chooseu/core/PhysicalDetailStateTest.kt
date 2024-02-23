@@ -113,7 +113,7 @@ class PhysicalDetailStateTest {
 
         val validHeightCentimeters = UserHeight(
             height = "11",
-            heightType = HeightMetric.Centimeter,
+            heightType = HeightMetric.Inches,
         )
 
         val validWeightPounds = UserWeight(
@@ -175,8 +175,8 @@ class PhysicalDetailStateTest {
             ),
 
             HeightUnitState(
-                HeightMetric.Centimeter.type,
-                HeightMetric.Centimeter,
+                HeightMetric.Inches.type,
+                HeightMetric.Inches,
             ),
         )
 
@@ -233,32 +233,32 @@ class PhysicalDetailStateTest {
             ),
             HeightTestArgs(
                 height = "10.9",
-                heightType = HeightMetric.Centimeter,
+                heightType = HeightMetric.Inches,
                 expectedResult = true
             ),
             HeightTestArgs(
                 height = "12",
-                heightType = HeightMetric.Centimeter,
+                heightType = HeightMetric.Inches,
                 expectedResult = true
             ),
             HeightTestArgs(
                 height = "13",
-                heightType = HeightMetric.Centimeter,
+                heightType = HeightMetric.Inches,
                 expectedResult = true,
             ),
             HeightTestArgs(
                 height = "-1.9",
-                heightType = HeightMetric.Centimeter,
+                heightType = HeightMetric.Inches,
                 expectedResult = false
             ),
             HeightTestArgs(
                 height = "0.9",
-                heightType = HeightMetric.Centimeter,
+                heightType = HeightMetric.Inches,
                 expectedResult = true
             ),
             HeightTestArgs(
                 height = "-0.9",
-                heightType = HeightMetric.Centimeter,
+                heightType = HeightMetric.Inches,
                 expectedResult = false
             ),
         )

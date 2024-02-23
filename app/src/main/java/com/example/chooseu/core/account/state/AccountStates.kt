@@ -1,0 +1,71 @@
+package com.example.chooseu.core.account.state
+
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import com.example.chooseu.core.registration.state.HeightMetric
+import com.example.chooseu.core.registration.state.WeightMetric
+import com.example.chooseu.domain.CurrentUser
+import com.example.chooseu.utils.NumberUtils
+import java.text.DecimalFormat
+
+sealed class AccountStates {
+    object Loading : AccountStates()
+    data class AccountInfo(val readOnly: Boolean = true, val currentUser: CurrentUser) :
+        AccountStates() {
+
+        var heightMetric by mutableStateOf(currentUser.heightMetric)
+            private set
+
+        var weightMetric by mutableStateOf(currentUser.weightMetric)
+            private set
+
+        var height by mutableStateOf(currentUser.height.toString())
+            private set
+        var weight by mutableStateOf(currentUser.weight.toString())
+            private set
+
+
+        fun updateHeight(heightInString: String) {
+            height = NumberUtils.updateStringToValidNumber(heightInString)
+        }
+
+        fun updateWeight(weightInString: String) {
+            weight = NumberUtils.updateStringToValidNumber(weightInString)
+        }
+
+        fun updateHeightMetric(newHeightMetric: String) {
+            if(heightMetric != newHeightMetric){
+                val conversionFunction: (Double) -> Double = when(newHeightMetric){
+                    HeightMetric.Feet.type -> {
+                        NumberUtils::convertCentimetersToFeet
+                    }
+                    else -> {
+                        NumberUtils::convertFeetToCentimeters
+                    }
+                }
+                height = formatDoubleToString(conversionFunction(NumberUtils.stringToDouble(height)))
+                heightMetric = newHeightMetric
+            }
+        }
+
+        fun updateWeightMetric(newWeightMetric: String) {
+            if (weightMetric != newWeightMetric) {
+                val conversionFunction: (Double) -> Double = when (newWeightMetric) {
+                    WeightMetric.Kilo.type -> NumberUtils::convertPoundsToKG
+                    else -> NumberUtils::convertKGToPounds
+                }
+
+                weight = formatDoubleToString(conversionFunction(NumberUtils.stringToDouble(weight)))
+                weightMetric = newWeightMetric
+            }
+        }
+    }
+
+    fun formatDoubleToString(number: Double): String {
+        val decimalFormat = DecimalFormat("#.#")
+        return decimalFormat.format(number)
+    }
+
+    data class Error(val error: String) : AccountStates()
+}

@@ -28,7 +28,9 @@ import io.appwrite.exceptions.AppwriteException
 import io.appwrite.models.Document
 import io.appwrite.models.Session
 import io.appwrite.models.User
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import net.openid.appauth.AuthorizationException
@@ -228,22 +230,24 @@ class UserRepositoryImpl @Inject constructor(
         }
 
     override suspend fun updateUserInfo(
-        documentId: String,
         weight: Double,
-        weightMetric: WeightMetric,
+        weightMetric: String,
         height: Double,
-        heightMetric: HeightMetric
+        heightMetric: String
     ): UpdateResult {
-        val serverResponse = userRemoteDbService.updateDocument(
-            documentId,
-            data = createJsonObject(
-                weight,
-                weightMetric,
-                height,
-                heightMetric
-            ),
-        )
-        return handleUpdateDocumentRequest(serverResponse)
+      return withContext(Dispatchers.IO){
+            val documentId = dataStore.data.firstOrNull()?.get(DataStoreKeys.USER_DOC_ID) ?: return@withContext UpdateResult.Failed("Doc Id not found")
+            val serverResponse = userRemoteDbService.updateDocument(
+                documentId,
+                data = createJsonObject(
+                    weight,
+                    weightMetric,
+                    height,
+                    heightMetric
+                ),
+            )
+             handleUpdateDocumentRequest(serverResponse)
+        }
     }
 
     private suspend fun handleUpdateDocumentRequest(
@@ -270,15 +274,15 @@ class UserRepositoryImpl @Inject constructor(
 
     private fun createJsonObject(
         weight: Double,
-        weightMetric: WeightMetric,
+        weightMetric: String,
         height: Double,
-        heightMetric: HeightMetric
+        heightMetric: String
     ): JsonObject {
         return JsonObject().apply {
             addProperty(DataStoreKeys.USER_WEIGHT.name, weight.toString())
-            addProperty(DataStoreKeys.USER_WEIGHT_METRIC.name, weightMetric.type)
+            addProperty(DataStoreKeys.USER_WEIGHT_METRIC.name, weightMetric)
             addProperty(DataStoreKeys.USER_HEIGHT.name, height.toString())
-            addProperty(DataStoreKeys.USER_HEIGHT_METRIC.name, heightMetric.type)
+            addProperty(DataStoreKeys.USER_HEIGHT_METRIC.name, heightMetric)
         }
     }
 
