@@ -8,6 +8,8 @@ import com.example.chooseu.core.registration.state.WeightMetric
 import com.example.chooseu.domain.CurrentUser
 import com.example.chooseu.utils.NumberUtils
 import java.text.DecimalFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 sealed class AccountStates {
     object Loading : AccountStates()
@@ -25,6 +27,7 @@ sealed class AccountStates {
         var weight by mutableStateOf(currentUser.weight.toString())
             private set
 
+        val age by mutableStateOf(calculateAge(currentUser.birthdate))
 
         fun updateHeight(heightInString: String) {
             height = NumberUtils.updateStringToValidNumber(heightInString)
@@ -65,6 +68,22 @@ sealed class AccountStates {
     fun formatDoubleToString(number: Double): String {
         val decimalFormat = DecimalFormat("#.#")
         return decimalFormat.format(number)
+    }
+
+    fun calculateAge(birthDate: String): Int {
+        val formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy")
+        val birthLocalDate = LocalDate.parse(birthDate, formatter)
+        val currentLocalDate = LocalDate.now()
+
+        // Calculate age
+        var age = currentLocalDate.year - birthLocalDate.year
+
+        // Adjust age if the birthdate hasn't occurred yet this year
+        if (currentLocalDate < birthLocalDate.plusYears(age.toLong())) {
+            age--
+        }
+
+        return age
     }
 
     data class Error(val error: String) : AccountStates()

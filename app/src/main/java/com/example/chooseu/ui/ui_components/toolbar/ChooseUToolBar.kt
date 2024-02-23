@@ -25,6 +25,7 @@ import com.example.chooseu.ui.theme.appColor
 
 @Composable
 fun ChooseUToolBar(
+    showTrailingIcon: Boolean = true,
     toolBarState: ToolBarState,
     navigateBack: () -> Unit,
     navigateToActionDestination: (GeneralDestinations) -> Unit,
@@ -41,15 +42,17 @@ fun ChooseUToolBar(
                     headline = toolBarState.headline,
                     navigateBack = navigateBack,
                     trailingIcon = {
-                        Image(
-                            modifier = Modifier.clickable(
-                                onClick = { navigateToActionDestination(toolBarState.trailingIcon.destinations) }
-                            ),
-                            painter = painterResource(
-                                id = toolBarState.trailingIcon.drawable,
-                            ),
-                            contentDescription = ""
-                        )
+                        if(showTrailingIcon){
+                            Image(
+                                modifier = Modifier.clickable(
+                                    onClick = { navigateToActionDestination(toolBarState.trailingIcon.destinations) }
+                                ),
+                                painter = painterResource(
+                                    id = toolBarState.trailingIcon.drawable,
+                                ),
+                                contentDescription = ""
+                            )
+                        }
                     },
                 )
             }

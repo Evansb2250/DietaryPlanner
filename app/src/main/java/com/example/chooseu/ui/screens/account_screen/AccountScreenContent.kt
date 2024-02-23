@@ -1,18 +1,15 @@
 package com.example.chooseu.ui.screens.account_screen
 
-import androidx.activity.ComponentDialog
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -27,6 +24,7 @@ import com.example.chooseu.core.account.state.AccountStates
 import com.example.chooseu.core.registration.state.heightUnits
 import com.example.chooseu.core.registration.state.weightUnits
 import com.example.chooseu.core.toolbar_states.ToolBarState
+import com.example.chooseu.ui.theme.yellowMain
 import com.example.chooseu.ui.ui_components.buttons.StandardButton
 import com.example.chooseu.ui.ui_components.custom_column.AppColumnContainer
 import com.example.chooseu.ui.ui_components.dialog.ErrorDialog
@@ -48,8 +46,9 @@ fun AccountScreenContent(
     Scaffold(
         topBar = {
             ChooseUToolBar(
+                showTrailingIcon = false,
                 toolBarState = ToolBarState.Navigated(
-                    "Account"
+                    "Account",
                 ),
                 navigateBack = onBackPress,
                 navigateToActionDestination = {}
@@ -85,24 +84,18 @@ fun AccountScreenContent(
                                 label = "Date Of Birth:",
                                 text = "${state.currentUser.birthdate}",
                             )
-
-
-                            Column {
-
-                                WhiteText(
-                                    text = "${state.currentUser.email}",
-                                )
-                                HorizontalDivider()
-                                WhiteText(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    text = "Email:",
-                                    textAlign = TextAlign.Center
-                                )
-                            }
+                            ImmutableAccountInfo(
+                                label = "Age:",
+                                text = "${state.age}",
+                            )
 
                             ImmutableAccountInfo(
                                 label = "Gender:",
                                 text = "${state.currentUser.gender}",
+                            )
+                            ImmutableAccountInfo(
+                                label = "Email:",
+                                text = state.currentUser.email,
                             )
 
                             AccountEdibleFields(
@@ -115,12 +108,6 @@ fun AccountScreenContent(
                                 dropDownOptions = weightUnits.map { it.type }
                             )
 
-
-
-                            Spacer(
-                                modifier = Modifier.size(5.dp),
-                            )
-
                             AccountEdibleFields(
                                 readOnly = state.readOnly,
                                 value = state.height,
@@ -129,6 +116,13 @@ fun AccountScreenContent(
                                 dropDownValue = state.heightMetric,
                                 onDropDownChange = state::updateHeightMetric,
                                 dropDownOptions = heightUnits.map { it.type }
+                            )
+                            Spacer(
+                                modifier = Modifier.size(10.dp),
+                            )
+                            Text(
+                                text = "Show weight history",
+                                color = yellowMain
                             )
 
                         }
@@ -199,7 +193,7 @@ private fun AccountEdibleFields(
     dropDownOptions: List<String>,
 ) {
     Row(
-        modifier = Modifier.padding(top = 8.dp)
+        modifier = Modifier.padding(top = 4.dp)
     ) {
 
         CustomOutlineTextField(
