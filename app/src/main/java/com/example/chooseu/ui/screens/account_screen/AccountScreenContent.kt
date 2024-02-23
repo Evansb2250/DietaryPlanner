@@ -86,7 +86,7 @@ fun AccountScreenContent(
                             )
                             ImmutableAccountInfo(
                                 label = "Age:",
-                                text = "${state.age}",
+                                text = "${state.calculateAge()}",
                             )
 
                             ImmutableAccountInfo(
@@ -174,8 +174,12 @@ private fun ImmutableAccountInfo(
         WhiteText(
             text = label,
         )
-        WhiteText(
+//        WhiteText(
+//            text = text,
+//        )
+        Text(
             text = text,
+            color = yellowMain,
         )
     }
 
