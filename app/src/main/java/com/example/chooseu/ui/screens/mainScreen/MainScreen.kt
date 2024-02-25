@@ -14,6 +14,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.chooseu.core.main_screen.BottomNavViewModel
 import com.example.chooseu.navigation.components.destinations.BottomNavBarDestinations
+import com.example.chooseu.navigation.components.destinations.GeneralDestinations
 import com.example.chooseu.navigation.navgraphs.MainScreenRoutes
 import com.example.chooseu.ui.theme.appColor
 import com.example.chooseu.ui.ui_components.bottomBar.ChooseUBottomBar
@@ -45,8 +46,8 @@ fun MainScreen(
 
             navController.navigate(navDirection.destination) {
                 this.launchSingleTop = true
-                popUpTo(BottomNavBarDestinations.Home.destination) {
-                    inclusive = true
+                popUpTo(GeneralDestinations.OnAppStartUpDestination.destination) {
+                    inclusive = false
                 }
             }
         }

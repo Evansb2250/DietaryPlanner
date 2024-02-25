@@ -47,5 +47,4 @@ object NumberUtils {
             1.0
         }
     }
-
 }

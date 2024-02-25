@@ -121,8 +121,8 @@ fun AccountScreenContent(
                                 modifier = Modifier.size(10.dp),
                             )
                             Text(
-                                text = "Show weight history",
-                                color = yellowMain
+                                text = "Show all updates..",
+                                color = yellowMain,
                             )
 
                         }
@@ -171,12 +171,10 @@ private fun ImmutableAccountInfo(
     Row(
         horizontalArrangement = Arrangement.spacedBy(2.dp)
     ) {
-        WhiteText(
+        Text(
             text = label,
+            color = Color.White,
         )
-//        WhiteText(
-//            text = text,
-//        )
         Text(
             text = text,
             color = yellowMain,
@@ -229,18 +227,4 @@ private fun AccountEdibleFields(
             onOptionChange = onDropDownChange
         )
     }
-}
-
-@Composable
-fun WhiteText(
-    modifier: Modifier = Modifier,
-    text: String,
-    textAlign: TextAlign = TextAlign.Left,
-) {
-    Text(
-        modifier = modifier,
-        text = text,
-        color = Color.White,
-        textAlign = textAlign
-    )
 }

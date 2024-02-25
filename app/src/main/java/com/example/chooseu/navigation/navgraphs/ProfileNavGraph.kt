@@ -89,9 +89,7 @@ fun NavGraphBuilder.ProfileNavGraph() {
         ) { it ->
         AppColumnContainer(
             modifier = Modifier.padding(it),
-            disableBackPress = false,
         ) {
-
                 ScreenUnavailable()
             }
         }

@@ -66,7 +66,7 @@ class AccountViewModel @Inject constructor(
         }
     }
 
-    fun saveChanges(userInfo: AccountStates.AccountInfo) {
+    fun saveChangesToServer(userInfo: AccountStates.AccountInfo) {
         setStateToLoading()
 
         viewModelScope.launch {
