@@ -10,7 +10,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.googlelightcalendar"
+    namespace = "com.example.chooseu"
     compileSdk = 34
 
     testOptions{
@@ -21,7 +21,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.example.googlelightcalendar"
+        applicationId = "com.example.chooseu"
         minSdk = 26
         targetSdk = 34
         versionCode = 1
@@ -86,9 +86,7 @@ dependencies {
     implementation("androidx.compose.ui:ui:1.7.0-alpha01")
     debugImplementation("androidx.compose.ui:ui-tooling:1.6.0")
     implementation("androidx.compose.ui:ui-tooling-preview:1.6.0")
-    implementation("androidx.compose.material3:material3")
     implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("com.google.android.material:material:1.11.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
 
     /**
@@ -124,8 +122,10 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-scalars:2.9.0")
 
     //MaterialDesign3
-    implementation("androidx.compose.material3:material3:1.1.2")
-    implementation("androidx.compose.material3:material3-window-size-class:1.1.2")
+    implementation("androidx.compose.material3:material3:1.2.0")
+    implementation("androidx.compose.material3:material3-window-size-class:1.2.0")
+    implementation("androidx.compose.material3:material3-adaptive:1.0.0-alpha06")
+    implementation("androidx.compose.material3:material3-adaptive-navigation-suite:1.0.0-alpha03")
 
     //Splash Screen
     implementation("androidx.core:core-splashscreen:1.0.1")
@@ -178,6 +178,9 @@ dependencies {
     androidTestImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
     debugImplementation("androidx.compose.ui:ui-tooling:1.5.4")
     debugImplementation("androidx.compose.ui:ui-test-manifest:1.5.4")
+
+    //AppWrite Android SDK
+    implementation("io.appwrite:sdk-for-android:4.0.1")
 
     // Mockito
     // Optional -- Mockito framework
