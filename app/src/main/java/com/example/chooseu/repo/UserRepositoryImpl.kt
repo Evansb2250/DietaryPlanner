@@ -10,13 +10,12 @@ import com.example.chooseu.common.DataStoreKeys
 import com.example.chooseu.core.TokenManager
 import com.example.chooseu.core.dispatcher_provider.DispatcherProvider
 import com.example.chooseu.core.registration.cache.keys.RegistrationKeys
-import com.example.chooseu.core.registration.state.HeightMetric
 import com.example.chooseu.core.registration.state.RegisterGoalStates
-import com.example.chooseu.core.registration.state.WeightMetric
 import com.example.chooseu.data.database.dao.UserDao
 import com.example.chooseu.data.database.models.toUser
 import com.example.chooseu.data.rest.api_service.service.account.AccountService
-import com.example.chooseu.data.rest.api_service.service.user_table.UserRemoteDbService
+import com.example.chooseu.data.rest.api_service.service.user_table.UserRemoteService
+import com.example.chooseu.data.rest.api_service.service.weight_history.BodyMassIndexRemoteService
 import com.example.chooseu.domain.CurrentUser
 import com.example.chooseu.utils.AsyncResponse
 import com.example.chooseu.utils.DataStoreUtil.clearUserData
@@ -35,6 +34,8 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import net.openid.appauth.AuthorizationException
 import net.openid.appauth.AuthorizationResponse
+import java.time.LocalDate
+import java.time.ZoneId
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.coroutines.resume
@@ -54,7 +55,8 @@ class UserRepositoryImpl @Inject constructor(
     private val dataStore: DataStore<Preferences>,
     private val tokenManager: TokenManager,
     private val dispatcherProvider: DispatcherProvider,
-    private val userRemoteDbService: UserRemoteDbService,
+    private val userRemoteDbService: UserRemoteService,
+    private val weightHistoryService: BodyMassIndexRemoteService,
 ) : UserRepository {
 
     override val currentUser: Flow<CurrentUser?> = dataStore.toCurrentUser()
@@ -235,8 +237,19 @@ class UserRepositoryImpl @Inject constructor(
         height: Double,
         heightMetric: String
     ): UpdateResult {
-      return withContext(Dispatchers.IO){
-            val documentId = dataStore.data.firstOrNull()?.get(DataStoreKeys.USER_DOC_ID) ?: return@withContext UpdateResult.Failed("Doc Id not found")
+        return withContext(Dispatchers.IO) {
+            val pref  = dataStore.data.firstOrNull()
+            val documentId = pref?.get(DataStoreKeys.USER_DOC_ID)
+                ?: return@withContext UpdateResult.Failed("Doc Id not found")
+            val userId = pref.get(DataStoreKeys.USER_ID) ?: return@withContext UpdateResult.Failed("userId not found")
+
+            weightHistoryService.add(
+                userId,
+                weight,
+                weightMetric,
+                calculateDateAsLong()
+            )
+
             val serverResponse = userRemoteDbService.updateDocument(
                 documentId,
                 data = createJsonObject(
@@ -246,8 +259,14 @@ class UserRepositoryImpl @Inject constructor(
                     heightMetric
                 ),
             )
-             handleUpdateDocumentRequest(serverResponse)
+            handleUpdateDocumentRequest(serverResponse)
         }
+    }
+
+    private fun calculateDateAsLong(): Long {
+        val date = LocalDate.now()
+        val instant = date.atStartOfDay(ZoneId.systemDefault()).toInstant()
+        return instant.toEpochMilli()
     }
 
     private suspend fun handleUpdateDocumentRequest(

@@ -3,7 +3,8 @@ package com.example.chooseu.di
 import android.content.Context
 import com.example.chooseu.common.Constants
 import com.example.chooseu.data.rest.api_service.service.account.AccountService
-import com.example.chooseu.data.rest.api_service.service.user_table.UserRemoteDbService
+import com.example.chooseu.data.rest.api_service.service.user_table.UserRemoteService
+import com.example.chooseu.data.rest.api_service.service.weight_history.BodyMassIndexRemoteService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -35,5 +36,11 @@ object AppWriteModule {
     @Provides
     fun provideUserService(
         appWriteClient: Client,
-    ): UserRemoteDbService = UserRemoteDbService(appWriteClient)
+    ): UserRemoteService = UserRemoteService(appWriteClient)
+
+    @Singleton
+    @Provides
+    fun providesWeightHistoryRemoteService(
+        appWriteClient: Client,
+        ): BodyMassIndexRemoteService = BodyMassIndexRemoteService(appWriteClient)
 }

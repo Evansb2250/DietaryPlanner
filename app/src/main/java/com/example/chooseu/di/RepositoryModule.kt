@@ -7,7 +7,8 @@ import com.example.chooseu.core.GoogleTokenManagerImpl
 import com.example.chooseu.core.dispatcher_provider.DispatcherProvider
 import com.example.chooseu.data.database.GoogleLightCalenderDatabase
 import com.example.chooseu.data.rest.api_service.service.account.AccountService
-import com.example.chooseu.data.rest.api_service.service.user_table.UserRemoteDbService
+import com.example.chooseu.data.rest.api_service.service.user_table.UserRemoteService
+import com.example.chooseu.data.rest.api_service.service.weight_history.BodyMassIndexRemoteService
 import com.example.chooseu.repo.UserRepository
 import com.example.chooseu.repo.UserRepositoryImpl
 import dagger.Module
@@ -29,7 +30,8 @@ object RepositoryModule {
         database: GoogleLightCalenderDatabase,
         dispatcherProvider: DispatcherProvider,
         dataStore: DataStore<Preferences>,
-        userService: UserRemoteDbService,
+        userService: UserRemoteService,
+        weightHistoryService: BodyMassIndexRemoteService,
     ): UserRepository {
         return UserRepositoryImpl(
             googleOauthClient = lazy { googleOauthClient },
@@ -39,6 +41,7 @@ object RepositoryModule {
             tokenManager = tokenManager,
             dispatcherProvider = dispatcherProvider,
             userRemoteDbService = userService,
+            weightHistoryService = weightHistoryService,
         )
     }
 }
