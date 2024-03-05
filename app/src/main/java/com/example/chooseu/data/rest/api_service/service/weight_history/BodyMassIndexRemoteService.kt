@@ -8,38 +8,54 @@ import io.appwrite.ID
 import io.appwrite.Query
 import io.appwrite.exceptions.AppwriteException
 import io.appwrite.models.Document
+import io.appwrite.models.DocumentList
 import io.appwrite.services.Databases
 
 class BodyMassIndexRemoteService(client: Client) {
     companion object {
-        private const val userCollectionId = "UserWeightHistory"
+        private const val bodyMassCollectionId = "BodyMassTable"
     }
 
     private val databases = Databases(client)
 
-    suspend fun fetchUserWeightHistory(userId: String): Document<Map<String, Any>> {
-        return databases.listDocuments(
-            AppWriteConstants.userDatabaseId,
-            userCollectionId,
-            listOf(Query.equal("userId", "${userId}"), Query.limit(10))
-        ).documents.first()
+    suspend fun fetchUserWeightHistory(userId: String): AsyncResponse<DocumentList <Map<String, Any>>>{
+        return try {
+            AsyncResponse.Success(
+                data = databases.listDocuments(
+                    AppWriteConstants.databaseId,
+                    bodyMassCollectionId,
+                    listOf(Query.equal("userId", "${userId}"), Query.limit(10))
+                )
+            )
+        } catch (e: AppwriteException) {
+            AsyncResponse.Failed(
+                data = null,
+                message = e.message ?: "failed to fetch weight history"
+            )
+        }
     }
 
     suspend fun add(
         userId: String,
         weight: Double,
         weightMetric: String,
-        date: Long,
+        height: Double,
+        heightMetric: String,
+        bmi: Double,
+        dateInteger: Long,
     ): Document<Map<String, Any>> {
         return databases.createDocument(
-            AppWriteConstants.userDatabaseId,
-            userCollectionId,
+            AppWriteConstants.databaseId,
+            bodyMassCollectionId,
             ID.unique(),
             mapOf(
                 "userId" to userId,
                 "weight" to weight,
-                "weightMetrics" to weightMetric,
-                "date" to date
+                "weightMetric" to weightMetric,
+                "height" to height,
+                "heightMetric" to heightMetric,
+                "bmi" to bmi,
+                "dateInteger" to dateInteger
             )
         )
     }
@@ -51,8 +67,8 @@ class BodyMassIndexRemoteService(client: Client) {
         return try {
             AsyncResponse.Success(
                 data = databases.updateDocument(
-                    AppWriteConstants.userDatabaseId,
-                    userCollectionId,
+                    AppWriteConstants.databaseId,
+                    bodyMassCollectionId,
                     documentId = documentId,
                     data = data,
                 )
@@ -64,8 +80,8 @@ class BodyMassIndexRemoteService(client: Client) {
 
     suspend fun remove(id: String) {
         databases.deleteDocument(
-            AppWriteConstants.userDatabaseId,
-            userCollectionId,
+            AppWriteConstants.databaseId,
+            bodyMassCollectionId,
             id
         )
     }

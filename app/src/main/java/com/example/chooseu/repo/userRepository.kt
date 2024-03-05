@@ -2,9 +2,6 @@ package com.example.chooseu.repo
 
 import android.content.Intent
 import androidx.activity.result.ActivityResultLauncher
-import com.example.chooseu.core.registration.state.HeightMetric
-import com.example.chooseu.core.registration.state.RegisterGoalStates
-import com.example.chooseu.core.registration.state.WeightMetric
 import com.example.chooseu.domain.CurrentUser
 import com.example.chooseu.utils.AsyncResponse
 import kotlinx.coroutines.flow.Flow
@@ -41,11 +38,11 @@ interface UserRepository {
         error: AuthorizationException?,
     ): AuthorizationResponseStates
 
-    suspend fun createUser(
+    suspend fun createUserInServer(
         userInfo: Map<String, String>,
-    ): AsyncResponse<RegisterGoalStates>
+    ): UpdateResult
 
-    suspend fun updateUserInfo(
+    suspend fun addNewBodyMassIndexToServer(
         weight: Double,
         weightMetric: String,
         height: Double,

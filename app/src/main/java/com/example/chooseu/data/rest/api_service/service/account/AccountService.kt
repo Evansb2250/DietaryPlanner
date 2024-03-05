@@ -2,6 +2,7 @@ package com.example.chooseu.data.rest.api_service.service.account
 
 import com.example.chooseu.utils.AsyncResponse
 import io.appwrite.Client
+import io.appwrite.ID
 import io.appwrite.models.User
 import io.appwrite.exceptions.AppwriteException
 import io.appwrite.models.Session
@@ -37,14 +38,13 @@ class AccountService(client: Client) {
     }
 
     suspend fun registerUser(
-        userId: String,
         email: String,
         password: String,
         name: String
     ): AsyncResponse<User<Map<String, Any>>?> {
         return try {
             val account = account.create(
-                userId = userId,
+                userId = ID.unique(),
                 email = email,
                 password = password,
                 name = name,

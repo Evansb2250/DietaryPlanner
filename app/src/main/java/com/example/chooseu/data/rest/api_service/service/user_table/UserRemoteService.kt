@@ -20,7 +20,7 @@ class UserRemoteService(client: Client) {
 
     suspend fun fetchUserDetails(userId: String): Document<Map<String, Any>> {
         return databases.listDocuments(
-            AppWriteConstants.userDatabaseId,
+            AppWriteConstants.databaseId,
             userCollectionId,
             listOf(Query.equal("userId", "${userId}"), Query.limit(10))
         ).documents.first()
@@ -31,26 +31,18 @@ class UserRemoteService(client: Client) {
         firstName: String,
         lastName: String,
         birthDate: String,
-        height: Double,
-        heightMetric: String,
-        weight: Double,
-        weightMetric: String,
         email: String,
         gender: String
     ): Document<Map<String, Any>> {
         return databases.createDocument(
-            AppWriteConstants.userDatabaseId,
+            AppWriteConstants.databaseId,
             userCollectionId,
             ID.unique(),
             mapOf(
                 "userId" to userId,
                 "firstName" to firstName,
                 "lastName" to lastName,
-                "height" to height,
                 "birthDate" to birthDate,
-                "heightMetric" to heightMetric,
-                "weight" to weight,
-                "weightMetric" to weightMetric,
                 "email" to email,
                 "gender" to gender,
             )
@@ -64,7 +56,7 @@ class UserRemoteService(client: Client) {
         return try {
             AsyncResponse.Success(
                 data = databases.updateDocument(
-                    AppWriteConstants.userDatabaseId,
+                    AppWriteConstants.databaseId,
                     userCollectionId,
                     documentId = documentId,
                     data = data,
@@ -77,7 +69,7 @@ class UserRemoteService(client: Client) {
 
     suspend fun remove(id: String) {
         databases.deleteDocument(
-            AppWriteConstants.userDatabaseId,
+            AppWriteConstants.databaseId,
             userCollectionId,
             id
         )

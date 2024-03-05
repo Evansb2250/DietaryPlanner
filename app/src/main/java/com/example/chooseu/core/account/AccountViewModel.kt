@@ -10,6 +10,7 @@ import com.example.chooseu.repo.UpdateResult
 import com.example.chooseu.repo.UserRepository
 import com.example.chooseu.utils.NumberUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.launchIn
@@ -31,6 +32,8 @@ class AccountViewModel @Inject constructor(
 
     fun getUserInfoFromUserRepo() {
         userRepository.currentUser.onEach { potentialUser ->
+            //used to prevent a flicker because the compose moves between Loading to AccountInfo so fast that it can't recompose in time
+            delay(30)
             _state.value = createAccountStateFromUser(potentialUser)
         }.launchIn(viewModelScope)
     }
@@ -74,7 +77,7 @@ class AccountViewModel @Inject constructor(
                 setToErrorState("can't have empty space for weight or height")
             } else {
                 handleUpdateUserResponse(
-                    userRepository.updateUserInfo(
+                    userRepository.addNewBodyMassIndexToServer(
                         weight = NumberUtils.stringToDouble(userInfo.weight),
                         weightMetric = userInfo.weightMetric,
                         height = NumberUtils.stringToDouble(userInfo.height),

@@ -36,12 +36,13 @@ object RepositoryModule {
         return UserRepositoryImpl(
             googleOauthClient = lazy { googleOauthClient },
             userDao = database.userDao(),
+            bmiDao = database.bodyMassIndexDao() ,
             dataStore = dataStore,
             accountService = accountService,
             tokenManager = tokenManager,
             dispatcherProvider = dispatcherProvider,
             userRemoteDbService = userService,
-            weightHistoryService = weightHistoryService,
+            bodyMassIndexService = weightHistoryService,
         )
     }
 }

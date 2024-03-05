@@ -8,8 +8,8 @@ import com.example.chooseu.core.registration.state.ErrorState
 import com.example.chooseu.core.registration.state.PhysicalDetailState
 import com.example.chooseu.navigation.components.destinations.GeneralDestinations
 import com.example.chooseu.navigation.components.navmanagers.AuthNavManager
+import com.example.chooseu.repo.UpdateResult
 import com.example.chooseu.repo.UserRepository
-import com.example.chooseu.utils.AsyncResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -55,20 +55,20 @@ class PhysicalDetailsViewModel @Inject constructor(
             PhysicalDetailState.Loading
         }
         viewModelScope.launch {
-            val result = userRepository.createUser(cache.getCache())
-            when (result) {
-                is AsyncResponse.Failed -> {
+            val updateResult = userRepository.createUserInServer(cache.getCache())
+
+            when (updateResult) {
+                is UpdateResult.Failed -> {
                     _state.update {
                         PhysicalDetailState.PhysicalDetails(
                             errorState = ErrorState(
                                 isError = true,
-                                message = result.message
+                                message = updateResult.message
                             )
                         )
                     }
                 }
-
-                is AsyncResponse.Success -> {
+                is UpdateResult.Success -> {
                     navigateToLoginScreen()
                 }
             }

@@ -43,15 +43,17 @@ class RegisterGoalViewModel @Inject constructor(
         }
 
         viewModelScope.launch(dispatcherProvider.main) {
-            val response: AsyncResponse<RegisterGoalStates> =
-                userRepository.createUser(userRegistrationCache.getCache())
+//            val response: AsyncResponse<RegisterGoalStates> =
+//                userRepository.createUserInServer(userRegistrationCache.getCache())
 
-            _state.update {
-                when (response) {
-                    is AsyncResponse.Failed -> response.data as RegisterGoalStates
-                    is AsyncResponse.Success -> response.data!!
-                }
-            }
+
+
+//            _state.update {
+//                when (response) {
+//                    is AsyncResponse.Failed -> response.data as RegisterGoalStates
+//                    is AsyncResponse.Success -> response.data!!
+//                }
+//            }
         }
     }
 
