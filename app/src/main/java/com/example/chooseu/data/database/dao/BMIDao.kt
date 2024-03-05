@@ -20,11 +20,11 @@ interface BMIDao {
     )
 
     @Query("Select * From BMIEntity where userId =:id")
-    fun getBMIHistory(id: String): List<BMIEntity>
+    suspend fun getBMIHistory(id: String): List<BMIEntity>
 
 
     @Query("SELECT * FROM BMIEntity ORDER BY dateAsInteger DESC LIMIT 1")
-    fun getCurrentBMI(): Flow<BMIEntity>
+    fun getCurrentBMI(): Flow<BMIEntity?>
 
 
     @Query("SELECT * FROM BMIEntity Where dateAsInteger=:date")

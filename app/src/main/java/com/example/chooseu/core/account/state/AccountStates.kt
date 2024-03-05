@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.example.chooseu.core.registration.state.HeightMetric
 import com.example.chooseu.core.registration.state.WeightMetric
+import com.example.chooseu.data.database.models.BMIEntity
 import com.example.chooseu.domain.CurrentUser
 import com.example.chooseu.utils.NumberUtils
 import java.text.DecimalFormat
@@ -88,5 +89,6 @@ sealed class AccountStates {
     }
 
 
+    data class BodyMassIndexHistory(val list: List<BMIEntity>) : AccountStates()
     data class Error(val error: String) : AccountStates()
 }

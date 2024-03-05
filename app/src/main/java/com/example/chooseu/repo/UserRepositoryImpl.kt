@@ -11,6 +11,7 @@ import com.example.chooseu.common.DataStoreKeys.BMI_STORED_DATE
 import com.example.chooseu.common.DataStoreKeys.BMI_VALUE
 import com.example.chooseu.common.DataStoreKeys.USER_HEIGHT
 import com.example.chooseu.common.DataStoreKeys.USER_HEIGHT_METRIC
+import com.example.chooseu.common.DataStoreKeys.USER_ID
 import com.example.chooseu.common.DataStoreKeys.USER_WEIGHT
 import com.example.chooseu.common.DataStoreKeys.USER_WEIGHT_METRIC
 import com.example.chooseu.core.TokenManager
@@ -78,6 +79,7 @@ class UserRepositoryImpl @Inject constructor(
         val gender = dataStoreData[DataStoreKeys.USER_GENDER] ?: return@combine null
         val email = dataStoreData[DataStoreKeys.USER_EMAIL] ?: return@combine null
         val birthDate = dataStoreData[DataStoreKeys.USER_BIRTH_DATE] ?: return@combine null
+        val userData = currentBMIData ?: return@combine null
 
         CurrentUser(
             userName = email,
@@ -86,10 +88,10 @@ class UserRepositoryImpl @Inject constructor(
             gender = gender,
             email = email,
             birthdate = birthDate,
-            heightMetric = currentBMIData.heightMetric,
-            height = currentBMIData.height,
-            weightMetric = currentBMIData.weightMetric,
-            weight = currentBMIData.weight
+            heightMetric = userData.heightMetric,
+            height = userData.height,
+            weightMetric = userData.weightMetric,
+            weight = userData.weight
         )
     }
 
@@ -154,19 +156,27 @@ class UserRepositoryImpl @Inject constructor(
 
     //all I want to know if logging in, getting the user data and storing it was successful.
     private suspend fun storeUserData(userData: User<Map<String, Any>>?): AsyncResponse<Unit> {
-        val personalInfo = userRemoteDbService.fetchUserDetails(userData!!.id)
-        val fetchHistoryResponse = bodyMassIndexService.fetchUserWeightHistory(userData.id)
+        val result = coroutineScope {
 
-        when (fetchHistoryResponse) {
-            is AsyncResponse.Failed -> {
-                return AsyncResponse.Failed(data = null, message = fetchHistoryResponse.message)
-            }
+            val personalInfo = async { userRemoteDbService.fetchUserDetails(userData!!.id) }.await()
+            val fetchHistoryResponse = async { bodyMassIndexService.fetchUserWeightHistory(userData!!.id) }.await()
 
-            is AsyncResponse.Success -> {
-                storeWeightHistoryInRoom(fetchHistoryResponse.data!!)
+            when (fetchHistoryResponse) {
+                is AsyncResponse.Failed -> {
+                    return@coroutineScope AsyncResponse.Failed(
+                        data = null,
+                        message = fetchHistoryResponse.message
+                    )
+                }
+
+                is AsyncResponse.Success -> {
+                    storeWeightHistoryInRoom(fetchHistoryResponse.data!!)
+                }
             }
+            return@coroutineScope dataStore.storeUserData(personalInfo)
         }
-        return dataStore.storeUserData(personalInfo)
+
+        return result
     }
 
 
@@ -179,7 +189,7 @@ class UserRepositoryImpl @Inject constructor(
                         userId = bmiInfo.data[DataStoreKeys.USER_ID.name] as String,
                         weight = bmiInfo.data[USER_WEIGHT.name]?.toString()?.toDoubleOrNull()
                             ?: 0.0,
-                        weightMetric = bmiInfo.data[USER_HEIGHT_METRIC.name] as String,
+                        weightMetric = bmiInfo.data[USER_WEIGHT_METRIC.name] as String,
                         height = bmiInfo.data[USER_HEIGHT.name]?.toString()?.toDoubleOrNull()
                             ?: 0.0,
                         heightMetric = bmiInfo.data[USER_HEIGHT_METRIC.name] as String,
@@ -259,6 +269,14 @@ class UserRepositoryImpl @Inject constructor(
         error: AuthorizationException?
     ): AuthorizationResponseStates {
         TODO("Not yet implemented")
+    }
+
+    override suspend fun getBMIHistory(): List<BMIEntity> {
+        return withContext(dispatcherProvider.io) {
+            val userId =
+                dataStore.data.firstOrNull()?.get(USER_ID) ?: return@withContext emptyList()
+            return@withContext bmiDao.getBMIHistory(userId)
+        }
     }
 
     override suspend fun createUserInServer(userInfo: Map<String, String>): UpdateResult =

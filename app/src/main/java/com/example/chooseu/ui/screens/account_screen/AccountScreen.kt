@@ -23,6 +23,8 @@ fun AccountScreen(
         onBackPress = accountViewModel::onBackPress,
         closeDialog = accountViewModel::cancelEditMode,
         cancel = accountViewModel::cancelEditMode,
-        saveInformation = accountViewModel::saveChangesToServer
+        showHistoryWeightHistory = accountViewModel::showWeightHistory,
+        saveInformation = accountViewModel::saveChangesToServer,
+        backToAccountScreen = accountViewModel::getUserInfoFromUserRepo
     )
 }

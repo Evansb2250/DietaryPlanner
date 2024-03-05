@@ -2,6 +2,7 @@ package com.example.chooseu.repo
 
 import android.content.Intent
 import androidx.activity.result.ActivityResultLauncher
+import com.example.chooseu.data.database.models.BMIEntity
 import com.example.chooseu.domain.CurrentUser
 import com.example.chooseu.utils.AsyncResponse
 import kotlinx.coroutines.flow.Flow
@@ -38,6 +39,7 @@ interface UserRepository {
         error: AuthorizationException?,
     ): AuthorizationResponseStates
 
+    suspend fun getBMIHistory(): List<BMIEntity>
     suspend fun createUserInServer(
         userInfo: Map<String, String>,
     ): UpdateResult

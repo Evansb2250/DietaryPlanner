@@ -59,6 +59,14 @@ class AccountViewModel @Inject constructor(
         }
     }
 
+    fun showWeightHistory(){
+        viewModelScope.launch {
+            _state.update {
+                AccountStates.BodyMassIndexHistory( userRepository.getBMIHistory())
+            }
+        }
+    }
+
     fun cancelEditMode() {
         viewModelScope.launch {
             userRepository.currentUser.collect { currentUser ->
