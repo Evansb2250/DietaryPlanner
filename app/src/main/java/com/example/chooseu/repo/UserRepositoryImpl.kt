@@ -1,11 +1,8 @@
 package com.example.chooseu.repo
 
-import android.content.Intent
-import androidx.activity.result.ActivityResultLauncher
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
-import com.example.chooseu.auth.OauthClient
 import com.example.chooseu.common.DataStoreKeys
 import com.example.chooseu.common.DataStoreKeys.BMI_STORED_DATE
 import com.example.chooseu.common.DataStoreKeys.BMI_VALUE
@@ -14,13 +11,10 @@ import com.example.chooseu.common.DataStoreKeys.USER_HEIGHT_METRIC
 import com.example.chooseu.common.DataStoreKeys.USER_ID
 import com.example.chooseu.common.DataStoreKeys.USER_WEIGHT
 import com.example.chooseu.common.DataStoreKeys.USER_WEIGHT_METRIC
-import com.example.chooseu.core.TokenManager
 import com.example.chooseu.core.dispatcher_provider.DispatcherProvider
 import com.example.chooseu.core.registration.cache.keys.RegistrationKeys
 import com.example.chooseu.data.database.dao.BMIDao
-import com.example.chooseu.data.database.dao.UserDao
 import com.example.chooseu.data.database.models.BMIEntity
-import com.example.chooseu.data.database.models.toUser
 import com.example.chooseu.data.rest.api_service.service.account.AccountService
 import com.example.chooseu.data.rest.api_service.service.user_table.UserRemoteService
 import com.example.chooseu.data.rest.api_service.service.weight_history.BodyMassIndexRemoteService
@@ -39,15 +33,11 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
-import net.openid.appauth.AuthorizationException
-import net.openid.appauth.AuthorizationResponse
 import java.time.LocalDate
 import java.time.ZoneId
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlin.coroutines.resume
 import io.appwrite.models.User as AppWriteUser
 
 sealed class UpdateResult {
@@ -58,12 +48,9 @@ sealed class UpdateResult {
 
 @Singleton
 class UserRepositoryImpl @Inject constructor(
-    private val googleOauthClient: Lazy<OauthClient>,
-    private val userDao: UserDao,
     private val bmiDao: BMIDao,
     private val accountService: AccountService,
     private val dataStore: DataStore<Preferences>,
-    private val tokenManager: TokenManager,
     private val dispatcherProvider: DispatcherProvider,
     private val userRemoteDbService: UserRemoteService,
     private val bodyMassIndexService: BodyMassIndexRemoteService,

@@ -2,8 +2,6 @@ package com.example.chooseu.di
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import com.example.chooseu.auth.OauthClientImp
-import com.example.chooseu.core.GoogleTokenManagerImpl
 import com.example.chooseu.core.dispatcher_provider.DispatcherProvider
 import com.example.chooseu.data.database.GoogleLightCalenderDatabase
 import com.example.chooseu.data.rest.api_service.service.account.AccountService
@@ -25,8 +23,6 @@ object RepositoryModule {
     @Provides
     fun providesUserRepository(
         accountService: AccountService,
-        googleOauthClient: OauthClientImp,
-        tokenManager: GoogleTokenManagerImpl,
         database: GoogleLightCalenderDatabase,
         dispatcherProvider: DispatcherProvider,
         dataStore: DataStore<Preferences>,
@@ -34,12 +30,9 @@ object RepositoryModule {
         weightHistoryService: BodyMassIndexRemoteService,
     ): UserRepository {
         return UserRepositoryImpl(
-            googleOauthClient = lazy { googleOauthClient },
-            userDao = database.userDao(),
             bmiDao = database.bodyMassIndexDao() ,
             dataStore = dataStore,
             accountService = accountService,
-            tokenManager = tokenManager,
             dispatcherProvider = dispatcherProvider,
             userRemoteDbService = userService,
             bodyMassIndexService = weightHistoryService,
