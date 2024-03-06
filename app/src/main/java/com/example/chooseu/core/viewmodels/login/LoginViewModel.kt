@@ -2,6 +2,7 @@ package com.example.chooseu.core.viewmodels.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.chooseu.common.Constants.Companion.googleSignNotAvailable
 import com.example.chooseu.core.dispatcher_provider.DispatcherProvider
 import com.example.chooseu.navigation.components.destinations.GeneralDestinations
 import com.example.chooseu.navigation.components.navmanagers.AuthNavManager
@@ -61,7 +62,7 @@ class LoginViewModel @Inject constructor(
 
     //Removed prior Oauth code, will be handled using AppWrite.
     fun signInWithGoogle() {
-        setErrorState("Google Sign in not available")
+        setErrorState(googleSignNotAvailable)
     }
 
     fun navigateToHomeScreen(
