@@ -1,5 +1,6 @@
 package com.example.chooseu.data.rest.api_service.service.user_table
 
+import com.example.chooseu.data.rest.api_service.AppWriteConstants
 import com.example.chooseu.utils.AsyncResponse
 import com.google.gson.JsonObject
 import io.appwrite.Client
@@ -9,9 +10,9 @@ import io.appwrite.exceptions.AppwriteException
 import io.appwrite.models.Document
 import io.appwrite.services.Databases
 
-class UserRemoteDbService(client: Client) {
+class UserRemoteService(client: Client) {
     companion object {
-        private const val userDatabaseId = "65cc1767ac6f56d136eb"
+
         private const val userCollectionId = "UserTable"
     }
 
@@ -19,10 +20,9 @@ class UserRemoteDbService(client: Client) {
 
     suspend fun fetchUserDetails(userId: String): Document<Map<String, Any>> {
         return databases.listDocuments(
-            userDatabaseId,
+            AppWriteConstants.databaseId,
             userCollectionId,
             listOf(Query.equal("userId", "${userId}"), Query.limit(10))
-            //    listOf(Query.orderDesc("\$createdAt"), Query.limit(10))
         ).documents.first()
     }
 
@@ -31,26 +31,18 @@ class UserRemoteDbService(client: Client) {
         firstName: String,
         lastName: String,
         birthDate: String,
-        height: Double,
-        heightMetric: String,
-        weight: Double,
-        weightMetric: String,
         email: String,
         gender: String
     ): Document<Map<String, Any>> {
         return databases.createDocument(
-            userDatabaseId,
+            AppWriteConstants.databaseId,
             userCollectionId,
             ID.unique(),
             mapOf(
                 "userId" to userId,
                 "firstName" to firstName,
                 "lastName" to lastName,
-                "height" to height,
                 "birthDate" to birthDate,
-                "heightMetric" to heightMetric,
-                "weight" to weight,
-                "weightMetric" to weightMetric,
                 "email" to email,
                 "gender" to gender,
             )
@@ -64,7 +56,7 @@ class UserRemoteDbService(client: Client) {
         return try {
             AsyncResponse.Success(
                 data = databases.updateDocument(
-                    userDatabaseId,
+                    AppWriteConstants.databaseId,
                     userCollectionId,
                     documentId = documentId,
                     data = data,
@@ -77,7 +69,7 @@ class UserRemoteDbService(client: Client) {
 
     suspend fun remove(id: String) {
         databases.deleteDocument(
-            userDatabaseId,
+            AppWriteConstants.databaseId,
             userCollectionId,
             id
         )

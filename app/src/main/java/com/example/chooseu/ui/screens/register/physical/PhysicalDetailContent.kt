@@ -110,7 +110,7 @@ private fun PhysicalDetailFormScreen(
         ) {
             ErrorDialog(
                 title = "Error",
-                error = state.errorState.message ?: "Error detected",
+                error = state.errorState.message ?: "Error Creating account",
                 onDismiss = retry
             )
         }

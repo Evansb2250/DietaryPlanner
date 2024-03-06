@@ -2,14 +2,15 @@ package com.example.chooseu.core.registration
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.chooseu.core.registration.cache.keys.RegistrationKeys
+import com.example.chooseu.core.dispatcher_provider.DispatcherProvider
 import com.example.chooseu.core.registration.cache.UserRegistrationCache
+import com.example.chooseu.core.registration.cache.keys.RegistrationKeys
 import com.example.chooseu.core.registration.state.ErrorState
 import com.example.chooseu.core.registration.state.PhysicalDetailState
 import com.example.chooseu.navigation.components.destinations.GeneralDestinations
 import com.example.chooseu.navigation.components.navmanagers.AuthNavManager
+import com.example.chooseu.repo.UpdateResult
 import com.example.chooseu.repo.UserRepository
-import com.example.chooseu.utils.AsyncResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -20,9 +21,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PhysicalDetailsViewModel @Inject constructor(
-    val navigationManger: AuthNavManager,
+    private val navigationManger: AuthNavManager,
     private val cache: UserRegistrationCache,
     private val userRepository: UserRepository,
+    private val dispatcherProvider: DispatcherProvider,
 ) : ViewModel() {
 
     private val _state: MutableStateFlow<PhysicalDetailState> = MutableStateFlow(PhysicalDetailState.PhysicalDetails())
@@ -50,28 +52,33 @@ class PhysicalDetailsViewModel @Inject constructor(
         }
     }
 
-    fun createAccount() {
-        _state.update { 
-            PhysicalDetailState.Loading
-        }
-        viewModelScope.launch {
-            val result = userRepository.createUser(cache.getCache())
-            when (result) {
-                is AsyncResponse.Failed -> {
+    private fun createAccount() {
+        setStateToLoading()
+        viewModelScope.launch(dispatcherProvider.main) {
+            val updateResult = userRepository.createUserInServer(cache.getCache())
+
+            when (updateResult) {
+                is UpdateResult.Failed -> {
                     _state.update {
                         PhysicalDetailState.PhysicalDetails(
                             errorState = ErrorState(
                                 isError = true,
-                                message = result.message
+                                message = updateResult.message
                             )
                         )
                     }
                 }
 
-                is AsyncResponse.Success -> {
+                is UpdateResult.Success -> {
                     navigateToLoginScreen()
                 }
             }
+        }
+    }
+
+    private fun setStateToLoading() {
+        _state.update {
+            PhysicalDetailState.Loading
         }
     }
 

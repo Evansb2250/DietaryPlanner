@@ -5,8 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.chooseu.core.dispatcher_provider.DispatcherProvider
 import com.example.chooseu.core.profile_screen.states.ProfileScreenStates
 import com.example.chooseu.navigation.components.destinations.GeneralDestinations
-import com.example.chooseu.navigation.components.navmanagers.AuthNavManager
 import com.example.chooseu.navigation.components.navmanagers.AppNavManager
+import com.example.chooseu.navigation.components.navmanagers.AuthNavManager
 import com.example.chooseu.repo.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.InternalCoroutinesApi
