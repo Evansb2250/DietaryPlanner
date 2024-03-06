@@ -2,8 +2,9 @@ package com.example.chooseu.core.registration
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.chooseu.core.registration.cache.keys.RegistrationKeys
+import com.example.chooseu.core.dispatcher_provider.DispatcherProvider
 import com.example.chooseu.core.registration.cache.UserRegistrationCache
+import com.example.chooseu.core.registration.cache.keys.RegistrationKeys
 import com.example.chooseu.core.registration.state.ErrorState
 import com.example.chooseu.core.registration.state.PhysicalDetailState
 import com.example.chooseu.navigation.components.destinations.GeneralDestinations
@@ -20,9 +21,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PhysicalDetailsViewModel @Inject constructor(
-    val navigationManger: AuthNavManager,
+    private val navigationManger: AuthNavManager,
     private val cache: UserRegistrationCache,
     private val userRepository: UserRepository,
+    private val dispatcherProvider: DispatcherProvider,
 ) : ViewModel() {
 
     private val _state: MutableStateFlow<PhysicalDetailState> = MutableStateFlow(PhysicalDetailState.PhysicalDetails())
@@ -50,11 +52,9 @@ class PhysicalDetailsViewModel @Inject constructor(
         }
     }
 
-    fun createAccount() {
-        _state.update { 
-            PhysicalDetailState.Loading
-        }
-        viewModelScope.launch {
+    private fun createAccount() {
+        setStateToLoading()
+        viewModelScope.launch(dispatcherProvider.main) {
             val updateResult = userRepository.createUserInServer(cache.getCache())
 
             when (updateResult) {
@@ -68,10 +68,17 @@ class PhysicalDetailsViewModel @Inject constructor(
                         )
                     }
                 }
+
                 is UpdateResult.Success -> {
                     navigateToLoginScreen()
                 }
             }
+        }
+    }
+
+    private fun setStateToLoading() {
+        _state.update {
+            PhysicalDetailState.Loading
         }
     }
 

@@ -95,22 +95,6 @@ class UserRepositoryImpl @Inject constructor(
         )
     }
 
-    @Deprecated("App Write will take care of this")
-
-    // Aysnc response is received in the ActivityResultLauncher in the loginScreen
-    override fun attemptAuthorization(
-        authorizationScopes: Array<String>
-    ) {
-        googleOauthClient.value.attemptAuthorization(authorizationScopes)
-    }
-
-    @Deprecated("App Write will take care of this")
-
-    //Registers the googleOauthClient to the activity launcher the googleOauthClient is a singleton, and it survives while mainActivity is alive.
-    override fun registerAuthLauncher(launcher: ActivityResultLauncher<Intent>) {
-        googleOauthClient.value.registerAuthLauncher(launcher)
-    }
-
     override suspend fun signIn(userName: String, password: String): AsyncResponse<Unit> =
         withContext(dispatcherProvider.io) {
             try {
@@ -209,66 +193,6 @@ class UserRepositoryImpl @Inject constructor(
             bmiDao.deleteAll()
             accountService.logout()
         }
-    }
-
-    @Deprecated("App Write will take care of this")
-
-    override suspend fun handleAuthorizationResponse(
-        intent: Intent,
-        authorizationResponse: AuthorizationResponse?,
-        error: AuthorizationException?,
-    ): AuthorizationResponseStates {
-        return withContext(dispatcherProvider.io) {
-            val asyncResponse = googleOauthClient.value.handleAuthorizationResponse(
-                intent = intent,
-                authorizationResponse = authorizationResponse,
-                error = error,
-            )
-            suspendCancellableCoroutine { continuation ->
-                when (asyncResponse) {
-                    is AsyncResponse.Failed<CurrentUser?> -> {
-                        continuation.resume(
-                            AuthorizationResponseStates.FailedResponsState(
-                                asyncResponse.message ?: "Failed"
-                            )
-                        )
-                    }
-
-                    is AsyncResponse.Success<CurrentUser?> -> {
-                        val user =
-                            userDao.getUserFromGmailSignIn(asyncResponse.data?.userName ?: "")
-                                ?.toUser()
-
-                        if (user != null) {
-                            continuation.resume(
-                                AuthorizationResponseStates.SuccessResponseState(
-                                    email = user.userName,
-                                    name = user.name,
-                                )
-                            )
-                        } else {
-                            // Have user register account.
-                            continuation.resume(
-                                AuthorizationResponseStates.FirstTimeUserState(
-                                    asyncResponse.data!!.userName,
-                                    asyncResponse.data.name,
-                                )
-                            )
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    @Deprecated("App Write will take care of this")
-
-    override suspend fun handleSignUpResponse(
-        intent: Intent,
-        authorizationResponse: AuthorizationResponse?,
-        error: AuthorizationException?
-    ): AuthorizationResponseStates {
-        TODO("Not yet implemented")
     }
 
     override suspend fun getBMIHistory(): List<BMIEntity> {

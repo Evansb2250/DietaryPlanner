@@ -19,16 +19,6 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 @Module
 @InstallIn(ViewModelComponent::class)
 object ViewModelModule {
-    @Provides
-    fun providesLoginViewModel(
-        userRepository: UserRepository,
-        navigationManger: AuthNavManager,
-    ): LoginViewModel {
-        return LoginViewModel(
-            navigationManager = navigationManger,
-            userRepository = userRepository,
-        )
-    }
 
     @Provides
     fun providesRegisterGoalViewModel(

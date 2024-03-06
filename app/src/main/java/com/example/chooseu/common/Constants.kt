@@ -29,5 +29,7 @@ class Constants {
         const val appWriteProjectId = "65cc071f270d4688d790"
 
         val URL_LOGOUT_REDIRECT = "com.ptruiz.authtest:/logout"
+
+        const val googleSignNotAvailable = "Google Sign in is not available"
     }
 }

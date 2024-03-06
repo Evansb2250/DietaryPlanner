@@ -23,13 +23,6 @@ import kotlinx.coroutines.Dispatchers
 fun LoginScreen(
     modifier: Modifier = Modifier,
     loginViewModel: LoginViewModel = hiltViewModel(),
-    googleSignInLauncher: ManagedActivityResultLauncher<Intent, ActivityResult> = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.StartActivityForResult(),
-        onResult = { result ->
-            val googleSignInIntent = result.data as Intent
-            loginViewModel.handleAuthorizationResponse(googleSignInIntent)
-        }
-    )
 ) {
 
 //When user exits the screen I want to clear the state.
@@ -39,11 +32,6 @@ fun LoginScreen(
         }
     }
 
-    LaunchedEffect(key1 = Unit) {
-        loginViewModel.registerAuthLauncher(
-            googleSignInLauncher
-        )
-    }
 
 
     val state = loginViewModel.state.collectAsState(Dispatchers.Main.immediate).value

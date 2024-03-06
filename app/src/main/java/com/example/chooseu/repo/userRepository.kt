@@ -12,32 +12,12 @@ import net.openid.appauth.AuthorizationResponse
 interface UserRepository {
 
     val currentUser: Flow<CurrentUser?>
-    fun attemptAuthorization(
-        authorizationScopes: Array<String>
-    )
-
-    fun registerAuthLauncher(
-        launcher: ActivityResultLauncher<Intent>
-    )
-
     suspend fun signIn(
         userName: String,
         password: String,
     ): AsyncResponse<Unit>
 
     suspend fun clearPrefsAndSignOut()
-
-    suspend fun handleAuthorizationResponse(
-        intent: Intent,
-        authorizationResponse: AuthorizationResponse? = AuthorizationResponse.fromIntent(intent),
-        error: AuthorizationException? = AuthorizationException.fromIntent(intent),
-    ): AuthorizationResponseStates
-
-    suspend fun handleSignUpResponse(
-        intent: Intent,
-        authorizationResponse: AuthorizationResponse?,
-        error: AuthorizationException?,
-    ): AuthorizationResponseStates
 
     suspend fun getBMIHistory(): List<BMIEntity>
     suspend fun createUserInServer(

@@ -3,9 +3,10 @@ package com.example.chooseu.core.registration
 import app.cash.turbine.test
 import assertk.assertThat
 import assertk.assertions.isEqualTo
-import com.example.chooseu.core.registration.InitialRegistrationState.*
+import com.example.chooseu.core.registration.registration_main.state.InitialRegistrationState.*
 import com.example.chooseu.core.registration.cache.UserRegistrationCache
 import com.example.chooseu.core.registration.cache.UserRegistrationCacheImpl
+import com.example.chooseu.core.registration.registration_main.RegistrationViewModel
 import com.example.chooseu.navigation.components.destinations.GeneralDestinations
 import com.example.chooseu.navigation.components.AuthNavManager
 import com.example.chooseu.repo.UserRepository
@@ -64,7 +65,7 @@ class RegistrationViewModelTest {
             )
         )
 
-        viewModel.onStoreCredentials(state)
+        viewModel.storeCredentialsIntoCache(state)
 
         verify(navigationManger, times(1)).navigate(GeneralDestinations.RegisterDetailsDestination)
     }
@@ -74,7 +75,7 @@ class RegistrationViewModelTest {
     @ParameterizedTest
     fun `OnStoreCredentials missing credentials Failed`(state: PersonalInformationState) = runTest {
 
-        viewModel.onStoreCredentials(state)
+        viewModel.storeCredentialsIntoCache(state)
 
         verify(navigationManger, times(0)).navigate(GeneralDestinations.RegisterDetailsDestination)
 
@@ -89,13 +90,13 @@ class RegistrationViewModelTest {
     @Test
     fun `reset test`() = runTest {
         val state = PersonalInformationState()
-        viewModel.onStoreCredentials(state)
+        viewModel.storeCredentialsIntoCache(state)
 
         viewModel.state.test {
             val stateAfterMethodCall = awaitItem()
             assertThat(stateAfterMethodCall.failedSignUp.value.isError).isEqualTo(true)
 
-            viewModel.reset()
+            viewModel.resetRegistrationState()
             val stateAfterReset = awaitItem()
             assertThat(stateAfterReset.failedSignUp.value.isError).isEqualTo(false)
         }
