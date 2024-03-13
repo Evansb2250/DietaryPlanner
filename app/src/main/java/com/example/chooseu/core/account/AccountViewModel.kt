@@ -48,9 +48,14 @@ class AccountViewModel @Inject constructor(
 
 
     fun onBackPress() {
-        appNavManager.navigate(
-            BottomNavBarDestinations.Profile,
-        )
+        when (state.value) {
+            is AccountStates.AccountInfo -> {
+                appNavManager.navigate(
+                    BottomNavBarDestinations.Profile,
+                )
+            }
+            else -> { getUserInfoFromUserRepo() }
+        }
     }
 
     fun enableEditMode(state: AccountStates.AccountInfo) {
@@ -59,10 +64,10 @@ class AccountViewModel @Inject constructor(
         }
     }
 
-    fun showWeightHistory(){
+    fun showWeightHistory() {
         viewModelScope.launch {
             _state.update {
-                AccountStates.BodyMassIndexHistory( userRepository.getBMIHistory())
+                AccountStates.BodyMassIndexHistory(bmiHistory = userRepository.getBMIHistory())
             }
         }
     }

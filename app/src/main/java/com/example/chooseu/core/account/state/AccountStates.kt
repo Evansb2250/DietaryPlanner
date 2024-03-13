@@ -5,16 +5,21 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.example.chooseu.core.registration.state.HeightMetric
 import com.example.chooseu.core.registration.state.WeightMetric
-import com.example.chooseu.data.database.models.BMIEntity
+import com.example.chooseu.domain.BodyMassIndex
 import com.example.chooseu.domain.CurrentUser
 import com.example.chooseu.utils.NumberUtils
 import java.text.DecimalFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-sealed class AccountStates {
+sealed class AccountStates(
+    open val title: String = "Account Info"
+) {
     object Loading : AccountStates()
-    data class AccountInfo(val readOnly: Boolean = true, val currentUser: CurrentUser) :
+    data class AccountInfo(
+        val readOnly: Boolean = true,
+        val currentUser: CurrentUser,
+    ) :
         AccountStates() {
 
         var heightMetric by mutableStateOf(currentUser.heightMetric)
@@ -28,8 +33,6 @@ sealed class AccountStates {
         var weight by mutableStateOf(currentUser.weight.toString())
             private set
 
-       // val age by mutableStateOf(calculateAge(currentUser.birthdate))
-
         fun updateHeight(heightInString: String) {
             height = NumberUtils.updateStringToValidNumber(heightInString)
         }
@@ -39,8 +42,8 @@ sealed class AccountStates {
         }
 
         fun updateHeightMetric(newHeightMetric: String) {
-            if(heightMetric != newHeightMetric){
-                val conversionFunction: (Double) -> Double = when(newHeightMetric){
+            if (heightMetric != newHeightMetric) {
+                val conversionFunction: (Double) -> Double = when (newHeightMetric) {
                     HeightMetric.Feet.type -> {
                         NumberUtils::convertCentimetersToFeet
                     }
@@ -89,6 +92,13 @@ sealed class AccountStates {
     }
 
 
-    data class BodyMassIndexHistory(val list: List<BMIEntity>) : AccountStates()
+    data class BodyMassIndexHistory(
+        override val title: String = "Weight History",
+        private val bmiHistory: List<BodyMassIndex>
+    ) : AccountStates() {
+        var weightHistory by mutableStateOf(bmiHistory)
+            private set
+    }
+
     data class Error(val error: String) : AccountStates()
 }

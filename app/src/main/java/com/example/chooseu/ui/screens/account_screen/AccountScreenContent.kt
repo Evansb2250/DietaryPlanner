@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -56,7 +57,7 @@ fun AccountScreenContent(
             ChooseUToolBar(
                 showTrailingIcon = false,
                 toolBarState = ToolBarState.Navigated(
-                    "Account",
+                    state.title,
                 ),
                 navigateBack = onBackPress,
                 navigateToActionDestination = {}
@@ -83,25 +84,25 @@ fun AccountScreenContent(
                             verticalArrangement = Arrangement.spacedBy(20.dp)
                         ) {
 
-                            ImmutableAccountInfo(
+                            ImmutableAccountText(
                                 label = "Name:",
                                 text = "${state.currentUser.name} ${state.currentUser.lastName}"
                             )
 
-                            ImmutableAccountInfo(
+                            ImmutableAccountText(
                                 label = "Date Of Birth:",
                                 text = "${state.currentUser.birthdate}",
                             )
-                            ImmutableAccountInfo(
+                            ImmutableAccountText(
                                 label = "Age:",
                                 text = "${state.calculateAge()}",
                             )
 
-                            ImmutableAccountInfo(
+                            ImmutableAccountText(
                                 label = "Gender:",
                                 text = "${state.currentUser.gender}",
                             )
-                            ImmutableAccountInfo(
+                            ImmutableAccountText(
                                 label = "Email:",
                                 text = state.currentUser.email,
                             )
@@ -173,8 +174,10 @@ fun AccountScreenContent(
                     BackHandler {
                         backToAccountScreen()
                     }
-                    LazyColumn() {
-                        items(count = state.list.size) { index ->
+                    LazyColumn {
+                        items(
+                            items = state.weightHistory,
+                        ) {
                             Card(
                                 modifier = Modifier
                                     .fillMaxWidth()
@@ -183,17 +186,26 @@ fun AccountScreenContent(
                                         vertical = 4.dp,
                                     ),
 
-                            ) {
-                                Text(
-                                    text = state.list[index].documentId
-                                )
-                                Text(
-                                    text = "${state.list[index].height.toString()} ${state.list[index].heightMetric}"
-                                )
-                                Text(
-                                    text = "${state.list[index].weight} ${state.list[index].weightMetric}"
-                                )
+                                ) {
+
+                                Column(
+                                    modifier = Modifier.padding(
+                                        horizontal = 8.dp,
+                                    ),
+                                ) {
+                                    Text(
+                                        text = it.date
+                                    )
+                                    Text(
+                                        text = "${it.height} ${it.heightMetric}"
+                                    )
+                                    Text(
+                                        text = "${it.weight} ${it.weightMetric}"
+                                    )
+                                }
+
                             }
+
                         }
                     }
                 }
@@ -204,7 +216,7 @@ fun AccountScreenContent(
 
 
 @Composable
-private fun ImmutableAccountInfo(
+private fun ImmutableAccountText(
     label: String,
     text: String
 ) {
@@ -226,6 +238,7 @@ private fun ImmutableAccountInfo(
 
 @Composable
 private fun AccountEdibleFields(
+    modifier: Modifier = Modifier,
     readOnly: Boolean,
     value: String,
     onValueChange: (String) -> Unit = {},
@@ -239,7 +252,7 @@ private fun AccountEdibleFields(
     ) {
 
         CustomOutlineTextField(
-            modifier = Modifier
+            modifier = modifier
                 .weight(5f),
             value = value,
             onValueChange = onValueChange,

@@ -15,9 +15,11 @@ import com.example.chooseu.core.dispatcher_provider.DispatcherProvider
 import com.example.chooseu.core.registration.cache.keys.RegistrationKeys
 import com.example.chooseu.data.database.dao.BMIDao
 import com.example.chooseu.data.database.models.BMIEntity
+import com.example.chooseu.data.database.models.toBodyMassIndexList
 import com.example.chooseu.data.rest.api_service.service.account.AccountService
 import com.example.chooseu.data.rest.api_service.service.user_table.UserRemoteService
 import com.example.chooseu.data.rest.api_service.service.weight_history.BodyMassIndexRemoteService
+import com.example.chooseu.domain.BodyMassIndex
 import com.example.chooseu.domain.CurrentUser
 import com.example.chooseu.utils.AsyncResponse
 import com.example.chooseu.utils.DataStoreUtil.clearUserData
@@ -182,11 +184,10 @@ class UserRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getBMIHistory(): List<BMIEntity> {
+    override suspend fun getBMIHistory(): List<BodyMassIndex> {
         return withContext(dispatcherProvider.io) {
-            val userId =
-                dataStore.data.firstOrNull()?.get(USER_ID) ?: return@withContext emptyList()
-            return@withContext bmiDao.getBMIHistory(userId)
+            val userId = dataStore.data.firstOrNull()?.get(USER_ID) ?: return@withContext emptyList()
+            return@withContext bmiDao.getBMIHistory(userId).toBodyMassIndexList()
         }
     }
 
@@ -240,7 +241,7 @@ class UserRepositoryImpl @Inject constructor(
             when (val bmiEntity = bmiDao.dateAlreadyExist(todayDate)) {
                 null -> {
                     // if our BMI change isn't already in our system we add it to the server as a new entry
-                    bodyMassIndexService.add(
+                    bodyMassIndexService.createNewDocument(
                         userId = userId,
                         weight = weight,
                         weightMetric = weightMetric,
@@ -341,7 +342,7 @@ class UserRepositoryImpl @Inject constructor(
                     }.await()
 
                     async {
-                        bodyMassIndexService.add(
+                        bodyMassIndexService.createNewDocument(
                             userId = registerUserStatus.data!!.id,
                             weight = userInfo[RegistrationKeys.WEIGHT.key]!!.toDouble(),
                             weightMetric = userInfo[RegistrationKeys.WEIGHTUNIT.key]!!,

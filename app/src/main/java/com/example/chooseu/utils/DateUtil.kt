@@ -12,7 +12,6 @@ object DateUtil {
     fun convertStringToDate(
         dateAsString: String,
     ): Date? {
-
         dateFormat.isLenient = false  // This will make the SimpleDateFormat strict
         return try {
             val date = dateFormat.parse(dateAsString)
@@ -34,5 +33,10 @@ object DateUtil {
             formattedDate = ""
         }
         return formattedDate
+    }
+
+    fun convertDateLongToString(date:Long): String{
+        val date = Date(date)
+        return dateFormat.format(date)
     }
 }

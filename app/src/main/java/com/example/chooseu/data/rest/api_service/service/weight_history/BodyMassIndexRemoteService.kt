@@ -35,7 +35,7 @@ class BodyMassIndexRemoteService(client: Client) {
         }
     }
 
-    suspend fun add(
+    suspend fun createNewDocument(
         userId: String,
         weight: Double,
         weightMetric: String,

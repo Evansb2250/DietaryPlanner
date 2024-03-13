@@ -8,16 +8,12 @@ import androidx.datastore.preferences.core.Preferences
 import com.example.chooseu.common.DataStoreKeys
 import com.example.chooseu.core.dispatcher_provider.DispatcherProvider
 import com.example.chooseu.core.on_startup.state.LastSignInState
-import com.example.chooseu.data.rest.api_service.service.account.AccountService
 import com.example.chooseu.utils.TokenUtil
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class OnAppStartUpManager @Inject constructor(
-    private val accountService: AccountService,
-    private val externalScope: CoroutineScope,
     private val dataStore: DataStore<Preferences>,
     private val dispatcher: DispatcherProvider,
 ) {
