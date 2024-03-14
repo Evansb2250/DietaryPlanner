@@ -24,6 +24,7 @@ import com.example.chooseu.domain.CurrentUser
 import com.example.chooseu.utils.AsyncResponse
 import com.example.chooseu.utils.DataStoreUtil.clearUserData
 import com.example.chooseu.utils.DataStoreUtil.storeUserData
+import com.example.chooseu.utils.DateUtility
 import com.google.gson.JsonObject
 import io.appwrite.exceptions.AppwriteException
 import io.appwrite.models.DocumentList
@@ -36,8 +37,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.withContext
-import java.time.LocalDate
-import java.time.ZoneId
 import javax.inject.Inject
 import javax.inject.Singleton
 import io.appwrite.models.User as AppWriteUser
@@ -236,7 +235,7 @@ class UserRepositoryImpl @Inject constructor(
                 ?: return@withContext UpdateResult.Failed("userId not found")
 
 
-            val todayDate = calculateDateAsLong()
+            val todayDate = DateUtility.calculateDateAsLong()
 
             when (val bmiEntity = bmiDao.dateAlreadyExist(todayDate)) {
                 null -> {
@@ -271,12 +270,6 @@ class UserRepositoryImpl @Inject constructor(
 
             handleUpdateDocumentRequest(serverResponse)
         }
-    }
-
-    private fun calculateDateAsLong(): Long {
-        val date = LocalDate.now()
-        val instant = date.atStartOfDay(ZoneId.systemDefault()).toInstant()
-        return instant.toEpochMilli()
     }
 
     private suspend fun handleUpdateDocumentRequest(
@@ -349,7 +342,7 @@ class UserRepositoryImpl @Inject constructor(
                             height = userInfo[RegistrationKeys.HEIGHT.key]!!.toDouble(),
                             heightMetric = userInfo[RegistrationKeys.HEIGHT_METRIC.key]!!,
                             bmi = 4.0,
-                            dateInteger = calculateDateAsLong()
+                            dateInteger = DateUtility.calculateDateAsLong()
                         )
                     }.await()
 

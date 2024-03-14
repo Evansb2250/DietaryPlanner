@@ -2,6 +2,7 @@ package com.example.chooseu.navigation.components.destinations
 
 import androidx.annotation.DrawableRes
 import com.example.chooseu.R
+import com.example.chooseu.navigation.components.destinations.destinationArguments.DiaryArgs
 
 sealed class BottomNavBarDestinations(
     val routeId: Int,
@@ -25,7 +26,7 @@ sealed class BottomNavBarDestinations(
 
     object Diary : BottomNavBarDestinations(
         routeId = 1,
-        destination = "Diary/",
+        destination = "Diary/{${DiaryArgs.LONG_DATE}}",
     ) {
         override val icon: Int = R.drawable.food_icon
         override val iconDescription: String = ""

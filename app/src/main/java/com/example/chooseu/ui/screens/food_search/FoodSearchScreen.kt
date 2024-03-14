@@ -9,6 +9,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -23,8 +24,15 @@ import com.example.chooseu.ui.ui_components.toolbar.ChooseUToolBar
 @Composable
 fun FoodSearchScreen(
     title: String,
-    vm : FoodSearchViewModel = hiltViewModel()
-){
+    dateLong: Long,
+    vm: FoodSearchViewModel = hiltViewModel()
+) {
+    LaunchedEffect(
+        key1 = dateLong,
+    ) {
+        vm.setLongDate(dateLong)
+    }
+
     Scaffold(
         topBar = {
             ChooseUToolBar(

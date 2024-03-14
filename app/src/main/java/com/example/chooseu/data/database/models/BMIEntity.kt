@@ -3,7 +3,7 @@ package com.example.chooseu.data.database.models
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.example.chooseu.domain.BodyMassIndex
-import com.example.chooseu.utils.DateUtil
+import com.example.chooseu.utils.DateUtility
 
 @Entity
 data class BMIEntity(
@@ -25,7 +25,7 @@ fun BMIEntity.toBodyMassIndex(): BodyMassIndex = BodyMassIndex(
     height = this.height,
     heightMetric = this.heightMetric,
     bmi = this.bmi,
-    date = DateUtil.convertDateLongToString(this.dateAsInteger)
+    date = DateUtility.convertDateLongToString(this.dateAsInteger)
 )
 
 fun List<BMIEntity>.toBodyMassIndexList(): List<BodyMassIndex> =

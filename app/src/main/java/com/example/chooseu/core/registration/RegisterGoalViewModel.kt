@@ -12,7 +12,6 @@ import com.example.chooseu.core.registration.state.WeightMetric
 import com.example.chooseu.navigation.components.destinations.GeneralDestinations
 import com.example.chooseu.navigation.components.navmanagers.AuthNavManager
 import com.example.chooseu.repo.UserRepository
-import com.example.chooseu.utils.AsyncResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

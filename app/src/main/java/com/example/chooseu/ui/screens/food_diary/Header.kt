@@ -38,6 +38,8 @@ import com.example.chooseu.ui.theme.yellowMain
 @Composable
 fun Header(
     date: String = "",
+    getPreviousDate: () -> Unit = {},
+    getNextDate: () -> Unit = {},
 ) {
 
     val density = LocalDensity.current
@@ -69,7 +71,8 @@ fun Header(
             contentAlignment = Alignment.CenterStart,
         ) {
             IconButton(
-                onClick = { /*TODO*/ }) {
+                onClick = getPreviousDate,
+            ) {
                 Image(
                     painter = painterResource(
                         id = R.drawable.left_outline_arrow
@@ -99,19 +102,20 @@ fun Header(
             contentAlignment = Alignment.CenterEnd,
         ) {
             IconButton(
-                modifier = Modifier.pointerInteropFilter {
-                    when (it.action) {
-                        MotionEvent.ACTION_DOWN -> {
-                            buttonBackground = Color.Gray
-                        }
-
-                        MotionEvent.ACTION_UP -> {
-                            buttonBackground = appColor
-                        }
-                    }
-                    true
-                },
-                onClick = { /*TODO*/ }) {
+//                modifier = Modifier.pointerInteropFilter {
+//                    when (it.action) {
+//                        MotionEvent.ACTION_DOWN -> {
+//                            buttonBackground = Color.Gray
+//                        }
+//
+//                        MotionEvent.ACTION_UP -> {
+//                            buttonBackground = appColor
+//                        }
+//                    }
+//                    true
+//                },
+                onClick = getNextDate,
+            ) {
                 Image(
                     modifier = Modifier.background(
                         color = buttonBackground,
