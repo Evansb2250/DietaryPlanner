@@ -6,6 +6,11 @@
 **Daily Documentation**
 https://docs.google.com/document/d/1JU_atZUCOZkKAPUd_FhBrnUb1hmduZ7IhzqtFA74J4M/edit?usp=sharing
 
+** Implementation Update **
+Android application and server integration demo https://www.youtube.com/watch?v=9906c5yMiAI&feature=youtu.be
+login demo https://www.youtube.com/watch?v=f0zDMJaPj8Y&feature=youtu.be
+
+
 **Meal Planning Application**
 **Overview**     **(In Progress)**
 Welcome to the Meal Planning Application! This project aims to provide a user-friendly platform for planning meals, setting dietary goals, and integrating meal plans with Google Calendar. Whether you're looking to eat healthier, achieve balanced nutrition, lose or gain weight, this app has you covered.
