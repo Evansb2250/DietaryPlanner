@@ -6,8 +6,9 @@
 **Daily Documentation**
 https://docs.google.com/document/d/1JU_atZUCOZkKAPUd_FhBrnUb1hmduZ7IhzqtFA74J4M/edit?usp=sharing
 
-** Implementation Update **
-Android application and server integration demo https://www.youtube.com/watch?v=9906c5yMiAI&feature=youtu.be
+**Implementation Update**
+***Android application and server integration demo*** 
+https://www.youtube.com/watch?v=9906c5yMiAI&feature=youtu.be
 login demo https://www.youtube.com/watch?v=f0zDMJaPj8Y&feature=youtu.be
 
 
