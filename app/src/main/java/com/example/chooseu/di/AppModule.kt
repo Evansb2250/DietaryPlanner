@@ -8,6 +8,7 @@ import com.example.chooseu.auth.OAuthStateHandler
 import com.example.chooseu.auth.OauthClientImp
 import com.example.chooseu.core.GoogleTokenManagerImpl
 import com.example.chooseu.core.TokenManager
+import com.example.chooseu.core.diary.cache.FoodItemCache
 import com.example.chooseu.core.registration.cache.UserRegistrationCache
 import com.example.chooseu.core.registration.cache.UserRegistrationCacheImpl
 import com.example.chooseu.navigation.components.navmanagers.AuthNavManager
@@ -74,6 +75,10 @@ class AppModule {
         authNavManager,
         externalScope
     )
+
+    @Provides
+    @Singleton
+    fun providesFoodItemCache(): FoodItemCache = FoodItemCache()
 
     @Provides
     @Singleton

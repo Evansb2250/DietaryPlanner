@@ -10,6 +10,7 @@ import com.example.chooseu.navigation.components.destinations.GeneralDestination
 import com.example.chooseu.navigation.components.destinations.destinationArguments.DiaryArgs
 import com.example.chooseu.ui.screens.food_diary.DiaryScreen
 import com.example.chooseu.ui.screens.food_search.FoodSearchScreen
+import com.example.chooseu.ui.screens.nutrition_screen.NutritionScreen
 import com.example.chooseu.ui.screens.profile.ProfileScreen
 import com.example.chooseu.ui.ui_components.ScreenUnavailable
 import com.example.chooseu.ui.ui_components.toolbar.ChooseUToolBar
@@ -81,6 +82,16 @@ fun NavGraphBuilder.MainScreenRoutes(
         FoodSearchScreen(
             title = title,
             dateLong = longDate.toLong()
+        )
+    }
+
+    composable(
+        route = GeneralDestinations.NutritionScreen.destination
+    ) {
+        val foodId = it.arguments?.getString("foodId") ?: return@composable
+
+        NutritionScreen(
+            foodId
         )
     }
 }

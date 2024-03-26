@@ -1,4 +1,4 @@
-package com.example.chooseu.ui.screens.loginScreen
+package com.example.chooseu.ui.screens.login_screen
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect

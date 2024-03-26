@@ -1,4 +1,4 @@
-package com.example.chooseu.ui.screens.mainScreen
+package com.example.chooseu.ui.screens.main_screen
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background

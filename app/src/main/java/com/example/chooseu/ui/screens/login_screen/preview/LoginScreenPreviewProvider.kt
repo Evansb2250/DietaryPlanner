@@ -1,4 +1,4 @@
-package com.example.chooseu.ui.screens.loginScreen.preview
+package com.example.chooseu.ui.screens.login_screen.preview
 
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import com.example.chooseu.core.viewmodels.login.LoginScreenStates

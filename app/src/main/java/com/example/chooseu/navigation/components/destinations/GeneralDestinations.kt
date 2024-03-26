@@ -1,5 +1,6 @@
 package com.example.chooseu.navigation.components.destinations
 
+import android.net.Uri
 import com.example.chooseu.navigation.components.Navigation
 import com.example.chooseu.navigation.components.destinations.destinationArguments.DiaryArgs
 
@@ -32,6 +33,10 @@ sealed class GeneralDestinations(
 
     object FoodSearchDestination :  GeneralDestinations(
         destination = " FoodSearchScreen/{${DiaryArgs.LONG_DATE}}/{${DiaryArgs.MEAL_TYPE}}",
+    )
+
+    object NutritionScreen: GeneralDestinations(
+        destination = "NutritionScreen/{foodId}/{date}"
     )
 }
 

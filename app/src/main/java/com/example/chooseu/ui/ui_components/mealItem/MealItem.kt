@@ -77,7 +77,7 @@ fun LazyListScope.MealItem(
                     modifier = Modifier.padding(
                         top = 3.dp
                     ),
-                    text = it.name,
+                    text = "",
                     color = color,
                     style = foodStyle
                 )
@@ -90,7 +90,7 @@ fun LazyListScope.MealItem(
                     modifier = Modifier.padding(
                         top = 3.dp
                     ),
-                    text = it.calorieCount,
+                    text = "",
                     color = color,
                     style = foodStyle
                 )
@@ -103,7 +103,7 @@ fun LazyListScope.MealItem(
                     bottom = 7.dp
                 )
                 .fillMaxWidth(),
-            text = it.generalNutrientVal,
+            text = "",
             textAlign = TextAlign.Start,
             color = color
         )

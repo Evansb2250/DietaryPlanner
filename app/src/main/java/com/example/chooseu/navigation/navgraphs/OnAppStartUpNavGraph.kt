@@ -6,7 +6,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.chooseu.navigation.components.destinations.GeneralDestinations
-import com.example.chooseu.ui.screens.mainScreen.MainScreen
+import com.example.chooseu.ui.screens.main_screen.MainScreen
 import com.example.chooseu.ui.screens.onAppStartUpScreen.LoginOrSignUpContainer
 
 /*

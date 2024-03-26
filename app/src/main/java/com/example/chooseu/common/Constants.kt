@@ -13,7 +13,8 @@ class Constants {
         val CALENDAR_READ_ONLY = "https://www.googleapis.com/auth/calendar.readonly"
         val CALENDAR_SCOPE = "https://www.googleapis.com/auth/calendar"
 
-        val CLIENT_SECRET = "436600699866-mb2h26828pgkgs44glut32iht394ntja.apps.googleusercontent.com"
+        val CLIENT_SECRET =
+            "436600699866-mb2h26828pgkgs44glut32iht394ntja.apps.googleusercontent.com"
 
         val CODE_VERIFIER_CHALLENGE_METHOD = "S256"
         val MESSAGE_DIGEST_ALGORITHM = "SHA-256"
@@ -23,6 +24,12 @@ class Constants {
         val URL_AUTH_REDIRECT = "com.example.googlelightcalendar:/oauth2redirect"
         val URL_API_CALL = "https://www.googleapis.com/drive/v2/files"
         val URL_LOGOUT = "https://accounts.google.com/o/oauth2/revoke?token="
+
+        //Edamams API Keys
+        /*
+         */
+        const val EDAMAM_APPLICATION_ID = "6d8a5a04"
+        const val EDAMAM_APPLICATION_KEY = "5b9a69743d6032a52c2e611b683563ff"
 
         // AppWrite info
         const val appwriteEndPoint = "https://cloud.appwrite.io/v1"
