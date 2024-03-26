@@ -7,6 +7,7 @@ plugins {
     id("com.google.devtools.ksp")
     id("de.mannodermaus.android-junit5")
     id("com.google.dagger.hilt.android")
+    kotlin("plugin.serialization") version "1.9.23"
 }
 
 android {
@@ -100,6 +101,16 @@ dependencies {
     /*
      * ViewModel libraries
      */
+
+    //Moshi
+    implementation("com.squareup.moshi:moshi:1.15.0")
+    //converter factory
+    implementation("com.squareup.retrofit2:converter-moshi:2.4.0")
+
+    //Kotlin serialization converter
+    implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:1.0.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
+
 
     // ViewModel
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version")

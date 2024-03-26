@@ -1,19 +1,16 @@
 package com.example.chooseu.navigation.components.destinations
 
+import android.net.Uri
 import com.example.chooseu.navigation.components.Navigation
+import com.example.chooseu.navigation.components.destinations.destinationArguments.DiaryArgs
 
 sealed class GeneralDestinations(
     override val destination: String,
     override val arguments: List<String> = emptyList()
 ) : Navigation {
-
-    /**
-     * Contains both login and registration screen wrapped in a container.
-     */
-    object OnAppStartUpDestination: GeneralDestinations(
+    object OnAppStartUpDestination : GeneralDestinations(
         destination = "onAppStartUp/{screenType}",
     )
-
     object RegistrationDestinations : GeneralDestinations(
         destination = "registerPaths/{email}",
     )
@@ -34,8 +31,12 @@ sealed class GeneralDestinations(
         destination = "NotificationScreen/{GeneralDestinations}",
     )
 
-    object FoodSearchDestination : GeneralDestinations(
-        destination = " FoodSearchScreen/{day}/{foodType}",
+    object FoodSearchDestination :  GeneralDestinations(
+        destination = " FoodSearchScreen/{${DiaryArgs.LONG_DATE}}/{${DiaryArgs.MEAL_TYPE}}",
+    )
+
+    object NutritionScreen: GeneralDestinations(
+        destination = "NutritionScreen/{foodId}/{date}"
     )
 }
 

@@ -1,5 +1,6 @@
 package com.example.chooseu.utils
 
+import android.util.Log
 import com.example.chooseu.navigation.components.Navigation
 
 
@@ -13,6 +14,7 @@ fun buildDestination(
     //checks the list of paramters
     parameters.forEach { (key, value) ->
         destination = destination.replace("{$key}", value)
+        Log.d("Builider", "original $value    after $destination")
     }
     return object : Navigation {
         override val destination: String

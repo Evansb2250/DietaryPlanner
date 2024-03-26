@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -19,17 +20,23 @@ import com.example.chooseu.core.toolbar_states.ToolBarState
 import com.example.chooseu.ui.theme.appColor
 import com.example.chooseu.ui.ui_components.mealItem.MealItem
 import com.example.chooseu.ui.ui_components.toolbar.ChooseUToolBar
-import com.example.chooseu.utils.DateUtil
 
 @Preview(
     showBackground = true,
 )
 @Composable
 fun DiaryScreen(
+    dateLong: Long? = null,
     viewModel: DiaryScreenViewModel = hiltViewModel(),
 ) {
     BackHandler {
 
+    }
+
+    LaunchedEffect(
+        key1 = dateLong,
+        ){
+        viewModel.setUpScreenState(dateLong)
     }
 
     Scaffold(
@@ -48,9 +55,11 @@ fun DiaryScreen(
             val state = viewModel.state.collectAsState().value
 
             when (state) {
-                is DiaryScreenStates.MealDiary -> {
+                is DiaryScreenStates.FoodDiaryEntry -> {
                     Header(
-                   DateUtil.convertDateToString(state.date)
+                        state.date,
+                        getPreviousDate = {viewModel.getPreviousDate(state)},
+                        getNextDate = {viewModel.getNextDate(state)}
                     )
                     LazyColumn(
                         modifier = Modifier
@@ -59,25 +68,23 @@ fun DiaryScreen(
                             .padding(sidePadding)
                     ) {
                         MealItem(
-                            dayOfMonth = state.date.dayOfMonth.toString(),
+                            dayOfMonth = state.date,
                             menuItem = state.breakfast,
                             onAddFood = viewModel::addFoodItem,
                         )
                         MealItem(
-                            dayOfMonth = state.date.dayOfMonth.toString(),
+                            dayOfMonth = state.date,
                             menuItem = state.lunch,
                             onAddFood = viewModel::addFoodItem,
                         )
                         MealItem(
-                            dayOfMonth = state.date.dayOfMonth.toString(),
+                            dayOfMonth = state.date,
                             menuItem = state.dinner,
                             onAddFood = viewModel::addFoodItem,
                         )
                     }
                 }
-                else -> {}
             }
-
         }
     }
 }

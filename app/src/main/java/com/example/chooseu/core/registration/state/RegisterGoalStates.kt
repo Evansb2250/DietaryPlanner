@@ -4,7 +4,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import com.example.chooseu.utils.DateUtil
+import com.example.chooseu.utils.DateUtility
 import java.time.LocalDate
 import java.time.ZoneId
 import java.time.temporal.ChronoUnit
@@ -60,7 +60,7 @@ sealed class RegisterGoalStates {
 
         fun validateSetGoal(): Boolean {
 
-            val futureDate = DateUtil.convertStringToDate(
+            val futureDate = DateUtility.convertStringToDate(
                 dateAsString = dateToAccomplishGoalBy.value
             )
 
@@ -71,7 +71,7 @@ sealed class RegisterGoalStates {
 
                 val weeksToCompleteGoal = ChronoUnit.WEEKS.between(
                     currentDate,
-                    futureDate.toInstant()?.atZone(ZoneId.systemDefault())?.toLocalDate()
+                    futureDate
                 )
 
                 when (selectedGoal.value) {

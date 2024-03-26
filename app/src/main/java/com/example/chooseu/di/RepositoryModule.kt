@@ -4,11 +4,14 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import com.example.chooseu.core.dispatcher_provider.DispatcherProvider
 import com.example.chooseu.data.database.GoogleLightCalenderDatabase
+import com.example.chooseu.data.rest.api_service.EdamamFoodApiService
 import com.example.chooseu.data.rest.api_service.service.account.AccountService
 import com.example.chooseu.data.rest.api_service.service.user_table.UserRemoteService
 import com.example.chooseu.data.rest.api_service.service.weight_history.BodyMassIndexRemoteService
 import com.example.chooseu.repo.UserRepository
 import com.example.chooseu.repo.UserRepositoryImpl
+import com.example.chooseu.repo.foodRepository.FoodRepository
+import com.example.chooseu.repo.foodRepository.FoodRepositoryImp
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -38,4 +41,11 @@ object RepositoryModule {
             bodyMassIndexService = weightHistoryService,
         )
     }
+
+
+    @Singleton
+    @Provides
+    fun providesFoodRepository(
+        edamamFoodApiService: EdamamFoodApiService,
+    ): FoodRepository = FoodRepositoryImp(edamamFoodApiService)
 }

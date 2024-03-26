@@ -1,7 +1,5 @@
 package com.example.chooseu.core.diary.models
 
-import com.example.chooseu.ui.screens.food_diary.FoodItem
-
 
 sealed class FoodDiaryItem(
     val typeOfMeal: DiaryEntryTypes,

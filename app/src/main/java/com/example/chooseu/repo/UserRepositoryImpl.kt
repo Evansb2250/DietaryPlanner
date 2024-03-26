@@ -24,6 +24,7 @@ import com.example.chooseu.domain.CurrentUser
 import com.example.chooseu.utils.AsyncResponse
 import com.example.chooseu.utils.DataStoreUtil.clearUserData
 import com.example.chooseu.utils.DataStoreUtil.storeUserData
+import com.example.chooseu.utils.DateUtility
 import com.google.gson.JsonObject
 import io.appwrite.exceptions.AppwriteException
 import io.appwrite.models.DocumentList
@@ -35,9 +36,8 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.zip
 import kotlinx.coroutines.withContext
-import java.time.LocalDate
-import java.time.ZoneId
 import javax.inject.Inject
 import javax.inject.Singleton
 import io.appwrite.models.User as AppWriteUser
@@ -83,6 +83,32 @@ class UserRepositoryImpl @Inject constructor(
             weight = userData.weight
         )
     }
+
+//    val currentUser1: Flow<CurrentUser?> =
+//        dataStore.data.zip(
+//            bmiDao.getCurrentBMI()
+//        ) { dataStoreData, currentBMIData ->
+//
+//            val firstName = dataStoreData[DataStoreKeys.USER_FIRST_NAME] ?: return@zip null
+//            val lastName = dataStoreData[DataStoreKeys.USER_LAST_NAME] ?: return@zip null
+//            val gender = dataStoreData[DataStoreKeys.USER_GENDER] ?: return@zip null
+//            val email = dataStoreData[DataStoreKeys.USER_EMAIL] ?: return@zip null
+//            val birthDate = dataStoreData[DataStoreKeys.USER_BIRTH_DATE] ?: return@zip null
+//            val userData = currentBMIData ?: return@zip null
+//
+//            CurrentUser(
+//                userName = email,
+//                name = firstName,
+//                lastName = lastName,
+//                gender = gender,
+//                email = email,
+//                birthdate = birthDate,
+//                heightMetric = userData.heightMetric,
+//                height = userData.height,
+//                weightMetric = userData.weightMetric,
+//                weight = userData.weight
+//            )
+//        }
 
     override suspend fun signIn(userName: String, password: String): AsyncResponse<Unit> =
         withContext(dispatcherProvider.io) {
@@ -132,7 +158,8 @@ class UserRepositoryImpl @Inject constructor(
         val result = coroutineScope {
 
             val personalInfo = async { userRemoteDbService.fetchUserDetails(userData!!.id) }.await()
-            val fetchHistoryResponse = async { bodyMassIndexService.fetchUserWeightHistory(userData!!.id) }.await()
+            val fetchHistoryResponse =
+                async { bodyMassIndexService.fetchUserWeightHistory(userData!!.id) }.await()
 
             when (fetchHistoryResponse) {
                 is AsyncResponse.Failed -> {
@@ -167,8 +194,7 @@ class UserRepositoryImpl @Inject constructor(
                             ?: 0.0,
                         heightMetric = bmiInfo.data[USER_HEIGHT_METRIC.name] as String,
                         bmi = bmiInfo.data[BMI_VALUE.name].toString().toDoubleOrNull() ?: 0.0,
-                        dateAsInteger = bmiInfo.data[BMI_STORED_DATE.name].toString().toDouble()
-                            .toLong(),
+                        dateAsInteger = bmiInfo.data[BMI_STORED_DATE.name].toString().toDouble().toLong(),
                     )
                 )
             }
@@ -186,7 +212,8 @@ class UserRepositoryImpl @Inject constructor(
 
     override suspend fun getBMIHistory(): List<BodyMassIndex> {
         return withContext(dispatcherProvider.io) {
-            val userId = dataStore.data.firstOrNull()?.get(USER_ID) ?: return@withContext emptyList()
+            val userId =
+                dataStore.data.firstOrNull()?.get(USER_ID) ?: return@withContext emptyList()
             return@withContext bmiDao.getBMIHistory(userId).toBodyMassIndexList()
         }
     }
@@ -236,7 +263,7 @@ class UserRepositoryImpl @Inject constructor(
                 ?: return@withContext UpdateResult.Failed("userId not found")
 
 
-            val todayDate = calculateDateAsLong()
+            val todayDate = DateUtility.calculateDateAsLong()
 
             when (val bmiEntity = bmiDao.dateAlreadyExist(todayDate)) {
                 null -> {
@@ -271,12 +298,6 @@ class UserRepositoryImpl @Inject constructor(
 
             handleUpdateDocumentRequest(serverResponse)
         }
-    }
-
-    private fun calculateDateAsLong(): Long {
-        val date = LocalDate.now()
-        val instant = date.atStartOfDay(ZoneId.systemDefault()).toInstant()
-        return instant.toEpochMilli()
     }
 
     private suspend fun handleUpdateDocumentRequest(
@@ -349,7 +370,7 @@ class UserRepositoryImpl @Inject constructor(
                             height = userInfo[RegistrationKeys.HEIGHT.key]!!.toDouble(),
                             heightMetric = userInfo[RegistrationKeys.HEIGHT_METRIC.key]!!,
                             bmi = 4.0,
-                            dateInteger = calculateDateAsLong()
+                            dateInteger = DateUtility.calculateDateAsLong()
                         )
                     }.await()
 

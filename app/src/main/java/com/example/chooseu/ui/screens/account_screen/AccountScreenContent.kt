@@ -84,25 +84,25 @@ fun AccountScreenContent(
                             verticalArrangement = Arrangement.spacedBy(20.dp)
                         ) {
 
-                            ImmutableAccountText(
+                            AccountText(
                                 label = "Name:",
                                 text = "${state.currentUser.name} ${state.currentUser.lastName}"
                             )
 
-                            ImmutableAccountText(
+                            AccountText(
                                 label = "Date Of Birth:",
                                 text = "${state.currentUser.birthdate}",
                             )
-                            ImmutableAccountText(
+                            AccountText(
                                 label = "Age:",
                                 text = "${state.calculateAge()}",
                             )
 
-                            ImmutableAccountText(
+                            AccountText(
                                 label = "Gender:",
                                 text = "${state.currentUser.gender}",
                             )
-                            ImmutableAccountText(
+                            AccountText(
                                 label = "Email:",
                                 text = state.currentUser.email,
                             )
@@ -216,7 +216,7 @@ fun AccountScreenContent(
 
 
 @Composable
-private fun ImmutableAccountText(
+private fun AccountText(
     label: String,
     text: String
 ) {
