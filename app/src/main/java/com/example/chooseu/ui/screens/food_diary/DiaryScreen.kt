@@ -9,10 +9,10 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.chooseu.common.sidePadding
 import com.example.chooseu.core.diary.DiaryScreenViewModel
 import com.example.chooseu.core.diary.states.DiaryScreenStates
@@ -52,7 +52,7 @@ fun DiaryScreen(
         Column(
             modifier = Modifier.padding(it)
         ) {
-            val state = viewModel.state.collectAsState().value
+            val state = viewModel.state.collectAsStateWithLifecycle().value
 
             when (state) {
                 is DiaryScreenStates.FoodDiaryEntry -> {

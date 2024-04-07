@@ -2,9 +2,8 @@ package com.example.chooseu.ui.screens.account_screen
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.chooseu.core.account.state.AccountStates
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.chooseu.core.account.AccountViewModel
 
 @Composable
@@ -15,7 +14,7 @@ fun AccountScreen(
         accountViewModel.getUserInfoFromUserRepo()
     }
 
-    val state = accountViewModel.state.collectAsState(initial = AccountStates.Loading).value
+    val state = accountViewModel.state.collectAsStateWithLifecycle().value
 
     AccountScreenContent(
         state = state,

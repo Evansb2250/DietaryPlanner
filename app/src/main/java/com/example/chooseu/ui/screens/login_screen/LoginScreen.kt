@@ -2,13 +2,12 @@ package com.example.chooseu.ui.screens.login_screen
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.chooseu.core.viewmodels.login.LoginScreenStates
 import com.example.chooseu.core.viewmodels.login.LoginViewModel
-import kotlinx.coroutines.Dispatchers
 
 @Preview(
     showBackground = true,
@@ -26,16 +25,13 @@ fun LoginScreen(
         }
     }
 
-
-
-    val state = loginViewModel.state.collectAsState(Dispatchers.Main.immediate).value
+    val state = loginViewModel.state.collectAsStateWithLifecycle().value
 
     LoginScreenDialog(
         state = state,
         resetLoginScreen = loginViewModel::resetLoginScreenState,
         navigateToHomeScreen = loginViewModel::navigateToHomeScreen,
     )
-
 
     LoginScreenContent(
         modifier = modifier,

@@ -131,6 +131,9 @@ dependencies {
 
     //Scalar Factory
     implementation("com.squareup.retrofit2:converter-scalars:2.9.0")
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+
 
     //MaterialDesign3
     implementation("androidx.compose.material3:material3:1.2.0")
@@ -141,10 +144,6 @@ dependencies {
     //Splash Screen
     implementation("androidx.core:core-splashscreen:1.0.1")
 
-    //Network
-    implementation("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
-
     //Datastore
     implementation("androidx.datastore:datastore-preferences:1.0.0")
 
@@ -153,6 +152,7 @@ dependencies {
     implementation("androidx.room:room-runtime:$room_version")
     // optional - Kotlin Extensions and Coroutines support for Room
     implementation("androidx.room:room-ktx:$room_version")
+
     // optional - Test helpers
     testImplementation("androidx.room:room-testing:$room_version")
     // To use Kotlin annotation processing tool (kapt)

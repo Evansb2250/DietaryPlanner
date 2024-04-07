@@ -2,8 +2,8 @@ package com.example.chooseu.ui.screens.food_search
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.chooseu.core.diary.searchFood.FoodSearchViewModel
 
 @Composable
@@ -20,7 +20,7 @@ fun FoodSearchScreen(
 
     FoodSearchScreenContent(
         title = title,
-        state = vm.state.collectAsState().value,
+        state = vm.state.collectAsStateWithLifecycle().value,
         navigateBackToFoodDiary = vm::navigateBackToFoodDiary,
         searchFoodItem = vm::updateSearchText,
         clearDialog = vm::reset,

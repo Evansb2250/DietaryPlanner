@@ -36,7 +36,6 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.coroutines.flow.zip
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -84,32 +83,6 @@ class UserRepositoryImpl @Inject constructor(
         )
     }
 
-//    val currentUser1: Flow<CurrentUser?> =
-//        dataStore.data.zip(
-//            bmiDao.getCurrentBMI()
-//        ) { dataStoreData, currentBMIData ->
-//
-//            val firstName = dataStoreData[DataStoreKeys.USER_FIRST_NAME] ?: return@zip null
-//            val lastName = dataStoreData[DataStoreKeys.USER_LAST_NAME] ?: return@zip null
-//            val gender = dataStoreData[DataStoreKeys.USER_GENDER] ?: return@zip null
-//            val email = dataStoreData[DataStoreKeys.USER_EMAIL] ?: return@zip null
-//            val birthDate = dataStoreData[DataStoreKeys.USER_BIRTH_DATE] ?: return@zip null
-//            val userData = currentBMIData ?: return@zip null
-//
-//            CurrentUser(
-//                userName = email,
-//                name = firstName,
-//                lastName = lastName,
-//                gender = gender,
-//                email = email,
-//                birthdate = birthDate,
-//                heightMetric = userData.heightMetric,
-//                height = userData.height,
-//                weightMetric = userData.weightMetric,
-//                weight = userData.weight
-//            )
-//        }
-
     override suspend fun signIn(userName: String, password: String): AsyncResponse<Unit> =
         withContext(dispatcherProvider.io) {
             try {
@@ -147,7 +120,6 @@ class UserRepositoryImpl @Inject constructor(
                     message = result.message ?: "Failed to Login",
                 )
             }
-
             is AsyncResponse.Success -> {
                 storeUserData(result.data)
             }

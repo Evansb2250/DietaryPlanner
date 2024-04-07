@@ -17,6 +17,7 @@ import com.example.chooseu.fakes.OAuthClientFake
 import com.example.chooseu.fakes.UserDaoFake
 import com.example.chooseu.fakes.UserRepositoryFake
 import com.example.chooseu.navigation.components.destinations.GeneralDestinations
+import com.example.chooseu.navigation.components.navmanagers.AuthNavManager
 import com.example.chooseu.repo.UserRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

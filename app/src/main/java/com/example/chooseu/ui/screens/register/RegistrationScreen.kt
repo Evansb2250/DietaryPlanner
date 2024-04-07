@@ -2,12 +2,11 @@ package com.example.chooseu.ui.screens.register
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.chooseu.core.registration.registration_main.RegistrationViewModel
 import com.example.chooseu.ui.screens.register.details.RegistrationScreenContent
-import kotlinx.coroutines.Dispatchers
 
 
 @Composable
@@ -22,10 +21,9 @@ fun RegistrationScreen(
             registrationViewModel.resetRegistrationState()        }
     }
 
-
     RegistrationScreenContent(
         modifier = modifier,
-        registrationState = registrationViewModel.state.collectAsState(Dispatchers.Main.immediate).value,
+        registrationState = registrationViewModel.state.collectAsStateWithLifecycle().value,
         onNext = registrationViewModel::storeCredentialsIntoCache,
         onReset = registrationViewModel::resetRegistrationState,
         signUpWithGoogle = registrationViewModel::signInWithGoogle,

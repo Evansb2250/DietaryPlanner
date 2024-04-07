@@ -4,8 +4,6 @@ import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFact
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import retrofit2.Retrofit
-import retrofit2.converter.moshi.MoshiConverterFactory
-import retrofit2.converter.scalars.ScalarsConverterFactory
 
 
 const val BASE_URL = "https://api.edamam.com/api/food-database/v2/"
@@ -16,7 +14,6 @@ object EdamamFoodApiClient {
             if(!::instance.isInitialized){
                 val retrofit = Retrofit.Builder()
                     .baseUrl(BASE_URL)
-//                    .addConverterFactory(ScalarsConverterFactory.create())
                     .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
                     .build()
 
