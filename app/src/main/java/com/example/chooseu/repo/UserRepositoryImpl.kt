@@ -1,5 +1,6 @@
 package com.example.chooseu.repo
 
+import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
@@ -92,7 +93,7 @@ class UserRepositoryImpl @Inject constructor(
 
                 //if storing information failed we want to log the user out of the session
                 if (result is AsyncResponse.Failed) {
-                    clearPrefsAndSignOut()
+                    clearPrefsOnSignOut()
                 }
 
                 result
@@ -174,7 +175,7 @@ class UserRepositoryImpl @Inject constructor(
         bmiDao.insertListOfBMI(listOfBMI)
     }
 
-    override suspend fun clearPrefsAndSignOut() {
+    override suspend fun clearPrefsOnSignOut() {
         withContext(dispatcherProvider.io) {
             dataStore.clearUserData()
             bmiDao.deleteAll()
@@ -347,7 +348,7 @@ class UserRepositoryImpl @Inject constructor(
                     }.await()
 
                     //used to end session, but no data is saved in dataStore
-                    clearPrefsAndSignOut()
+                    clearPrefsOnSignOut()
                     UpdateResult.Success(message = "Account Created !!")
                 }
                 result

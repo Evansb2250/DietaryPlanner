@@ -27,10 +27,10 @@ class ProfileViewModel @Inject constructor(
 
     fun logout(){
         viewModelScope.launch(dispatcherProvider.main) {
-            userRepository.clearPrefsAndSignOut()
             authNavManager.navigate(
                 GeneralDestinations.OnAppStartUpDestination
             )
+            userRepository.clearPrefsOnSignOut()
         }
     }
     @OptIn(InternalCoroutinesApi::class)

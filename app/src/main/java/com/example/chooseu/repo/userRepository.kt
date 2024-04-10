@@ -13,7 +13,7 @@ interface UserRepository {
         password: String,
     ): AsyncResponse<Unit>
 
-    suspend fun clearPrefsAndSignOut()
+    suspend fun clearPrefsOnSignOut()
 
     suspend fun getBMIHistory(): List<BodyMassIndex>
     suspend fun createUserInServer(
