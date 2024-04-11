@@ -6,17 +6,14 @@ import androidx.navigation.compose.composable
 import com.example.chooseu.navigation.components.destinations.BottomNavBarDestinations
 import com.example.chooseu.navigation.components.destinations.GeneralDestinations
 import com.example.chooseu.navigation.components.destinations.destinationArguments.DiaryArgs
+import com.example.chooseu.navigation.components.getLongDate
+import com.example.chooseu.navigation.components.getUserId
 import com.example.chooseu.ui.screens.calendar.CalendarScreen
 import com.example.chooseu.ui.screens.food_diary.DiaryScreen
 import com.example.chooseu.ui.screens.food_search.FoodSearchScreen
 import com.example.chooseu.ui.screens.home.HomeScreen
 import com.example.chooseu.ui.screens.nutrition_screen.NutritionScreen
 import com.example.chooseu.ui.screens.profile.ProfileScreen
-
-fun NavBackStackEntry.getUserId(): String = this.arguments?.getString("userId") ?: ""
-fun NavBackStackEntry.getLongDate(): Long? =
-    this.arguments?.getString(DiaryArgs.LONG_DATE.name)?.toLongOrNull()
-
 
 fun NavGraphBuilder.MainScreenRoutes(
 ) {

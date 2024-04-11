@@ -36,12 +36,6 @@ class BottomNavViewModel @Inject constructor(
         )
     }
 
-    fun resetNavBarTab() {
-        //makes sure we always use the first navTab id in the list to reset it from 0.
-        // This we I can remove or comment out screens without having to change my code to point to the
-        //write tab.
-        selectedOption = navigationsTabs[0].routeId
-    }
 
     fun updateBottomBarTab(route: BottomNavBarDestinations? = null, currentScreen: String? = null) {
         isVisible = currentScreen in navigationsTabs.map { it.destination }
