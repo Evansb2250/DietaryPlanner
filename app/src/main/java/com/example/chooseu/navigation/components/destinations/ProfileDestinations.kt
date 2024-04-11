@@ -3,18 +3,18 @@ package com.example.chooseu.navigation.components.destinations
 sealed class ProfileDestinations {
 
     object Account : GeneralDestinations(
-        destination = "profile/account"
+        destination = "profile/account/{userId}"
     )
 
     object NotificationScreen : GeneralDestinations(
-        destination = "profile/notifications"
+        destination = "profile/notifications/{userId}"
     )
 
-    object Calendar : GeneralDestinations(
-        destination = "profile/calendar"
+    object Calendar_settings : GeneralDestinations(
+        destination = "profile/calendar_settings/{userId}"
     )
 
     object TOS : GeneralDestinations(
-        destination = "profile/tos"
+        destination = "profile/tos/{userId}"
     )
 }

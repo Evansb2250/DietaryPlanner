@@ -12,6 +12,7 @@ import com.example.chooseu.core.TOSViewModel
 import com.example.chooseu.core.toolbar_states.ToolBarState
 import com.example.chooseu.navigation.components.destinations.ProfileDestinations
 import com.example.chooseu.ui.screens.account_screen.AccountScreen
+import com.example.chooseu.ui.screens.calendar_access.CalendarSettingScreen
 import com.example.chooseu.ui.ui_components.ScreenUnavailable
 import com.example.chooseu.ui.ui_components.custom_column.AppColumnContainer
 import com.example.chooseu.ui.ui_components.toolbar.ChooseUToolBar
@@ -49,28 +50,9 @@ fun NavGraphBuilder.ProfileNavGraph() {
     }
 
     composable(
-        route = ProfileDestinations.Calendar.destination
+        route = ProfileDestinations.Calendar_settings.destination
     ) {
-        val calendarViewModel: CalendarViewModel = hiltViewModel()
-
-        Scaffold(
-            topBar = {
-                ChooseUToolBar(
-                    toolBarState = ToolBarState.Navigated(
-                        "Calendar"
-                    ),
-                    navigateBack = calendarViewModel::onBackPress,
-                    navigateToActionDestination = {}
-                )
-            }
-        ) { it ->
-            AppColumnContainer(
-                modifier = Modifier.padding(it),
-            ) {
-
-                ScreenUnavailable()
-            }
-        }
+        CalendarSettingScreen(userId = it.getUserId())
     }
 
     composable(

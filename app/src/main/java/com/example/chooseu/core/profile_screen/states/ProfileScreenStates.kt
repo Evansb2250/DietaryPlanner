@@ -34,7 +34,7 @@ sealed class ProfileScreenStates {
                 leadingIconId = R.drawable.calendar_icon_2,
                 text = "Calendar",
                 trailingIconId = R.drawable.right_arrow,
-                destination = ProfileDestinations.Calendar,
+                destination = ProfileDestinations.Calendar_settings,
             ),
 
             ProfileOptions(

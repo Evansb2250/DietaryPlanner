@@ -26,6 +26,7 @@ import com.example.chooseu.ui.ui_components.toolbar.ChooseUToolBar
 )
 @Composable
 fun DiaryScreen(
+    userId: String = "",
     dateLong: Long? = null,
     viewModel: DiaryScreenViewModel = hiltViewModel(),
 ) {

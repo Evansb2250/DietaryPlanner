@@ -9,6 +9,7 @@ import com.example.chooseu.core.diary.nutrition.NutritionViewModel
 
 @Composable
 fun NutritionScreen(
+   userId: String = "",
    foodId: String,
    vm: NutritionViewModel = hiltViewModel()
 ){

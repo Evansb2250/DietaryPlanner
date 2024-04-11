@@ -8,6 +8,7 @@ import com.example.chooseu.core.diary.searchFood.FoodSearchViewModel
 
 @Composable
 fun FoodSearchScreen(
+    userId: String = "",
     title: String,
     dateLong: Long,
     vm: FoodSearchViewModel = hiltViewModel()

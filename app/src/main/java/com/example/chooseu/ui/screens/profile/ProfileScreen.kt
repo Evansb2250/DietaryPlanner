@@ -13,6 +13,7 @@ import com.example.chooseu.core.profile_screen.states.ProfileScreenStates
 )
 @Composable
 fun ProfileScreen(
+    userId: String = "",
 ) {
     BackHandler {
 
