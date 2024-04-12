@@ -7,14 +7,13 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.chooseu.core.toolbar_states.ToolBarState
 import com.example.chooseu.ui.ui_components.ScreenUnavailable
 import com.example.chooseu.ui.ui_components.toolbar.ChooseUToolBar
-import com.example.chooseu.utils.ViewModelAssistFactory
-import dagger.hilt.android.lifecycle.HiltViewModel
+import com.example.chooseu.di.VMAssistFactoryModule
 
 @Composable
 fun HomeScreen(
     userId: String,
     vm: HomeViewModel = hiltViewModel(
-        creationCallback = { factory: ViewModelAssistFactory.HomeViewModelFactory ->
+        creationCallback = { factory: VMAssistFactoryModule.HomeViewModelFactory ->
             factory.create(userId)
         }
     )

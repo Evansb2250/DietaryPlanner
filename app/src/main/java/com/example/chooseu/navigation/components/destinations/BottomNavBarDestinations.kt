@@ -18,7 +18,7 @@ sealed class BottomNavBarDestinations(
 
     object Home : BottomNavBarDestinations(
         routeId = 0,
-        destination = "homeScreen/",
+        destination = "homeScreen/{userId}",
     ) {
         override val icon: Int = R.drawable.home_icon
         override val iconDescription: String = ""
@@ -26,7 +26,7 @@ sealed class BottomNavBarDestinations(
 
     object Diary : BottomNavBarDestinations(
         routeId = 1,
-        destination = "Diary/{${DiaryArgs.LONG_DATE}}",
+        destination = "Diary/{userId}/{${DiaryArgs.LONG_DATE}}",
     ) {
         override val icon: Int = R.drawable.food_icon
         override val iconDescription: String = ""
@@ -34,7 +34,7 @@ sealed class BottomNavBarDestinations(
 
     object Calendar : BottomNavBarDestinations(
         routeId = 2,
-        destination = "calendar/",
+        destination = "calendar/{userId}",
     ) {
         override val icon: Int = R.drawable.calendar_icon
         override val iconDescription: String = ""
@@ -42,7 +42,7 @@ sealed class BottomNavBarDestinations(
 
     object Profile : BottomNavBarDestinations(
         routeId = 3,
-        destination = "profile/",
+        destination = "profile/{userId}",
     ) {
         override val icon: Int = R.drawable.profile_icon
         override val iconDescription: String = ""

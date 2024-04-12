@@ -19,7 +19,7 @@ sealed class ToolBarState(
         headline = title,
         trailingIcon = TrailingIcon(
             drawable = R.drawable.notification_bell,
-            destinations = GeneralDestinations.NotificationDestination,
+            destinations = GeneralDestinations.Notification,
         ),
     )
 

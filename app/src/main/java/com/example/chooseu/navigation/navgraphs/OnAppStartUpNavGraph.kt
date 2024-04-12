@@ -1,11 +1,13 @@
 package com.example.chooseu.navigation.navgraphs
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.chooseu.navigation.components.destinations.GeneralDestinations
+import com.example.chooseu.navigation.components.getUserId
 import com.example.chooseu.ui.screens.main_screen.MainScreen
 import com.example.chooseu.ui.screens.onAppStartUpScreen.LoginOrSignUpContainer
 
@@ -17,7 +19,7 @@ import com.example.chooseu.ui.screens.onAppStartUpScreen.LoginOrSignUpContainer
 @RequiresApi(Build.VERSION_CODES.P)
 fun NavGraphBuilder.OnAppStartNavGraph() {
     composable(
-        route = GeneralDestinations.OnAppStartUpDestination.destination,
+        route = GeneralDestinations.AuthentificationFlow.destination,
         arguments = listOf(
             navArgument("screenType") {
                 defaultValue = "Login"
@@ -31,8 +33,14 @@ fun NavGraphBuilder.OnAppStartNavGraph() {
     }
 
     composable(
-        route = GeneralDestinations.MainScreenDestinations.destination,
+        route = GeneralDestinations.MainScreenFlow.destination,
     ) {
-        MainScreen()
+
+        Log.d("NAVTEST", "${it.getUserId()}  route ${it.destination.route}")
+
+
+        MainScreen(
+            userId = it.getUserId()
+        )
     }
 }

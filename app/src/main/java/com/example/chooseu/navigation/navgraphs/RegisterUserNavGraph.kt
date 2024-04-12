@@ -9,16 +9,16 @@ import com.example.chooseu.ui.screens.register.goal_creation.RegisterGoalsScreen
 
 fun NavGraphBuilder.RegisterUserNavGraph() {
     navigation(
-        route = GeneralDestinations.RegistrationDestinations.destination,
-        startDestination = GeneralDestinations.RegisterDetailsDestination.destination
+        route = GeneralDestinations.RegistrationFlow.destination,
+        startDestination = GeneralDestinations.RegisterDetailsFlow.destination
     ) {
         composable(
-            route = GeneralDestinations.RegisterDetailsDestination.destination
+            route = GeneralDestinations.RegisterDetailsFlow.destination
         ) {
             PhysicalDetailScreen()
         }
         composable(
-            route = GeneralDestinations.RegisterGoalsDestination.destination
+            route = GeneralDestinations.RegisterGoalsFlow.destination
         ) {
             RegisterGoalsScreen()
         }

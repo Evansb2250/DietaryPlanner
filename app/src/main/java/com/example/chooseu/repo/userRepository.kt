@@ -11,7 +11,7 @@ interface UserRepository {
     suspend fun signIn(
         userName: String,
         password: String,
-    ): AsyncResponse<Unit>
+    ): AsyncResponse<String>
 
     suspend fun clearPrefsOnSignOut()
 

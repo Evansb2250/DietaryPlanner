@@ -71,7 +71,7 @@ class RegistrationViewModel @Inject constructor(
     }
 
     private fun navigateToFinalRegistrationPage() {
-        navigationManger.navigate(GeneralDestinations.RegisterDetailsDestination)
+        navigationManger.navigate(GeneralDestinations.RegisterDetailsFlow)
     }
 
     fun resetRegistrationState() {

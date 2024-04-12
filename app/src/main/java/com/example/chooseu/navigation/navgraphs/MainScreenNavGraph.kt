@@ -1,6 +1,5 @@
 package com.example.chooseu.navigation.navgraphs
 
-import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.example.chooseu.navigation.components.destinations.BottomNavBarDestinations
@@ -54,7 +53,7 @@ fun NavGraphBuilder.MainScreenRoutes(
     ProfileNavGraph()
 
     composable(
-        route = GeneralDestinations.FoodSearchDestination.destination
+        route = GeneralDestinations.FoodSearchFlow.destination
     ) {
         val title = it.arguments?.getString(DiaryArgs.MEAL_TYPE.name) ?: "cant find"
         FoodSearchScreen(
@@ -65,7 +64,7 @@ fun NavGraphBuilder.MainScreenRoutes(
     }
 
     composable(
-        route = GeneralDestinations.NutritionScreen.destination
+        route = GeneralDestinations.Nutrition.destination
     ) {
         val foodId = it.arguments?.getString("foodId") ?: return@composable
 

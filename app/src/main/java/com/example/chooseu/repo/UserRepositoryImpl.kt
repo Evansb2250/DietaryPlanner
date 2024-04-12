@@ -84,7 +84,7 @@ class UserRepositoryImpl @Inject constructor(
         )
     }
 
-    override suspend fun signIn(userName: String, password: String): AsyncResponse<Unit> =
+    override suspend fun signIn(userName: String, password: String): AsyncResponse<String> =
         withContext(dispatcherProvider.io) {
             try {
                 storeSessionExpirationDate(accountService.login(userName, password))
@@ -113,7 +113,7 @@ class UserRepositoryImpl @Inject constructor(
         }
     }
 
-    private suspend fun handleLoggedInResponse(result: AsyncResponse<User<Map<String, Any>>?>): AsyncResponse<Unit> =
+    private suspend fun handleLoggedInResponse(result: AsyncResponse<User<Map<String, Any>>?>): AsyncResponse<String> =
         when (result) {
             is AsyncResponse.Failed -> {
                 AsyncResponse.Failed(
@@ -127,7 +127,7 @@ class UserRepositoryImpl @Inject constructor(
         }
 
     //all I want to know if logging in, getting the user data and storing it was successful.
-    private suspend fun storeUserData(userData: User<Map<String, Any>>?): AsyncResponse<Unit> {
+    private suspend fun storeUserData(userData: User<Map<String, Any>>?): AsyncResponse<String> {
         val result = coroutineScope {
 
             val personalInfo = async { userRemoteDbService.fetchUserDetails(userData!!.id) }.await()
@@ -137,7 +137,7 @@ class UserRepositoryImpl @Inject constructor(
             when (fetchHistoryResponse) {
                 is AsyncResponse.Failed -> {
                     return@coroutineScope AsyncResponse.Failed(
-                        data = null,
+                        data = "Failed",
                         message = fetchHistoryResponse.message
                     )
                 }

@@ -127,7 +127,7 @@ class FoodSearchViewModel @Inject constructor(
             foodItemCache.map[foodId] = foodItem
 
             navManager.navigate(
-                GeneralDestinations.NutritionScreen,
+                GeneralDestinations.Nutrition,
                 mapOf(
                     "foodId" to foodId,
                     "date" to date.toString()

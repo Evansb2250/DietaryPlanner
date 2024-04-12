@@ -64,7 +64,7 @@ class DiaryScreenViewModel @Inject constructor(
         val dateAsLong = DateUtility.convertStringStringDateToLong(date)
 
         navigationManager.navigate(
-            GeneralDestinations.FoodSearchDestination,
+            GeneralDestinations.FoodSearchFlow,
             arguments = mapOf(
                 DiaryArgs.LONG_DATE.name to "$dateAsLong",
                 DiaryArgs.MEAL_TYPE.name to foodType,

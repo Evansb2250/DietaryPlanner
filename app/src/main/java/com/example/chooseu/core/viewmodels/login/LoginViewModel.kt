@@ -1,5 +1,6 @@
 package com.example.chooseu.core.viewmodels.login
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.chooseu.common.Constants.Companion.googleSignNotAvailable
@@ -66,9 +67,14 @@ class LoginViewModel @Inject constructor(
     }
 
     fun navigateToHomeScreen(
+        userId: String,
     ) {
+        Log.d("NAVTEST", "from navigateToHomeScreen $userId")
         navigationManager.navigate(
-            navigation = GeneralDestinations.MainScreenDestinations,
+            navigation = GeneralDestinations.MainScreenFlow,
+            arguments = mapOf(
+                "userId" to userId,
+            )
         )
         resetLoginScreenState()
     }
@@ -79,7 +85,8 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    private fun handleSignInResponse(response: AsyncResponse<Unit>) {
+    private fun handleSignInResponse(response: AsyncResponse<String>) {
+
         when (response) {
             is AsyncResponse.Failed -> {
                 _state.update {
@@ -91,7 +98,7 @@ class LoginViewModel @Inject constructor(
 
             is AsyncResponse.Success -> {
                 _state.update {
-                    LoginScreenStates.UserSignedInState
+                    LoginScreenStates.UserSignedInState(response.data!!)
                 }
             }
         }

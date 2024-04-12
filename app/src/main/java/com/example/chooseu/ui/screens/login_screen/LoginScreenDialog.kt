@@ -1,8 +1,10 @@
 package com.example.chooseu.ui.screens.login_screen
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import com.example.chooseu.core.viewmodels.login.LoginScreenStates
+import com.example.chooseu.navigation.components.getUserId
 import com.example.chooseu.ui.screens.login_screen.preview.LoginScreenPreviewProvider
 import com.example.chooseu.ui.ui_components.dialog.ErrorDialog
 import com.example.chooseu.ui.ui_components.dialog.LoadingDialog
@@ -12,7 +14,7 @@ fun LoginScreenDialog(
     @PreviewParameter(LoginScreenPreviewProvider::class)
     state: LoginScreenStates,
     resetLoginScreen: () -> Unit = {},
-    navigateToHomeScreen: () -> Unit = {},
+    navigateToHomeScreen: (userId: String) -> Unit = {},
 ) {
     when (state) {
         LoginScreenStates.Loading -> {
@@ -36,7 +38,8 @@ fun LoginScreenDialog(
         }
 
         is LoginScreenStates.UserSignedInState -> {
-            navigateToHomeScreen()
+            Log.d("NAVTEST", "Logged In ${state.userId}")
+            navigateToHomeScreen(state.userId)
         }
 
         else -> {}

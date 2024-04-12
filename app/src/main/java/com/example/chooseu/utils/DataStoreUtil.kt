@@ -21,7 +21,7 @@ import io.appwrite.models.Document
 object DataStoreUtil {
     suspend fun DataStore<Preferences>.storeUserData(
         userData: Document<Map<String, Any>>,
-    ): AsyncResponse<Unit> {
+    ): AsyncResponse<String> {
         return try {
             this.edit { preferences ->
                 // Map preferences to CurrentUser
@@ -33,9 +33,9 @@ object DataStoreUtil {
                 preferences[USER_EMAIL] = userData.data[USER_EMAIL.name] as String
                 preferences[USER_BIRTH_DATE] = userData.data[USER_BIRTH_DATE.name] as String
             }
-            AsyncResponse.Success(data = null)
+            AsyncResponse.Success(data = userData.id)
         } catch (e: ClassCastException) {
-            AsyncResponse.Failed(data = null, message = e.message)
+            AsyncResponse.Failed(data = "Failed", message = e.message)
         } catch (e: Exception) {
             AsyncResponse.Failed(data = null, message = e.message)
         }

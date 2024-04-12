@@ -5,6 +5,7 @@ import androidx.activity.compose.BackHandler
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -32,7 +33,6 @@ fun App(
         viewModel.showExitDialog()
     }
 
-
     if (viewModel.showExitAppNotification) {
         ExitAppDialog(
             userResponse = {
@@ -49,9 +49,11 @@ fun App(
         navigationState = viewModel.navigationManager.navigationState,
         navigateToDestination = { navDirection ->
             //clears the stack if we are navigating back to the LoginScreen
-            if (navDirection.destination == GeneralDestinations.OnAppStartUpDestination.destination) {
-                navControl.navigate(GeneralDestinations.OnAppStartUpDestination.destination) {
-                    popUpTo(GeneralDestinations.OnAppStartUpDestination.destination) {
+            if (navDirection.destination == GeneralDestinations.AuthentificationFlow.destination) {
+
+                navControl.navigate(GeneralDestinations.AuthentificationFlow.destination) {
+
+                    popUpTo(GeneralDestinations.AuthentificationFlow.destination) {
                         inclusive = true
                     }
                 }
@@ -63,6 +65,20 @@ fun App(
         },
     )
 
+
+
+    LaunchedEffect(key1 = Unit) {
+        if(lastSignInState is LastSignInState.AlreadyLoggedIn){
+            navControl.navigate(
+                GeneralDestinations.MainScreenFlow.destination.replace(
+                    "{userId}",
+                    lastSignInState.userId
+                )
+            )
+        }
+    }
+
+
     NavHost(
         modifier = Modifier
             .background(
@@ -70,9 +86,10 @@ fun App(
                 color = appColor
             ),
         navController = navControl,
-        startDestination = viewModel.getStartDestination(lastSignInState),
+        startDestination = GeneralDestinations.AuthentificationFlow.destination,
     ) {
         OnAppStartNavGraph()
         RegisterUserNavGraph()
     }
+
 }

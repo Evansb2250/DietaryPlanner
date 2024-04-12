@@ -84,7 +84,7 @@ class PhysicalDetailsViewModel @Inject constructor(
 
     fun navigateToLoginScreen() {
         navigationManger.navigate(
-            GeneralDestinations.OnAppStartUpDestination
+            GeneralDestinations.AuthentificationFlow
         )
         // removes all the data
         cache.clearCache()

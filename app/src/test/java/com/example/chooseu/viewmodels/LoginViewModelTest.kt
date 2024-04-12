@@ -202,13 +202,13 @@ class LoginViewModelTest {
     @Test
     fun navigateHomeScreenTest(){
         verify(navigationManager, times(0)).navigate(
-            GeneralDestinations.MainScreenDestinations
+            GeneralDestinations.MainScreenFlow
         )
 
         loginViewModel.navigateToHomeScreen("exampleEmail@.com")
 
         verify(navigationManager, times(1)).navigate(
-            GeneralDestinations.MainScreenDestinations,
+            GeneralDestinations.MainScreenFlow,
             mapOf(
                 "userId" to "exampleEmail@.com"
             )
@@ -225,7 +225,7 @@ class LoginViewModelTest {
         loginViewModel.navigateToRegisterScreen()
 
         verify(navigationManager, times(1)).navigate(
-            GeneralDestinations.RegistrationDestinations,
+            GeneralDestinations.RegistrationFlow,
         )
     }
 

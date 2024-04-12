@@ -45,7 +45,7 @@ class PhysicalDetailsViewModelTest {
     fun storePhysicalDetailsInCacheTestPass() {
         val state = provideCompletedDetailsState()
         viewModel.storePhysicalDetailsInCache(state)
-        verify(navigationManager, times(1)).navigate(GeneralDestinations.RegisterGoalsDestination)
+        verify(navigationManager, times(1)).navigate(GeneralDestinations.RegisterGoalsFlow)
         verify(userRegistrationCache, times(1)).storeKey(RegistrationKeys.BIRTHDATE, state.birthDate.value)
         assertThat(userRegistrationCache.getKey(RegistrationKeys.BIRTHDATE)).isEqualTo(state.birthDate.value)
     }
@@ -56,7 +56,7 @@ class PhysicalDetailsViewModelTest {
             this.birthDate.value = ""
         }
         viewModel.storePhysicalDetailsInCache(state)
-        verify(navigationManager, times(0)).navigate(GeneralDestinations.RegisterGoalsDestination)
+        verify(navigationManager, times(0)).navigate(GeneralDestinations.RegisterGoalsFlow)
         viewModel.state.test {
             val stateAfterStoringCache = awaitItem()
             assertThat(stateAfterStoringCache.errorState.isError).isEqualTo(true)
@@ -70,7 +70,7 @@ class PhysicalDetailsViewModelTest {
             this.birthDate.value = ""
         }
         viewModel.storePhysicalDetailsInCache(state)
-        verify(navigationManager, times(0)).navigate(GeneralDestinations.RegisterGoalsDestination)
+        verify(navigationManager, times(0)).navigate(GeneralDestinations.RegisterGoalsFlow)
         viewModel.state.test {
 
             val stateAfterStoringCache = awaitItem()

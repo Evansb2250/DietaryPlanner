@@ -7,18 +7,21 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.chooseu.core.profile_screen.ProfileViewModel
 import com.example.chooseu.core.profile_screen.states.ProfileScreenStates
+import com.example.chooseu.di.VMAssistFactoryModule
 
-@Preview(
-    showBackground = true
-)
 @Composable
 fun ProfileScreen(
-    userId: String = "",
+    userId: String,
+    vm: ProfileViewModel = hiltViewModel(
+        creationCallback = { factory: VMAssistFactoryModule.ProfileViewModelFactory ->
+            factory.create(userId)
+        }
+    )
 ) {
     BackHandler {
 
     }
-    val vm: ProfileViewModel = hiltViewModel()
+
     val state: ProfileScreenStates.ProfilePage = vm.state.collectAsStateWithLifecycle().value
 
     ProfileScreenContent(

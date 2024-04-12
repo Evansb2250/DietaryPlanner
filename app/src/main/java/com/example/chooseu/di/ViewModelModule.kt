@@ -10,6 +10,7 @@ import com.example.chooseu.core.viewmodels.login.LoginViewModel
 import com.example.chooseu.navigation.components.navmanagers.AppNavManager
 import com.example.chooseu.navigation.components.navmanagers.AuthNavManager
 import com.example.chooseu.repo.UserRepository
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -33,23 +34,4 @@ object ViewModelModule {
         dispatcherProvider = dispatcherProvider,
     )
 
-    @Provides
-    fun providesProfileViewModel(
-        bottomNavManager: AppNavManager,
-        authNavManager: AuthNavManager,
-        userRepository: UserRepository,
-        dispatcherProvider: DispatcherProvider,
-    ): ProfileViewModel = ProfileViewModel(
-        bottomNavManager = bottomNavManager,
-        authNavManager = authNavManager,
-        userRepository = userRepository,
-        dispatcherProvider = dispatcherProvider,
-    )
-
-    @Provides
-    fun providesBottomNavViewModel(
-        navigationManger: AppNavManager
-    ): BottomNavViewModel = BottomNavViewModel(
-        navigationManager = navigationManger,
-    )
 }

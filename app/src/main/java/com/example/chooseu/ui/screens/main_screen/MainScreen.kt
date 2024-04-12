@@ -18,11 +18,17 @@ import com.example.chooseu.navigation.components.destinations.GeneralDestination
 import com.example.chooseu.navigation.navgraphs.MainScreenRoutes
 import com.example.chooseu.ui.theme.appColor
 import com.example.chooseu.ui.ui_components.bottomBar.ChooseUBottomBar
+import com.example.chooseu.di.VMAssistFactoryModule
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun MainScreen(
-    vm: BottomNavViewModel = hiltViewModel(),
+    userId: String ,
+    vm: BottomNavViewModel = hiltViewModel(
+        creationCallback = { factory: VMAssistFactoryModule.BottomNavVmFactory ->
+            factory.create(userId)
+        }
+    ),
     navController: NavHostController = rememberNavController()
 ) {
 
@@ -38,15 +44,15 @@ fun MainScreen(
     }
 
     LaunchedEffect(
-        key1 = vm.navigationManager.navigationState,
+        key1 = vm.getNavManager().navigationState,
     ) {
-        vm.navigationManager.navigationState.collectLatest { navDirection ->
+        vm.getNavManager().navigationState.collectLatest { navDirection ->
             if (navDirection is BottomNavBarDestinations)
                 navController.popBackStack()
 
             navController.navigate(navDirection.destination) {
                 this.launchSingleTop = true
-                popUpTo(GeneralDestinations.OnAppStartUpDestination.destination) {
+                popUpTo(GeneralDestinations.AuthentificationFlow.destination) {
                     inclusive = false
                 }
             }

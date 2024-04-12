@@ -67,7 +67,7 @@ class RegistrationViewModelTest {
 
         viewModel.storeCredentialsIntoCache(state)
 
-        verify(navigationManger, times(1)).navigate(GeneralDestinations.RegisterDetailsDestination)
+        verify(navigationManger, times(1)).navigate(GeneralDestinations.RegisterDetailsFlow)
     }
 
 
@@ -77,7 +77,7 @@ class RegistrationViewModelTest {
 
         viewModel.storeCredentialsIntoCache(state)
 
-        verify(navigationManger, times(0)).navigate(GeneralDestinations.RegisterDetailsDestination)
+        verify(navigationManger, times(0)).navigate(GeneralDestinations.RegisterDetailsFlow)
 
         viewModel.state.test {
             val stateAfterOnStoreCredentials = awaitItem()

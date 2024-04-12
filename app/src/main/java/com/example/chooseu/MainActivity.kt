@@ -31,22 +31,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             LaunchedEffect(key1 = Unit) {
-                onAppStartUpManager
-                    .getPreferencesFlow()
-                    .catch { exception ->
-                        if (exception is IOException) {
-                            emit(emptyPreferences())
-                        } else {
-                            throw exception
-                        }
-                    }.collectLatest { pref ->
-                        val experiationDate = pref.get(DataStoreKeys.USER_SESSION_EXPIRATION)
-                        val storedUserKey = pref.get(DataStoreKeys.USER_ID)
-                        onAppStartUpManager.setOnAppStartUpState(
-                            storedUserKey = storedUserKey,
-                            experiationDate = experiationDate,
-                        )
-                    }
+                onAppStartUpManager.setOnAppStartUpState()
             }
 
             GoogleLightCalendarTheme {
@@ -55,6 +40,7 @@ class MainActivity : ComponentActivity() {
                 }
 
                 if (onAppStartUpManager.isfinishedLoading.value) {
+
                     App(
                         lastSignInState = onAppStartUpManager.lastLoginState,
                         //calls the Finish function to close app

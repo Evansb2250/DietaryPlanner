@@ -35,7 +35,7 @@ sealed class LoginScreenStates {
         val email: String,
     ) : LoginScreenStates()
 
-    object UserSignedInState: LoginScreenStates()
+    data class UserSignedInState(val userId: String): LoginScreenStates()
 
     data class LoginError(val message: String) : LoginScreenStates()
 }

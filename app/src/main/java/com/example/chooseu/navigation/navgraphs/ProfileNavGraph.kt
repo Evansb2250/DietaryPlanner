@@ -11,6 +11,7 @@ import com.example.chooseu.core.NotificationViewModel
 import com.example.chooseu.core.TOSViewModel
 import com.example.chooseu.core.toolbar_states.ToolBarState
 import com.example.chooseu.navigation.components.destinations.ProfileDestinations
+import com.example.chooseu.navigation.components.getUserId
 import com.example.chooseu.ui.screens.account_screen.AccountScreen
 import com.example.chooseu.ui.screens.calendar_access.CalendarSettingScreen
 import com.example.chooseu.ui.ui_components.ScreenUnavailable

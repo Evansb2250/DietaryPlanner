@@ -1,6 +1,5 @@
 package com.example.chooseu.navigation.components.destinations
 
-import android.net.Uri
 import com.example.chooseu.navigation.components.Navigation
 import com.example.chooseu.navigation.components.destinations.destinationArguments.DiaryArgs
 
@@ -8,34 +7,34 @@ sealed class GeneralDestinations(
     override val destination: String,
     override val arguments: List<String> = emptyList()
 ) : Navigation {
-    object OnAppStartUpDestination : GeneralDestinations(
+    object AuthentificationFlow : GeneralDestinations(
         destination = "onAppStartUp/{screenType}",
     )
-    object RegistrationDestinations : GeneralDestinations(
+    object RegistrationFlow : GeneralDestinations(
         destination = "registerPaths/{email}",
     )
 
-    object RegisterDetailsDestination : GeneralDestinations(
+    object RegisterDetailsFlow : GeneralDestinations(
         destination = "registerPhysicalScreen",
     )
 
-    object RegisterGoalsDestination : GeneralDestinations(
-        destination = "registerGoalScreen",
+    object RegisterGoalsFlow : GeneralDestinations(
+        destination = "RegisterGoalScreen",
     )
 
-    object MainScreenDestinations : GeneralDestinations(
-        destination = "mainScreen",
+    object MainScreenFlow : GeneralDestinations(
+        destination = "MainScreen/{userId}",
     )
 
-    object NotificationDestination : GeneralDestinations(
+    object Notification : GeneralDestinations(
         destination = "NotificationScreen/{GeneralDestinations}",
     )
 
-    object FoodSearchDestination :  GeneralDestinations(
+    object FoodSearchFlow :  GeneralDestinations(
         destination = " FoodSearchScreen/{${DiaryArgs.LONG_DATE}}/{${DiaryArgs.MEAL_TYPE}}",
     )
 
-    object NutritionScreen: GeneralDestinations(
+    object Nutrition: GeneralDestinations(
         destination = "NutritionScreen/{foodId}/{date}"
     )
 }
