@@ -7,25 +7,29 @@ import androidx.compose.runtime.Composable
 
 @Composable
 fun ExitAppDialog(
+    showDialog: Boolean,
     userResponse: (Boolean) -> Unit,
 ) {
-    AlertDialog(
-        title = {
-            Text("Exit Application")
-        },
-        onDismissRequest = {
-            userResponse(false)
-        },
-        confirmButton = {
-            Button(onClick = { userResponse(false) }) {
-                Text(text = "Cancel")
+    if (showDialog){
+        AlertDialog(
+            title = {
+                Text("Exit Application")
+            },
+            onDismissRequest = {
+                userResponse(false)
+            },
+            confirmButton = {
+                Button(onClick = { userResponse(false) }) {
+                    Text(text = "Cancel")
+                }
+            },
+            dismissButton = {
+                Button(onClick = { userResponse(true) }) {
+                    Text(text = "Exit")
+                }
             }
-        },
-        dismissButton = {
-            Button(onClick = { userResponse(true) }) {
-                Text(text = "Exit")
-            }
-        }
-    )
+        )
+    }
+
 
 }

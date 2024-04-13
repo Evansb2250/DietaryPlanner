@@ -5,7 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.example.chooseu.navigation.components.destinations.BottomNavBarDestinations
-import com.example.chooseu.navigation.components.navmanagers.AppNavManager
+import com.example.chooseu.navigation.components.navmanagers.MainFlowNavManager
 import com.example.chooseu.di.VMAssistFactoryModule
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
@@ -15,7 +15,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
     assistedFactory = VMAssistFactoryModule.BottomNavVmFactory::class,
 )
 class BottomNavViewModel @AssistedInject constructor(
-    private val navigationManager: AppNavManager,
+    private val navigationManager: MainFlowNavManager,
     @Assisted private val userId: String,
 ) : ViewModel() {
 
@@ -34,7 +34,6 @@ class BottomNavViewModel @AssistedInject constructor(
 
     fun navigate(
         navigationDestinations: BottomNavBarDestinations,
-        arguments: Map<String, String>,
     ) {
         navigationManager.navigate(
             navigation = navigationDestinations,
@@ -44,7 +43,7 @@ class BottomNavViewModel @AssistedInject constructor(
         )
     }
 
-    fun getNavManager(): AppNavManager = navigationManager
+    fun getNavManager(): MainFlowNavManager = navigationManager
 
     fun updateBottomBarTab(route: BottomNavBarDestinations? = null, currentScreen: String? = null) {
         isVisible = currentScreen in navigationsTabs.map { it.destination }

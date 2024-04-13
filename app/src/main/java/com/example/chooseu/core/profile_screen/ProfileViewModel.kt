@@ -6,7 +6,7 @@ import com.example.chooseu.core.dispatcher_provider.DispatcherProvider
 import com.example.chooseu.core.profile_screen.states.ProfileScreenStates
 import com.example.chooseu.di.VMAssistFactoryModule
 import com.example.chooseu.navigation.components.destinations.GeneralDestinations
-import com.example.chooseu.navigation.components.navmanagers.AppNavManager
+import com.example.chooseu.navigation.components.navmanagers.MainFlowNavManager
 import com.example.chooseu.navigation.components.navmanagers.AuthNavManager
 import com.example.chooseu.repo.UserRepository
 import dagger.assisted.Assisted
@@ -23,7 +23,7 @@ import kotlinx.coroutines.launch
 )
 class ProfileViewModel @AssistedInject constructor(
     @Assisted private val userId: String,
-    private val bottomNavManager: AppNavManager,
+    private val bottomNavManager: MainFlowNavManager,
     private val authNavManager: AuthNavManager,
     private val userRepository: UserRepository,
     private val dispatcherProvider: DispatcherProvider,

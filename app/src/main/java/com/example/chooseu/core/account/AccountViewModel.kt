@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.chooseu.core.account.state.AccountStates
 import com.example.chooseu.domain.CurrentUser
 import com.example.chooseu.navigation.components.destinations.BottomNavBarDestinations
-import com.example.chooseu.navigation.components.navmanagers.AppNavManager
+import com.example.chooseu.navigation.components.navmanagers.MainFlowNavManager
 import com.example.chooseu.repo.UpdateResult
 import com.example.chooseu.repo.UserRepository
 import com.example.chooseu.utils.NumberUtils
@@ -21,7 +21,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AccountViewModel @Inject constructor(
-    private val appNavManager: AppNavManager,
+    private val appNavManager: MainFlowNavManager,
     private val userRepository: UserRepository,
 ) : ViewModel() {
 

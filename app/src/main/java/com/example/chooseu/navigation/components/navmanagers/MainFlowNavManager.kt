@@ -6,8 +6,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class AppNavManager @Inject constructor(
-    private val authNavManager: AuthNavManager,
+class MainFlowNavManager @Inject constructor(
     private val externalScope: CoroutineScope,
 ) : NavigationManger(externalScope) {
     fun navigate(

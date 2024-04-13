@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import com.example.chooseu.core.diary.states.DiaryScreenStates
 import com.example.chooseu.navigation.components.destinations.GeneralDestinations
 import com.example.chooseu.navigation.components.destinations.destinationArguments.DiaryArgs
-import com.example.chooseu.navigation.components.navmanagers.AppNavManager
+import com.example.chooseu.navigation.components.navmanagers.MainFlowNavManager
 import com.example.chooseu.utils.DateUtility
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,7 +16,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DiaryScreenViewModel @Inject constructor(
-    val navigationManager: AppNavManager,
+    val navigationManager: MainFlowNavManager,
 ) : ViewModel() {
 
     private val _state: MutableStateFlow<DiaryScreenStates> = MutableStateFlow(

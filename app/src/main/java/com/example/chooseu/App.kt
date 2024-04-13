@@ -14,8 +14,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.chooseu.core.app.AppViewModel
 import com.example.chooseu.core.on_startup.state.LastSignInState
 import com.example.chooseu.navigation.components.destinations.GeneralDestinations
-import com.example.chooseu.navigation.navgraphs.OnAppStartNavGraph
-import com.example.chooseu.navigation.navgraphs.RegisterUserNavGraph
+import com.example.chooseu.navigation.navgraphs.OnAppStartUpFlow
 import com.example.chooseu.ui.theme.appColor
 import com.example.chooseu.ui.ui_components.NavManagerStateObserver
 import com.example.chooseu.ui.ui_components.dialog.ExitAppDialog
@@ -33,17 +32,17 @@ fun App(
         viewModel.showExitDialog()
     }
 
-    if (viewModel.showExitAppNotification) {
-        ExitAppDialog(
-            userResponse = {
-                if (it) {
-                    closeApp()
-                } else {
-                    viewModel.closeExitDialog()
-                }
+
+    ExitAppDialog(
+        showDialog = viewModel.showExitAppNotification,
+        userResponse = {
+            if (it) {
+                closeApp()
+            } else {
+                viewModel.closeExitDialog()
             }
-        )
-    }
+        }
+    )
 
     NavManagerStateObserver(
         navigationState = viewModel.navigationManager.navigationState,
@@ -52,6 +51,7 @@ fun App(
             if (navDirection.destination == GeneralDestinations.AuthentificationFlow.destination) {
 
                 navControl.navigate(GeneralDestinations.AuthentificationFlow.destination) {
+                    launchSingleTop = true
 
                     popUpTo(GeneralDestinations.AuthentificationFlow.destination) {
                         inclusive = true
@@ -59,7 +59,7 @@ fun App(
                 }
             } else {
                 navControl.navigate(navDirection.destination) {
-                    this.launchSingleTop
+                    this.launchSingleTop = true
                 }
             }
         },
@@ -68,13 +68,15 @@ fun App(
 
 
     LaunchedEffect(key1 = Unit) {
-        if(lastSignInState is LastSignInState.AlreadyLoggedIn){
+        if (lastSignInState is LastSignInState.AlreadyLoggedIn) {
             navControl.navigate(
                 GeneralDestinations.MainScreenFlow.destination.replace(
                     "{userId}",
                     lastSignInState.userId
                 )
-            )
+            ) {
+                this.launchSingleTop
+            }
         }
     }
 
@@ -88,8 +90,6 @@ fun App(
         navController = navControl,
         startDestination = GeneralDestinations.AuthentificationFlow.destination,
     ) {
-        OnAppStartNavGraph()
-        RegisterUserNavGraph()
+        OnAppStartUpFlow()
     }
-
 }

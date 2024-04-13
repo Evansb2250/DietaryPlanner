@@ -1,5 +1,8 @@
 package com.example.chooseu.navigation.components.navmanagers
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import com.example.chooseu.navigation.components.Navigation
 import com.example.chooseu.navigation.components.destinations.GeneralDestinations
 import com.example.chooseu.utils.buildDestination
@@ -18,6 +21,9 @@ abstract class NavigationManger(
 ) {
     protected val _navigationState = MutableSharedFlow<Navigation>()
     val navigationState: SharedFlow<Navigation> = _navigationState.asSharedFlow()
+
+    var logout by mutableStateOf(false)
+        private set
 
     fun navigate(
         navigation: GeneralDestinations,

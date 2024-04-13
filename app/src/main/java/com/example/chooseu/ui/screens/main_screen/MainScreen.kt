@@ -23,7 +23,7 @@ import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun MainScreen(
-    userId: String ,
+    userId: String,
     vm: BottomNavViewModel = hiltViewModel(
         creationCallback = { factory: VMAssistFactoryModule.BottomNavVmFactory ->
             factory.create(userId)
@@ -33,25 +33,32 @@ fun MainScreen(
 ) {
 
     BackHandler {
-
+        //prevents back navigation and forces user to logout.
     }
 
     //needed to check the current destination on BackPress because it isn't tracked through the flow.
     val destinations = navController.currentBackStackEntryAsState().value?.destination
 
-    LaunchedEffect(key1 = destinations) {
-        vm.updateBottomBarTab(route = null, currentScreen = destinations?.route)
+    LaunchedEffect(
+        key1 = destinations,
+    ) {
+        vm.updateBottomBarTab(
+            route = null,
+            currentScreen = destinations?.route,
+        )
     }
 
     LaunchedEffect(
         key1 = vm.getNavManager().navigationState,
     ) {
         vm.getNavManager().navigationState.collectLatest { navDirection ->
+
             if (navDirection is BottomNavBarDestinations)
                 navController.popBackStack()
 
             navController.navigate(navDirection.destination) {
                 this.launchSingleTop = true
+
                 popUpTo(GeneralDestinations.AuthentificationFlow.destination) {
                     inclusive = false
                 }
@@ -64,19 +71,18 @@ fun MainScreen(
             color = appColor,
         ),
         bottomBar = {
-            if (vm.isVisible) {
-                ChooseUBottomBar(
-                    tabs = vm.navigationsTabs,
-                    tabPosition = vm.selectedOption,
-                    onClick = { item ->
-                        vm.navigate(
-                            item,
-                            arguments = emptyMap()
-                        )
-                    }
-                )
-            }
-        }) { innerPadding ->
+            ChooseUBottomBar(
+                showToolBar = vm.isVisible,
+                tabs = vm.navigationsTabs,
+                tabPosition = vm.selectedOption,
+                onClick = { item ->
+                    vm.navigate(
+                        item,
+                    )
+                }
+            )
+        }
+    ) { innerPadding ->
         NavHost(
             modifier = Modifier
                 .padding(innerPadding)
@@ -85,7 +91,7 @@ fun MainScreen(
                     color = appColor
                 ),
             navController = navController,
-            startDestination = vm.navigationsTabs.get(0).destination
+            startDestination = vm.navigationsTabs[0].destination
         ) {
             MainScreenRoutes()
         }

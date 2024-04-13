@@ -12,7 +12,7 @@ import com.example.chooseu.core.diary.cache.FoodItemCache
 import com.example.chooseu.core.registration.cache.UserRegistrationCache
 import com.example.chooseu.core.registration.cache.UserRegistrationCacheImpl
 import com.example.chooseu.navigation.components.navmanagers.AuthNavManager
-import com.example.chooseu.navigation.components.navmanagers.AppNavManager
+import com.example.chooseu.navigation.components.navmanagers.MainFlowNavManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -69,10 +69,8 @@ class AppModule {
     @Provides
     @Singleton
     fun providesMainScreenNavigationManager(
-        authNavManager: AuthNavManager,
         externalScope: CoroutineScope
-    ): AppNavManager = AppNavManager(
-        authNavManager,
+    ): MainFlowNavManager = MainFlowNavManager(
         externalScope
     )
 

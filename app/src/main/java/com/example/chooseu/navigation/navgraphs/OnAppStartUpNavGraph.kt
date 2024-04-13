@@ -1,15 +1,10 @@
 package com.example.chooseu.navigation.navgraphs
 
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.compose.composable
-import androidx.navigation.navArgument
-import com.example.chooseu.navigation.components.destinations.GeneralDestinations
-import com.example.chooseu.navigation.components.getUserId
-import com.example.chooseu.ui.screens.main_screen.MainScreen
-import com.example.chooseu.ui.screens.onAppStartUpScreen.LoginOrSignUpContainer
+import com.example.chooseu.navigation.navgraphs.composable.AuthentificationFlowComposable
+import com.example.chooseu.navigation.navgraphs.composable.MainScreenFlowComposable
 
 /*
  * User can either go to the Login or Registration screen from onAppStartUp. Switching between the two screen is done by a tab and logic and no navigation is used.
@@ -17,30 +12,19 @@ import com.example.chooseu.ui.screens.onAppStartUpScreen.LoginOrSignUpContainer
  * MainScreen takes the user to the Home Screen where there is a bottom Navigation to go to different screens.
  */
 @RequiresApi(Build.VERSION_CODES.P)
-fun NavGraphBuilder.OnAppStartNavGraph() {
-    composable(
-        route = GeneralDestinations.AuthentificationFlow.destination,
-        arguments = listOf(
-            navArgument("screenType") {
-                defaultValue = "Login"
-            },
-        )
-    ) {
-        val displayedScreen = it.arguments?.getString("screenType")!!
-        LoginOrSignUpContainer(
-            displayedScreen,
-        )
-    }
+fun NavGraphBuilder.OnAppStartUpFlow() {
 
-    composable(
-        route = GeneralDestinations.MainScreenFlow.destination,
-    ) {
+    /***
+     * contains login and register screen
+     */
+    AuthentificationFlowComposable()
 
-        Log.d("NAVTEST", "${it.getUserId()}  route ${it.destination.route}")
-
-
-        MainScreen(
-            userId = it.getUserId()
-        )
-    }
+    /***
+     *  Register a new user
+     */
+    RegistrationFlow()
+    /***
+     * directs to landing page of the application.
+     */
+    MainScreenFlowComposable()
 }

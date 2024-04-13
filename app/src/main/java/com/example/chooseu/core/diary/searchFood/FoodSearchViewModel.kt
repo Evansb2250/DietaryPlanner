@@ -11,7 +11,7 @@ import com.example.chooseu.data.rest.api_service.dtos.foodItemDTO.toUniqueFoodIt
 import com.example.chooseu.navigation.components.destinations.BottomNavBarDestinations
 import com.example.chooseu.navigation.components.destinations.GeneralDestinations
 import com.example.chooseu.navigation.components.destinations.destinationArguments.DiaryArgs
-import com.example.chooseu.navigation.components.navmanagers.AppNavManager
+import com.example.chooseu.navigation.components.navmanagers.MainFlowNavManager
 import com.example.chooseu.repo.foodRepository.FoodRepository
 import com.example.chooseu.core.diary.models.FoodItem
 import com.example.chooseu.utils.AsyncResponse
@@ -32,7 +32,7 @@ import javax.inject.Inject
 @HiltViewModel
 class FoodSearchViewModel @Inject constructor(
     val foodRepository: FoodRepository,
-    val navManager: AppNavManager,
+    val navManager: MainFlowNavManager,
     val foodItemCache: FoodItemCache,
 ) : ViewModel() {
     private var date: Long = 0L

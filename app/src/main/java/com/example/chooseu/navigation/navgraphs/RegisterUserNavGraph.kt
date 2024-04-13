@@ -7,7 +7,7 @@ import com.example.chooseu.navigation.components.destinations.GeneralDestination
 import com.example.chooseu.screens.register.physical.PhysicalDetailScreen
 import com.example.chooseu.ui.screens.register.goal_creation.RegisterGoalsScreen
 
-fun NavGraphBuilder.RegisterUserNavGraph() {
+fun NavGraphBuilder.RegistrationFlow() {
     navigation(
         route = GeneralDestinations.RegistrationFlow.destination,
         startDestination = GeneralDestinations.RegisterDetailsFlow.destination
