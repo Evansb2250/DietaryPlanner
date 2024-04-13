@@ -3,10 +3,10 @@ package com.example.chooseu.core.registration
 import app.cash.turbine.test
 import assertk.assertThat
 import assertk.assertions.isEqualTo
-import com.example.chooseu.core.registration.registration_main.state.InitialRegistrationState.*
-import com.example.chooseu.core.registration.cache.UserRegistrationCache
-import com.example.chooseu.core.registration.cache.UserRegistrationCacheImpl
-import com.example.chooseu.core.registration.registration_main.RegistrationViewModel
+import com.example.chooseu.ui.screens.register.main.state.InitialRegistrationState.*
+import com.example.chooseu.core.cache.UserRegistrationCache
+import com.example.chooseu.core.cache.UserRegistrationCacheImpl
+import com.example.chooseu.ui.screens.register.main.RegistrationViewModel
 import com.example.chooseu.navigation.components.destinations.GeneralDestinations
 import com.example.chooseu.navigation.components.AuthNavManager
 import com.example.chooseu.repo.UserRepository

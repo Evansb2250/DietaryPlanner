@@ -1,7 +1,7 @@
 package com.example.chooseu.screens.register.previews
 
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
-import com.example.chooseu.core.registration.state.PhysicalDetailState
+import com.example.chooseu.ui.screens.register.physical.states.PhysicalDetailState
 
 class PhysicalDetailPreview: PreviewParameterProvider<PhysicalDetailState> {
     override val values: Sequence<PhysicalDetailState>

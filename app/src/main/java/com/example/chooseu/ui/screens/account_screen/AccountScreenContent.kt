@@ -26,11 +26,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.example.chooseu.common.Constants.Companion.heightUnits
+import com.example.chooseu.common.Constants.Companion.weightUnits
 import com.example.chooseu.common.sidePadding
-import com.example.chooseu.core.account.state.AccountStates
-import com.example.chooseu.core.registration.state.heightUnits
-import com.example.chooseu.core.registration.state.weightUnits
 import com.example.chooseu.core.toolbar_states.ToolBarState
+import com.example.chooseu.ui.screens.account_screen.state.AccountStates
 import com.example.chooseu.ui.theme.yellowMain
 import com.example.chooseu.ui.ui_components.buttons.StandardButton
 import com.example.chooseu.ui.ui_components.custom_column.AppColumnContainer

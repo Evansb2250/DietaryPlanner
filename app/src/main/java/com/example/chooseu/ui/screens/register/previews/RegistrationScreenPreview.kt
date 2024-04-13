@@ -1,7 +1,7 @@
 package com.example.chooseu.screens.register.previews
 
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
-import com.example.chooseu.core.registration.registration_main.state.InitialRegistrationState
+import com.example.chooseu.ui.screens.register.main.state.InitialRegistrationState
 
 
 class RegistrationScreenPreview : PreviewParameterProvider<InitialRegistrationState.PersonalInformationState>{

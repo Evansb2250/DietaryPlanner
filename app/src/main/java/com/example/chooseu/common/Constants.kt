@@ -1,5 +1,8 @@
 package com.example.chooseu.common
 
+import com.example.chooseu.ui.screens.register.physical.states.HeightMetric
+import com.example.chooseu.ui.screens.register.physical.states.WeightMetric
+
 class Constants {
     companion object {
         val SHARED_PREFERENCES_NAME = "AUTH_STATE_PREFERENCE"
@@ -38,5 +41,9 @@ class Constants {
         val URL_LOGOUT_REDIRECT = "com.ptruiz.authtest:/logout"
 
         const val googleSignNotAvailable = "Google Sign in is not available"
+
+
+        val heightUnits = listOf(HeightMetric.Feet, HeightMetric.Inches)
+        val weightUnits: List<WeightMetric> = listOf(WeightMetric.Kilo, WeightMetric.Pounds)
     }
 }

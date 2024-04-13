@@ -6,9 +6,8 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import com.example.chooseu.core.CalendarViewModel
-import com.example.chooseu.core.NotificationViewModel
-import com.example.chooseu.core.TOSViewModel
+import com.example.chooseu.ui.screens.notification_screen.NotificationViewModel
+import com.example.chooseu.ui.screens.tos.TOSViewModel
 import com.example.chooseu.core.toolbar_states.ToolBarState
 import com.example.chooseu.navigation.components.destinations.ProfileDestinations
 import com.example.chooseu.navigation.components.getUserId

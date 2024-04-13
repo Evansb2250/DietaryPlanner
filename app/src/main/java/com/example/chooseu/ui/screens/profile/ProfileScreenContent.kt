@@ -10,7 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.example.chooseu.core.profile_screen.states.ProfileScreenStates
+import com.example.chooseu.ui.screens.profile.states.ProfileScreenStates
 import com.example.chooseu.core.toolbar_states.ToolBarState
 import com.example.chooseu.navigation.components.destinations.GeneralDestinations
 import com.example.chooseu.ui.ui_components.buttons.SignOutButton
@@ -19,7 +19,7 @@ import com.example.chooseu.ui.ui_components.toolbar.ChooseUToolBar
 @Composable
 fun ProfileScreenContent(
     state: ProfileScreenStates.ProfilePage,
-    onNavigateTo:(GeneralDestinations) -> Unit = {},
+    onNavigateTo: (GeneralDestinations) -> Unit = {},
     onSignOut: () -> Unit,
 ) {
 //Used to prevent taping more than one option at a time.
@@ -37,9 +37,10 @@ fun ProfileScreenContent(
             )
         }
     ) { paddingValues ->
-        ProfileOptionsComposable(
-            state,
-            paddingValues,
+
+        ProfileSettingsContainer(
+            settings = state.items,
+            paddingValues = paddingValues,
             navigate = onNavigateTo
         )
 

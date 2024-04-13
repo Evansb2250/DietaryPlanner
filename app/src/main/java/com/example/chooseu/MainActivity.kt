@@ -7,14 +7,9 @@ import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.LaunchedEffect
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.datastore.preferences.core.emptyPreferences
-import com.example.chooseu.common.DataStoreKeys
-import com.example.chooseu.core.on_startup.OnAppStartUpManager
+import com.example.chooseu.ui.screens.onAppStartUpScreen.OnAppStartUpManager
 import com.example.chooseu.ui.theme.GoogleLightCalendarTheme
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collectLatest
-import java.io.IOException
 import javax.inject.Inject
 
 @AndroidEntryPoint

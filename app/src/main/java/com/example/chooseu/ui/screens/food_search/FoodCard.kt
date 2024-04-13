@@ -25,8 +25,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.chooseu.R
-import com.example.chooseu.core.diary.states.FoodItemListActions
-import com.example.chooseu.core.diary.models.FoodItem
+import com.example.chooseu.ui.screens.food_search.states.FoodItemListActions
+import com.example.chooseu.ui.screens.nutrition_screen.FoodItem
 
 @Composable
 fun FoodCard(

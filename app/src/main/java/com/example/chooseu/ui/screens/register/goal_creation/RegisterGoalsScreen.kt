@@ -8,9 +8,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.chooseu.core.registration.RegisterGoalViewModel
-import com.example.chooseu.core.registration.state.RegisterGoalStates
-import com.example.chooseu.core.registration.state.RegisterGoalStates.AccountComfirmationState
+import com.example.chooseu.ui.screens.register.goal_creation.states.RegisterGoalStates
+import com.example.chooseu.ui.screens.register.goal_creation.states.RegisterGoalStates.AccountComfirmationState
 import com.example.chooseu.ui.theme.appColor
 import com.example.chooseu.ui.ui_components.dialog.ErrorDialog
 import com.example.chooseu.ui.ui_components.dialog.LoadingDialog

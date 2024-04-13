@@ -1,7 +1,7 @@
 package com.example.chooseu.di
 
-import com.example.chooseu.core.main_screen.BottomNavViewModel
-import com.example.chooseu.core.profile_screen.ProfileViewModel
+import com.example.chooseu.ui.screens.main_screen.BottomNavViewModel
+import com.example.chooseu.ui.screens.profile.ProfileViewModel
 import com.example.chooseu.ui.screens.calendar_access.CalendarSettingViewModel
 import com.example.chooseu.ui.screens.home.HomeViewModel
 import dagger.Module

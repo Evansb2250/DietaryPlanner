@@ -1,6 +1,6 @@
 package com.example.chooseu.data.rest.api_service.dtos.foodItemDTO
 
-import com.example.chooseu.core.diary.models.FoodItem
+import com.example.chooseu.ui.screens.nutrition_screen.FoodItem
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

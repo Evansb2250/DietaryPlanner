@@ -13,7 +13,7 @@ import com.example.chooseu.common.DataStoreKeys.USER_ID
 import com.example.chooseu.common.DataStoreKeys.USER_WEIGHT
 import com.example.chooseu.common.DataStoreKeys.USER_WEIGHT_METRIC
 import com.example.chooseu.core.dispatcher_provider.DispatcherProvider
-import com.example.chooseu.core.registration.cache.keys.RegistrationKeys
+import com.example.chooseu.core.cache.keys.RegistrationKeys
 import com.example.chooseu.data.database.dao.BMIDao
 import com.example.chooseu.data.database.models.BMIEntity
 import com.example.chooseu.data.database.models.toBodyMassIndexList

@@ -25,11 +25,11 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import com.example.chooseu.R
-import com.example.chooseu.core.registration.Genders
-import com.example.chooseu.core.registration.state.PhysicalDetailState
-import com.example.chooseu.core.registration.state.heightUnits
-import com.example.chooseu.core.registration.state.weightUnits
+import com.example.chooseu.common.Constants.Companion.heightUnits
+import com.example.chooseu.common.Constants.Companion.weightUnits
 import com.example.chooseu.screens.register.previews.PhysicalDetailPreview
+import com.example.chooseu.ui.screens.register.physical.Genders
+import com.example.chooseu.ui.screens.register.physical.states.PhysicalDetailState
 import com.example.chooseu.ui.ui_components.buttons.StandardButton
 import com.example.chooseu.ui.ui_components.calendar.DateSelector
 import com.example.chooseu.ui.ui_components.custom_column.AppColumnContainer

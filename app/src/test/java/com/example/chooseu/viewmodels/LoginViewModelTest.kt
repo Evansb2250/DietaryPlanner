@@ -7,8 +7,8 @@ import app.cash.turbine.test
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.assertions.isInstanceOf
-import com.example.chooseu.core.viewmodels.login.LoginScreenStates
-import com.example.chooseu.core.viewmodels.login.LoginViewModel
+import com.example.chooseu.ui.screens.login_screen.LoginScreenStates
+import com.example.chooseu.ui.screens.login_screen.LoginViewModel
 import com.example.chooseu.data.database.dao.UserDao
 import com.example.chooseu.data.database.models.UserEntity
 import com.example.chooseu.domain.CurrentUser

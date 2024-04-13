@@ -2,12 +2,12 @@ package com.example.chooseu.core
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
-import com.example.chooseu.core.registration.Genders
-import com.example.chooseu.core.registration.state.HeightMetric
-import com.example.chooseu.core.registration.state.PhysicalDetailState
-import com.example.chooseu.core.registration.state.WeightMetric
-import com.example.chooseu.core.registration.state.UserHeight
-import com.example.chooseu.core.registration.state.UserWeight
+import com.example.chooseu.ui.screens.register.physical.Genders
+import com.example.chooseu.ui.screens.register.physical.states.HeightMetric
+import com.example.chooseu.ui.screens.register.physical.states.PhysicalDetailState
+import com.example.chooseu.ui.screens.register.physical.states.WeightMetric
+import com.example.chooseu.ui.screens.register.physical.states.UserHeight
+import com.example.chooseu.ui.screens.register.physical.states.UserWeight
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource

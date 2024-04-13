@@ -23,7 +23,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.chooseu.R
-import com.example.chooseu.core.registration.state.RegisterGoalStates
+import com.example.chooseu.ui.screens.register.goal_creation.states.RegisterGoalStates
 import com.example.chooseu.ui.ui_components.custom_column.AppColumnContainer
 
 @Composable

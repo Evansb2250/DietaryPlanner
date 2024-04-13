@@ -14,8 +14,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.chooseu.common.sidePadding
-import com.example.chooseu.core.diary.DiaryScreenViewModel
-import com.example.chooseu.core.diary.states.DiaryScreenStates
+import com.example.chooseu.ui.screens.food_diary.state.DiaryScreenStates
 import com.example.chooseu.core.toolbar_states.ToolBarState
 import com.example.chooseu.ui.theme.appColor
 import com.example.chooseu.ui.ui_components.mealItem.MealItem

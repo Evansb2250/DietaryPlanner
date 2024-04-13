@@ -3,8 +3,6 @@ package com.example.chooseu.ui.screens.login_screen
 import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.PreviewParameter
-import com.example.chooseu.core.viewmodels.login.LoginScreenStates
-import com.example.chooseu.navigation.components.getUserId
 import com.example.chooseu.ui.screens.login_screen.preview.LoginScreenPreviewProvider
 import com.example.chooseu.ui.ui_components.dialog.ErrorDialog
 import com.example.chooseu.ui.ui_components.dialog.LoadingDialog

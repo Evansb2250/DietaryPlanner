@@ -16,7 +16,6 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import com.example.chooseu.R
 import com.example.chooseu.common.imageHolder
-import com.example.chooseu.core.viewmodels.login.LoginScreenStates
 import com.example.chooseu.ui.screens.login_screen.preview.LoginScreenPreviewProvider
 import com.example.chooseu.ui.ui_components.buttons.GoogleButton
 import com.example.chooseu.ui.ui_components.buttons.StandardButton

@@ -4,7 +4,7 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.chooseu.core.registration.PhysicalDetailsViewModel
+import com.example.chooseu.ui.screens.register.physical.PhysicalDetailsViewModel
 
 
 @Composable

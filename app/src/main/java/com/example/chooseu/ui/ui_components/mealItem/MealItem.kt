@@ -20,7 +20,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
-import com.example.chooseu.core.diary.models.FoodDiaryItem
+import com.example.chooseu.ui.screens.food_diary.models.FoodDiaryItem
 import com.example.chooseu.ui.theme.appColor
 import com.example.chooseu.ui.theme.yellowMain
 

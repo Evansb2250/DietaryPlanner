@@ -28,10 +28,10 @@ import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import com.example.chooseu.R
 import com.example.chooseu.common.sidePadding
-import com.example.chooseu.core.diary.states.FoodItemListActions
-import com.example.chooseu.core.diary.states.FoodSearchStates
+import com.example.chooseu.ui.screens.food_search.states.FoodItemListActions
+import com.example.chooseu.ui.screens.food_search.states.FoodSearchStates
 import com.example.chooseu.core.toolbar_states.ToolBarState
-import com.example.chooseu.core.diary.models.partitionFoodItemsRecommendations
+import com.example.chooseu.ui.screens.nutrition_screen.partitionFoodItemsRecommendations
 import com.example.chooseu.ui.ui_components.custom_column.AppColumnContainer
 import com.example.chooseu.ui.ui_components.dialog.ErrorDialog
 import com.example.chooseu.ui.ui_components.dialog.LoadingDialog

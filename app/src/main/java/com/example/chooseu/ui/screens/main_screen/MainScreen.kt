@@ -12,7 +12,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.chooseu.core.main_screen.BottomNavViewModel
 import com.example.chooseu.navigation.components.destinations.BottomNavBarDestinations
 import com.example.chooseu.navigation.components.destinations.GeneralDestinations
 import com.example.chooseu.navigation.navgraphs.MainScreenRoutes

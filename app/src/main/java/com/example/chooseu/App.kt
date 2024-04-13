@@ -11,8 +11,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
-import com.example.chooseu.core.app.AppViewModel
-import com.example.chooseu.core.on_startup.state.LastSignInState
+import com.example.chooseu.ui.screens.onAppStartUpScreen.state.LastSignInState
 import com.example.chooseu.navigation.components.destinations.GeneralDestinations
 import com.example.chooseu.navigation.navgraphs.OnAppStartUpFlow
 import com.example.chooseu.ui.theme.appColor

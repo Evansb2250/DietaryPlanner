@@ -18,15 +18,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.example.chooseu.core.profile_screen.states.ProfileScreenStates
+import com.example.chooseu.ui.screens.profile.states.ProfileScreenStates
 import com.example.chooseu.navigation.components.destinations.GeneralDestinations
 import com.example.chooseu.ui.theme.appColor
 import com.example.chooseu.ui.ui_components.custom_layout.CustomRowLayout
 
 
 @Composable
-fun ProfileOptionsComposable(
-    state: ProfileScreenStates.ProfilePage,
+fun ProfileSettingsContainer(
+    settings:  List<ProfileScreenStates.ProfilePage.ProfileOptions>,
     paddingValues: PaddingValues,
     navigate: (GeneralDestinations) -> Unit = {}
 ) {
@@ -46,7 +46,7 @@ fun ProfileOptionsComposable(
                 .wrapContentHeight(),
             verticalArrangement = Arrangement.SpaceBetween,
         ) {
-            state.items.forEach {
+            settings.forEach {
                 CustomRowLayout(
                     leadingIcon = {
                         Image(

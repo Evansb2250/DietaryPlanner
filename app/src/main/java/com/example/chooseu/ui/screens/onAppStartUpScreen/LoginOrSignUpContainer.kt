@@ -11,7 +11,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.example.chooseu.ui.screens.login_screen.LoginScreen
-import com.example.chooseu.ui.screens.register.RegistrationScreen
+import com.example.chooseu.ui.screens.register.main.RegistrationScreen
 import com.example.chooseu.ui.ui_components.header.LoginOrSignUpTabAndHeader
 
 
