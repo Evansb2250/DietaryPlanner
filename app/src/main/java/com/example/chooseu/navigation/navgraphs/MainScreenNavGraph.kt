@@ -66,11 +66,12 @@ fun NavGraphBuilder.MainScreenRoutes(
     composable(
         route = GeneralDestinations.Nutrition.destination
     ) {
-        val foodId = it.arguments?.getString("foodId") ?: return@composable
+        val foodId = it.arguments?.getString("foodId")
 
         NutritionScreen(
             userId = it.getUserId(),
             foodId = foodId,
+            dayLong = it.getLongDate(),
         )
     }
 }

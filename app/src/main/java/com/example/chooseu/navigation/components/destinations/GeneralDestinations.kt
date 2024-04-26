@@ -31,11 +31,11 @@ sealed class GeneralDestinations(
     )
 
     object FoodSearchFlow :  GeneralDestinations(
-        destination = " FoodSearchScreen/{${DiaryArgs.LONG_DATE}}/{${DiaryArgs.MEAL_TYPE}}",
+        destination = " FoodSearchScreen/{userId}/{${DiaryArgs.LONG_DATE}}/{${DiaryArgs.MEAL_TYPE}}",
     )
 
     object Nutrition: GeneralDestinations(
-        destination = "NutritionScreen/{foodId}/{date}"
+        destination = "NutritionScreen/{userId}/{foodId}/{dateLong}"
     )
 }
 

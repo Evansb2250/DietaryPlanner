@@ -1,5 +1,7 @@
+import com.example.chooseu.ui.screens.nutrition_screen.NutritionDetail
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import java.text.DecimalFormat
 
 @Serializable
 data class NutritionInfo(
@@ -10,19 +12,83 @@ data class NutritionInfo(
     @SerialName("healthLabels") val healthLabels: List<String> = emptyList(),
     @SerialName("cautions") val cautions: List<String> = emptyList(),
     @SerialName("totalNutrients") val totalNutrients: TotalNutrientsDTO = TotalNutrientsDTO(),
-   @SerialName("totalDaily") val totalDaily: TotalDailyDTO = TotalDailyDTO(),
-   @SerialName("ingredients") val ingredients: List<IngredientDTO> = emptyList()
+    @SerialName("totalDaily") val totalDaily: TotalDailyDTO = TotalDailyDTO(),
+    @SerialName("ingredients") val ingredients: List<IngredientDTO> = emptyList()
 )
+
+
+private val decimalFormat = DecimalFormat("#.##")
+fun NutrientDTO.printNutritionValue(): String =
+    "${decimalFormat.format(this.quantity)} ${this.unit ?: "g"}"
+
+fun TotalNutrientsDTO.toNutritionDetail(
+    servingType: String,
+    quantity: Double = 1.0,
+): NutritionDetail = NutritionDetail(
+    servingType = servingType,
+    quantifier = quantity,
+    nutritionValues = listOf(
+        this.enercKCAL.copy(
+            label = "Calories",
+        ),
+        this.fasat.copy(
+            label = "Saturated fat"
+        ),
+        this.fatrn.copy(
+            label = "Trans fat"
+        ),
+        this.cholesterol.copy(
+            label = "Cholestrol"
+        ),
+        this.sodium.copy(
+            label = "Sodium"
+        ),
+        this.chocdfNet.copy(
+            label = "Total carbs"
+        ),
+        this.fiber.copy(
+            label = "Fiber",
+        ),
+        this.sugar.copy(
+            label = "Sugar",
+        ),
+        this.addedSugar.copy(
+            label = "Added Sugar",
+        ),
+        this.procnt.copy(
+            label = "Protein",
+        ),
+        this.vitaminC.copy(
+            label = "Vitamin C",
+        ),
+        this.iron.copy(
+            label = "Iron"
+        ),
+        this.vitaminD.copy(
+            label = "Vitamin D"
+        ),
+        this.potassium.copy(
+            label = "Potassium"
+        ),
+        this.calcium.copy(
+            label = "Calcium"
+        )
+    ),
+)
+
 
 @Serializable
 data class TotalNutrientsDTO(
     @SerialName("SUGAR.added") val addedSugar: NutrientDTO = NutrientDTO(),
+    @SerialName("SUGAR") val sugar: NutrientDTO = NutrientDTO(),
     @SerialName("ENERC_KCAL") val enercKCAL: NutrientDTO = NutrientDTO(),
     @SerialName("FAT") val fat: NutrientDTO = NutrientDTO(),
+    @SerialName("FATRN") val fatrn: NutrientDTO = NutrientDTO(),
     @SerialName("FASAT") val fasat: NutrientDTO = NutrientDTO(),
     @SerialName("FAMS") val fams: NutrientDTO = NutrientDTO(),
     @SerialName("FAPU") val fapu: NutrientDTO = NutrientDTO(),
     @SerialName("CHOCDF") val chocdf: NutrientDTO = NutrientDTO(),
+    @SerialName("FIBTG") val fiber: NutrientDTO = NutrientDTO(),
     @SerialName("CHOCDF.net") val chocdfNet: NutrientDTO = NutrientDTO(),
     @SerialName("PROCNT") val procnt: NutrientDTO = NutrientDTO(),
     @SerialName("CHOLE") val cholesterol: NutrientDTO = NutrientDTO(),
@@ -53,7 +119,7 @@ data class TotalNutrientsDTO(
 data class NutrientDTO(
     val label: String = "",
     val quantity: Double = 0.0,
-    val unit: String = ""
+    val unit: String? = null
 )
 
 @Serializable

@@ -16,7 +16,8 @@ interface EdamamFoodApiService {
         @Query("app_id") appId: String = Constants.EDAMAM_APPLICATION_ID,
         @Query("app_key") appKey: String = Constants.EDAMAM_APPLICATION_KEY,
         @Query("nutrition-type") nutritionType: String = "cooking",
-        @Query("category") category: String = "generic-foods",
+        @Query("category") genericCategory: String = "generic-foods",
+        @Query("category") fastFoodCategory: String = "fast-foods",
         @Query("ingr") ingr: String,
     ): FoodResponse
 

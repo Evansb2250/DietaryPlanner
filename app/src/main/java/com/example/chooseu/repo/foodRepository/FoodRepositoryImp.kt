@@ -1,6 +1,6 @@
 package com.example.chooseu.repo.foodRepository
 
-import android.util.Log
+import com.example.chooseu.ui.screens.nutrition_screen.NutritionDetail
 import com.example.chooseu.common.Constants
 import com.example.chooseu.data.rest.api_service.NutritionBody
 import com.example.chooseu.data.rest.api_service.EdamamFoodApiService
@@ -10,6 +10,7 @@ import com.example.chooseu.utils.AsyncResponse
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import toNutritionDetail
 
 
 class FoodRepositoryImp(
@@ -37,10 +38,10 @@ class FoodRepositoryImp(
 
     override suspend fun getNutritionDetails(
         foodId: String,
-        measureUri: String
-    ) {
+        measureUri: String,
+    ): NutritionDetail {
         return withContext(Dispatchers.IO){
-            val ob = edamamFoodService.requestNutrients(
+             edamamFoodService.requestNutrients(
                 appId = Constants.EDAMAM_APPLICATION_ID,
                 appKey = Constants.EDAMAM_APPLICATION_KEY,
                 jsonBody = NutritionBody(
@@ -52,9 +53,7 @@ class FoodRepositoryImp(
                         )
                     )
                 ),
-            )
-            ob.totalDaily
-            Log.d("NutritionVal", " result ${ob.totalNutrients}")
+            ).totalNutrients.toNutritionDetail(measureUri)
         }
     }
 }

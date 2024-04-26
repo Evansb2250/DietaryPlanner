@@ -8,6 +8,7 @@ import com.example.chooseu.core.cache.FoodItemCache
 import com.example.chooseu.ui.screens.food_search.states.FoodItemListActions
 import com.example.chooseu.ui.screens.food_search.states.FoodSearchStates
 import com.example.chooseu.data.rest.api_service.dtos.foodItemDTO.toUniqueFoodItems
+import com.example.chooseu.di.VMAssistFactoryModule
 import com.example.chooseu.navigation.components.destinations.BottomNavBarDestinations
 import com.example.chooseu.navigation.components.destinations.GeneralDestinations
 import com.example.chooseu.navigation.components.destinations.destinationArguments.DiaryArgs
@@ -15,6 +16,8 @@ import com.example.chooseu.navigation.components.navmanagers.MainFlowNavManager
 import com.example.chooseu.repo.foodRepository.FoodRepository
 import com.example.chooseu.ui.screens.nutrition_screen.FoodItem
 import com.example.chooseu.utils.AsyncResponse
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,12 +32,16 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.SerializationException
 import javax.inject.Inject
 
-@HiltViewModel
-class FoodSearchViewModel @Inject constructor(
-    val foodRepository: FoodRepository,
-    val navManager: MainFlowNavManager,
-    val foodItemCache: FoodItemCache,
+@HiltViewModel(
+    assistedFactory = VMAssistFactoryModule.FoodSearchFactory::class
+)
+class FoodSearchViewModel @AssistedInject constructor(
+    private val foodRepository: FoodRepository,
+    private val navManager: MainFlowNavManager,
+    private val foodItemCache: FoodItemCache,
+    @Assisted private val userId: String,
 ) : ViewModel() {
+
     private var date: Long = 0L
 
     private var searchJob: Job? = null
@@ -122,7 +129,8 @@ class FoodSearchViewModel @Inject constructor(
 
     fun viewNutrientDetails(foodId: String) {
         try {
-            val foodItem = _state.value.foodItemsFound.value.firstOrNull { it.foodId == foodId } ?: return
+            val foodItem =
+                _state.value.foodItemsFound.value.firstOrNull { it.foodId == foodId } ?: return
 
             foodItemCache.map[foodId] = foodItem
 
@@ -130,7 +138,8 @@ class FoodSearchViewModel @Inject constructor(
                 GeneralDestinations.Nutrition,
                 mapOf(
                     "foodId" to foodId,
-                    "date" to date.toString()
+                    "userId" to userId,
+                    "dateLong" to date.toString()
                 )
             )
 
