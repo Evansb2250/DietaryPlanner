@@ -1,4 +1,5 @@
 import com.example.chooseu.ui.screens.nutrition_screen.NutritionDetail
+import com.example.chooseu.utils.NumberUtils
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import java.text.DecimalFormat
@@ -16,17 +17,12 @@ data class NutritionInfo(
     @SerialName("ingredients") val ingredients: List<IngredientDTO> = emptyList()
 )
 
-
-private val decimalFormat = DecimalFormat("#.##")
-fun NutrientDTO.printNutritionValue(): String =
-    "${decimalFormat.format(this.quantity)} ${this.unit ?: "g"}"
-
 fun TotalNutrientsDTO.toNutritionDetail(
     servingType: String,
-    quantity: Double = 1.0,
+    quantity: String = "1.0",
 ): NutritionDetail = NutritionDetail(
     servingType = servingType,
-    quantifier = quantity,
+    quantifier = NumberUtils.updateStringToValidNumber(quantity),
     nutritionValues = listOf(
         this.enercKCAL.copy(
             label = "Calories",

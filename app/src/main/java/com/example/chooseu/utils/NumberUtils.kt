@@ -5,29 +5,26 @@ private const val feetPerInches = 12
 
 object NumberUtils {
 
-    fun convertPoundsToKG(amountInPounds: Double): Double{
+    fun convertPoundsToKG(amountInPounds: Double): Double {
         return amountInPounds / kgToPound
     }
 
-    fun convertKGToPounds(amountInKG: Double): Double{
-        return amountInKG *  kgToPound
+    fun convertKGToPounds(amountInKG: Double): Double {
+        return amountInKG * kgToPound
     }
 
-    fun convertFeetToCentimeters(feets: Double): Double{
-       return feets * feetPerInches
+    fun convertFeetToCentimeters(feets: Double): Double {
+        return feets * feetPerInches
     }
 
-    fun convertCentimetersToFeet(feets: Double): Double{
+    fun convertCentimetersToFeet(feets: Double): Double {
         return feets / feetPerInches
     }
 
 
-
-
-
     fun updateStringToValidNumber(heightInString: String): String {
         return try {
-            if (heightInString.trim().toDouble() <= 0) {
+            if (heightInString.trim().toDouble() < 0) {
                 ""
             } else {
                 heightInString
@@ -39,12 +36,13 @@ object NumberUtils {
 
     fun stringToDouble(stringNumber: String): Double {
         return try {
-            if (stringNumber.trim().toDouble() <= 1.0) {
-                1.0
-            }
-            stringNumber.trim().toDouble()
+            val returnValue = if (stringNumber.trim().toDouble() < 1.0) {
+                0.0
+            } else stringNumber.trim().toDouble()
+
+            returnValue
         } catch (e: Exception) {
-            1.0
+            0.0
         }
     }
 }

@@ -40,8 +40,8 @@ class FoodRepositoryImp(
         foodId: String,
         measureUri: String,
     ): NutritionDetail {
-        return withContext(Dispatchers.IO){
-             edamamFoodService.requestNutrients(
+        return withContext(Dispatchers.IO) {
+            edamamFoodService.requestNutrients(
                 appId = Constants.EDAMAM_APPLICATION_ID,
                 appKey = Constants.EDAMAM_APPLICATION_KEY,
                 jsonBody = NutritionBody(
@@ -53,7 +53,11 @@ class FoodRepositoryImp(
                         )
                     )
                 ),
-            ).totalNutrients.toNutritionDetail(measureUri)
+            ).totalNutrients
+                .toNutritionDetail(
+                    quantity = "1.0",
+                    servingType = measureUri,
+                )
         }
     }
 }

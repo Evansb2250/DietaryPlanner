@@ -21,8 +21,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.chooseu.common.sidePadding
 import com.example.chooseu.di.VMAssistFactoryModule
 import com.example.chooseu.ui.ui_components.menu.CustomDropDownMenu
-import com.example.chooseu.ui.ui_components.text_fields.CustomOutlineTextField
-import printNutritionValue
+import com.example.chooseu.ui.ui_components.text_fields.NumberTextField
 
 
 @Composable
@@ -38,7 +37,7 @@ fun NutritionScreen(
                 foodId = foodId,
             )
         }
-    )
+    ),
 ) {
     LaunchedEffect(key1 = foodId) {
         vm.loadData()
@@ -68,7 +67,7 @@ fun NutritionScreen(
                 options = vm.servingOptions.map { it.label },
                 enable = true,
                 onOptionChange = { it ->
-                  vm.updateSelectedServing(it)
+                    vm.updateSelectedServing(it)
                 },
                 onIndexChange = {},
             )
@@ -85,14 +84,15 @@ fun NutritionScreen(
                 textAlign = TextAlign.Left,
             )
 
-            CustomOutlineTextField(
+            NumberTextField(
                 modifier = Modifier.weight(.5f),
-                value = "0"
+                value = vm.nutritionalValues.quantifier,
+                onValueChange = vm::updateQuantity,
             )
         }
 
-        LazyColumn(){
-            items(vm.nutritionalValues.nutitionValues){
+        LazyColumn() {
+            items(vm.nutritionalValues.nutritionStats) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceAround
