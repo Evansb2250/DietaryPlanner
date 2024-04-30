@@ -7,5 +7,5 @@ import com.example.chooseu.utils.AsyncResponse
 interface FoodRepository {
         suspend fun makeNetworkRequest(food: String): AsyncResponse<FoodResponse?>
 
-        suspend fun getNutritionDetails(foodId:String, measureUri: String) : NutritionDetail
+        suspend fun getNutritionDetails(foodId:String, measureUri: String) : AsyncResponse<NutritionDetail?>
 }

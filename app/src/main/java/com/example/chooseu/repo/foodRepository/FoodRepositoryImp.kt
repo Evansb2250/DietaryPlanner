@@ -1,5 +1,6 @@
 package com.example.chooseu.repo.foodRepository
 
+import NutritionInfo
 import com.example.chooseu.ui.screens.nutrition_screen.NutritionDetail
 import com.example.chooseu.common.Constants
 import com.example.chooseu.data.rest.api_service.NutritionBody
@@ -39,25 +40,45 @@ class FoodRepositoryImp(
     override suspend fun getNutritionDetails(
         foodId: String,
         measureUri: String,
-    ): NutritionDetail {
+    ): AsyncResponse<NutritionDetail?> {
         return withContext(Dispatchers.IO) {
-            edamamFoodService.requestNutrients(
-                appId = Constants.EDAMAM_APPLICATION_ID,
-                appKey = Constants.EDAMAM_APPLICATION_KEY,
-                jsonBody = NutritionBody(
-                    ingredients = listOf(
-                        Ingredient(
-                            quantity = 1,
-                            measureURI = measureUri,
-                            foodId = foodId
+            fetchNutritionInfo(
+                foodId,
+                measureUri,
+            )
+        }
+    }
+
+
+    private suspend fun fetchNutritionInfo(
+        foodId: String,
+        measureUri: String,
+    ): AsyncResponse<NutritionDetail?> {
+        return try {
+            AsyncResponse.Success(
+                data = edamamFoodService.requestNutrients(
+                    appId = Constants.EDAMAM_APPLICATION_ID,
+                    appKey = Constants.EDAMAM_APPLICATION_KEY,
+                    jsonBody = NutritionBody(
+                        ingredients = listOf(
+                            Ingredient(
+                                quantity = 1,
+                                measureURI = measureUri,
+                                foodId = foodId
+                            )
                         )
                     )
-                ),
-            ).totalNutrients
-                .toNutritionDetail(
-                    quantity = "1.0",
-                    servingType = measureUri,
-                )
+                ).totalNutrients
+                    .toNutritionDetail(
+                        quantity = "1.0",
+                        servingType = measureUri,
+                    ),
+            )
+        } catch (e: Exception) {
+            AsyncResponse.Failed(
+                data = null,
+                message = "Couldn't complete API request"
+            )
         }
     }
 }

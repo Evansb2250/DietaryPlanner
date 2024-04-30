@@ -8,26 +8,13 @@ import androidx.lifecycle.viewModelScope
 import com.example.chooseu.core.cache.FoodItemCache
 import com.example.chooseu.di.VMAssistFactoryModule
 import com.example.chooseu.repo.foodRepository.FoodRepository
+import com.example.chooseu.utils.AsyncResponse
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-
-sealed class NutritionScreenStates {
-    data class NutritionView(
-        private val servingUris: List<String>,
-        val foodId: String,
-        val foodLabel: String,
-        val isLoading: Boolean = false,
-        val hasError: Boolean = false,
-        val errorMessage: String? = null,
-        val servings: List<String>,
-        val selectedServing: String,
-        val nutritionDetails: NutritionDetail?,
-    ) : NutritionScreenStates()
-}
 
 @HiltViewModel(
     assistedFactory = VMAssistFactoryModule.NutritionViewModelFactory::class
@@ -39,7 +26,7 @@ class NutritionViewModel @AssistedInject constructor(
     @Assisted("food") private val foodId: String?,
     cache: FoodItemCache,
 ) : ViewModel() {
-    var _state: MutableStateFlow<NutritionScreenStates.NutritionView> = MutableStateFlow(
+    var _state: MutableStateFlow<NutritionScreenStates> = MutableStateFlow(
         NutritionScreenStates.NutritionView(
             servingUris = emptyList(),
             foodId = "",
@@ -51,6 +38,8 @@ class NutritionViewModel @AssistedInject constructor(
         )
     )
     val state = _state.asStateFlow()
+
+    private val foodLabel = cache.map[foodId]?.label ?: "Unkown"
 
     private val servingOptions by mutableStateOf(
         cache.map[foodId]?.unitTypes?.drop(1) ?: emptyList()
@@ -74,23 +63,56 @@ class NutritionViewModel @AssistedInject constructor(
                 _state.value = foodRepository.getNutritionDetails(
                     foodId = foodId,
                     measureUri = servingOptions.first { it.label.equals(selectedServingSize) }.uri
-                ).let {
-                    NutritionScreenStates.NutritionView(
-                        foodId = foodId,
-                        foodLabel = "",
-                        servings = servingOptions.map { it.label },
-                        servingUris = servingOptions.map { it.uri },
-                        selectedServing = selectedServingSize,
-                        nutritionDetails = it
+                ).let { response ->
+                    handleNetworkRequest(
+                        foodId,
+                        selectedServingSize,
+                        response,
                     )
                 }
             }
         }
     }
 
+
+    private fun handleNetworkRequest(
+        foodId: String,
+        selectedServingSize: String,
+        response: AsyncResponse<NutritionDetail?>
+    ): NutritionScreenStates.NutritionView {
+        return when (response) {
+            is AsyncResponse.Failed ->
+                NutritionScreenStates.NutritionView(
+                    foodId = foodId,
+                    foodLabel = foodLabel,
+                    isLoading = false,
+                    hasError = true,
+                    errorMessage = response.message ?: "network error",
+                    servings = servingOptions.map { it.label },
+                    servingUris = servingOptions.map { it.uri },
+                    selectedServing = selectedServingSize,
+                    nutritionDetails = null,
+                )
+
+            is AsyncResponse.Success -> {
+                NutritionScreenStates.NutritionView(
+                    foodId = foodId,
+                    foodLabel = foodLabel,
+                    servings = servingOptions.map { it.label },
+                    servingUris = servingOptions.map { it.uri },
+                    selectedServing = selectedServingSize,
+                    nutritionDetails = response.data
+                )
+            }
+        }
+    }
+
     private fun setLoadingState() {
-        _state.value = _state.value.copy(
-            isLoading = true
-        )
+        val nutritionState  = state.value
+        if(nutritionState is NutritionScreenStates.NutritionView){
+            _state.value = nutritionState.copy(
+                isLoading = true
+            )
+        }
     }
 }

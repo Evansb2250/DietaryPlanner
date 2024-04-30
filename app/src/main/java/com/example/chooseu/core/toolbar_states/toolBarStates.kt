@@ -12,15 +12,16 @@ sealed class ToolBarState(
 ) {
     data class Navigated(
         val title: String,
+        val trailingIcon_: TrailingIcon = TrailingIcon(
+            drawable = R.drawable.notification_bell,
+            destinations = GeneralDestinations.Notification,
+        ),
     ) : ToolBarState(
         leadingIcon = LeadingIcon(
             R.drawable.back_arrow, clickable = true
         ),
         headline = title,
-        trailingIcon = TrailingIcon(
-            drawable = R.drawable.notification_bell,
-            destinations = GeneralDestinations.Notification,
-        ),
+        trailingIcon = trailingIcon_,
     )
 
     data class Home(
@@ -41,6 +42,7 @@ data class LeadingIcon(
     @DrawableRes val drawable: Int,
     val clickable: Boolean,
 )
+
 data class TrailingIcon(
     @DrawableRes val drawable: Int,
     val destinations: GeneralDestinations,
