@@ -22,8 +22,20 @@ abstract class NavigationManger(
     protected val _navigationState = MutableSharedFlow<Navigation>()
     val navigationState: SharedFlow<Navigation> = _navigationState.asSharedFlow()
 
+    private val _onBackPressState = MutableSharedFlow<Boolean>()
+    val onBackPressState = _onBackPressState.asSharedFlow()
+
     var logout by mutableStateOf(false)
         private set
+
+    fun onBackPress(){
+        externalScope.launch {
+            _onBackPressState.emit(true)
+            //used to reset state
+            _onBackPressState.emit(false)
+        }
+    }
+
 
     fun navigate(
         navigation: GeneralDestinations,

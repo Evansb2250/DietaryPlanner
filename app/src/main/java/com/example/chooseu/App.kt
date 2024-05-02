@@ -44,8 +44,17 @@ fun App(
     )
 
     NavManagerStateObserver(
+        navigationState = viewModel.navigationManager.onBackPressState,
+        onNewStateEvent = { popBackStack ->
+            if(popBackStack){
+                navControl.popBackStack()
+            }
+        }
+    )
+
+    NavManagerStateObserver(
         navigationState = viewModel.navigationManager.navigationState,
-        navigateToDestination = { navDirection ->
+        onNewStateEvent = { navDirection ->
             //clears the stack if we are navigating back to the LoginScreen
             if (navDirection.destination == GeneralDestinations.AuthentificationFlow.destination) {
 
