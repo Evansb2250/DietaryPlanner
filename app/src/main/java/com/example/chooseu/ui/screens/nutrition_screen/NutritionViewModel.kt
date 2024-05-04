@@ -60,7 +60,7 @@ class NutritionViewModel @AssistedInject constructor(
     }
 
 
-    private val foodLabel = cache.map[foodId]?.label ?: "Unkown"
+    private val foodLabel = cache.map[foodId]?.label ?: "Unknfiown"
 
     private val servingOptions by mutableStateOf(
         cache.map[foodId]?.unitTypes?.drop(1) ?: emptyList()
