@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.chooseu.core.cache.FoodItemCache
+import com.example.chooseu.data.rest.api_service.dtos.nutritionInfo.NutritionConstants
 import com.example.chooseu.di.VMAssistFactoryModule
 import com.example.chooseu.navigation.components.navmanagers.MainFlowNavManager
 import com.example.chooseu.repo.foodRepository.FoodRepository
@@ -23,6 +24,7 @@ data class SavedNutritionValue(
     val foodId: String,
     val foodName: String,
     val foodServingUri: String,
+    val servingLabel: String,
     val quantity: Double,
     val protein: Double,
     val carbs: Double,
@@ -79,7 +81,24 @@ class NutritionViewModel @AssistedInject constructor(
     }
 
     fun add(nutritionView: NutritionScreenStates.NutritionView) {
+        try {
+            SavedNutritionValue(
+                userId = userId!!,
+                day = day!!,
+                foodId = nutritionView.foodId,
+                foodName = nutritionView.foodLabel,
+                foodServingUri = getServingUri(nutritionView.selectedServing),
+                servingLabel = nutritionView.selectedServing,
+                quantity = nutritionView.nutritionDetails?.quantifier?.toDouble() ?: 0.0,
+                protein = nutritionView.getNutritionValueByLabel(NutritionConstants.PROTEIN),
+                carbs = nutritionView.getNutritionValueByLabel(NutritionConstants.TOTAL_CARBS),
+                totalCalories = nutritionView.getNutritionValueByLabel(NutritionConstants.CALORIES),
+            )
+        } catch (
+            e: Exception
+        ) {
 
+        }
     }
 
     fun loadData(
@@ -91,7 +110,7 @@ class NutritionViewModel @AssistedInject constructor(
             if (foodId != null) {
                 _state.value = foodRepository.getNutritionDetails(
                     foodId = foodId,
-                    measureUri = servingOptions.first { it.label.equals(selectedServingSize) }.uri
+                    measureUri = getServingUri(selectedServingSize),
                 ).let { response ->
                     handleNetworkRequest(
                         foodId,
@@ -136,6 +155,12 @@ class NutritionViewModel @AssistedInject constructor(
         }
     }
 
+    private fun getServingUri(
+        selectedServingSize: String,
+    ): String {
+        return servingOptions.first { it.label.equals(selectedServingSize) }.uri
+    }
+
     private fun setLoadingState() {
         val nutritionState = state.value
         if (nutritionState is NutritionScreenStates.NutritionView) {
@@ -143,5 +168,14 @@ class NutritionViewModel @AssistedInject constructor(
                 isLoading = true
             )
         }
+    }
+
+    private fun setErrorState(
+        errorMessage: String,
+    ) {
+        _state.value = NutritionScreenStates.NutritionView(
+            hasError = true,
+            errorMessage = errorMessage,
+        )
     }
 }
