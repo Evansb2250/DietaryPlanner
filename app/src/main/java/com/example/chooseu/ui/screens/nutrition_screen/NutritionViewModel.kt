@@ -40,7 +40,7 @@ class NutritionViewModel @AssistedInject constructor(
     @Assisted("food") private val foodId: String?,
     cache: FoodItemCache,
 ) : ViewModel() {
-    lateinit var _state: MutableStateFlow<NutritionScreenStates>
+    private lateinit var _state: MutableStateFlow<NutritionScreenStates>
 
     val state = _state.asStateFlow()
 
@@ -76,6 +76,10 @@ class NutritionViewModel @AssistedInject constructor(
 
     fun onBackPress() {
         navManager.onBackPress()
+    }
+
+    fun add(nutritionView: NutritionScreenStates.NutritionView) {
+
     }
 
     fun loadData(
