@@ -1,5 +1,6 @@
 package com.example.chooseu.ui.screens.nutrition_screen
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -22,6 +23,10 @@ fun NutritionScreen(
         }
     ),
 ) {
+    BackHandler {
+        vm.onBackPress()
+    }
+
     LaunchedEffect(key1 = foodId) {
         vm.loadData()
     }
@@ -31,5 +36,6 @@ fun NutritionScreen(
         state = vm.state.collectAsStateWithLifecycle().value,
         updateNutritionScreen = vm::updateNutritionQuantity,
         updateNutritionServing = vm::updateNutritionServing,
+        onBackNavigation = vm::onBackPress,
     )
 }

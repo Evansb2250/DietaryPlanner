@@ -1,3 +1,4 @@
+import com.example.chooseu.data.rest.api_service.dtos.nutritionInfo.NutritionConstants
 import com.example.chooseu.ui.screens.nutrition_screen.NutritionDetail
 import com.example.chooseu.utils.NumberUtils
 import kotlinx.serialization.SerialName
@@ -25,49 +26,49 @@ fun TotalNutrientsDTO.toNutritionDetail(
     quantifier = NumberUtils.updateStringToValidNumber(quantity),
     nutritionValues = listOf(
         this.enercKCAL.copy(
-            label = "Calories",
+            label = NutritionConstants.CALORIES ,
         ),
         this.fasat.copy(
-            label = "Saturated fat"
+            label = NutritionConstants.SATURATED_FAT
         ),
         this.fatrn.copy(
-            label = "Trans fat"
+            label = NutritionConstants.TRANS_FAT,
         ),
         this.cholesterol.copy(
-            label = "Cholestrol"
+            label = NutritionConstants.CHOLESTEROL,
         ),
         this.sodium.copy(
-            label = "Sodium"
+            label = NutritionConstants.SODIUM,
         ),
         this.chocdfNet.copy(
-            label = "Total carbs"
+            label = NutritionConstants.TOTAL_CARBS,
         ),
         this.fiber.copy(
-            label = "Fiber",
+            label = NutritionConstants.FIBER,
         ),
         this.sugar.copy(
-            label = "Sugar",
+            label = NutritionConstants.SUGAR,
         ),
         this.addedSugar.copy(
-            label = "Added Sugar",
+            label = NutritionConstants.ADDED_SUGAR,
         ),
         this.procnt.copy(
-            label = "Protein",
+            label = NutritionConstants.PROTEIN,
         ),
         this.vitaminC.copy(
-            label = "Vitamin C",
+            label = NutritionConstants.VITAMIN_C,
         ),
         this.iron.copy(
-            label = "Iron"
+            label = NutritionConstants.IRON,
         ),
         this.vitaminD.copy(
-            label = "Vitamin D"
+            label = NutritionConstants.VITAMIN_D,
         ),
         this.potassium.copy(
-            label = "Potassium"
+            label = NutritionConstants.POTASSIUM,
         ),
         this.calcium.copy(
-            label = "Calcium"
+            label = NutritionConstants.CALCIUM,
         )
     ),
 )

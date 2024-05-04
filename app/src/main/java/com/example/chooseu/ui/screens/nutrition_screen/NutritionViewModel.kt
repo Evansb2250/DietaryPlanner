@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.chooseu.core.cache.FoodItemCache
 import com.example.chooseu.di.VMAssistFactoryModule
+import com.example.chooseu.navigation.components.navmanagers.MainFlowNavManager
 import com.example.chooseu.repo.foodRepository.FoodRepository
 import com.example.chooseu.utils.AsyncResponse
 import dagger.assisted.Assisted
@@ -16,28 +17,48 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
+data class SavedNutritionValue(
+    val userId: String,
+    val day: Long,
+    val foodId: String,
+    val foodName: String,
+    val foodServingUri: String,
+    val quantity: Double,
+    val protein: Double,
+    val carbs: Double,
+    val totalCalories: Double,
+)
+
 @HiltViewModel(
     assistedFactory = VMAssistFactoryModule.NutritionViewModelFactory::class
 )
 class NutritionViewModel @AssistedInject constructor(
     private val foodRepository: FoodRepository,
+    private val navManager: MainFlowNavManager,
     @Assisted private val day: Long?,
     @Assisted("user") private val userId: String?,
     @Assisted("food") private val foodId: String?,
     cache: FoodItemCache,
 ) : ViewModel() {
-    var _state: MutableStateFlow<NutritionScreenStates> = MutableStateFlow(
-        NutritionScreenStates.NutritionView(
-            servingUris = emptyList(),
-            foodId = "",
-            foodLabel = "",
-            isLoading = true,
-            servings = emptyList(),
-            selectedServing = "",
-            nutritionDetails = null
-        )
-    )
+    lateinit var _state: MutableStateFlow<NutritionScreenStates>
+
     val state = _state.asStateFlow()
+
+    init {
+        _state.value = if (day != null && userId != null && foodId != null)
+            NutritionScreenStates.NutritionView(
+                servingUris = emptyList(),
+                foodId = "",
+                foodLabel = "",
+                isLoading = true,
+                servings = emptyList(),
+                selectedServing = "",
+                nutritionDetails = null
+            )
+        else
+            NutritionScreenStates.Error
+    }
+
 
     private val foodLabel = cache.map[foodId]?.label ?: "Unkown"
 
@@ -51,6 +72,10 @@ class NutritionViewModel @AssistedInject constructor(
 
     fun updateNutritionQuantity(newState: NutritionScreenStates.NutritionView) {
         _state.value = newState
+    }
+
+    fun onBackPress() {
+        navManager.onBackPress()
     }
 
     fun loadData(
@@ -108,8 +133,8 @@ class NutritionViewModel @AssistedInject constructor(
     }
 
     private fun setLoadingState() {
-        val nutritionState  = state.value
-        if(nutritionState is NutritionScreenStates.NutritionView){
+        val nutritionState = state.value
+        if (nutritionState is NutritionScreenStates.NutritionView) {
             _state.value = nutritionState.copy(
                 isLoading = true
             )

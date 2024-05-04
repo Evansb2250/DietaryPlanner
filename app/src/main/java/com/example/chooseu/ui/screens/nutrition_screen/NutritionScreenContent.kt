@@ -2,6 +2,7 @@ package com.example.chooseu.ui.screens.nutrition_screen
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,12 +15,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -48,6 +45,7 @@ fun NutritionScreenContent(
     updateNutritionScreen: (NutritionScreenStates.NutritionView) -> Unit = {},
     updateNutritionServing: (String) -> Unit = {},
     dismissErrorDialog: () -> Unit = {},
+    onBackNavigation: () -> Unit = {},
 ) {
     when (state) {
         is NutritionScreenStates.NutritionView -> {
@@ -60,6 +58,9 @@ fun NutritionScreenContent(
                         ),
                         navigationIcon = {
                             Image(
+                                modifier = Modifier.clickable {
+                                    onBackNavigation()
+                                },
                                 painter = painterResource(id = R.drawable.back_arrow),
                                 contentDescription = " ",
                             )
@@ -69,7 +70,8 @@ fun NutritionScreenContent(
                         ),
                         title = {
                             Text(
-                                modifier = Modifier.fillMaxWidth(),
+                                modifier = Modifier
+                                    .fillMaxWidth(),
                                 color = Color.White,
                                 text = state.foodLabel,
                                 textAlign = TextAlign.Center,
@@ -95,6 +97,7 @@ fun NutritionScreenContent(
                     modifier = Modifier.padding(
                         padding,
                     ),
+                    thickness = 0.5.dp,
                     color = Color.White,
                 )
                 Column(
@@ -151,6 +154,8 @@ fun NutritionScreenContent(
                                 onIndexChange = {},
                             )
                         }
+
+
                         Spacer(modifier = Modifier.size(20.dp))
                         Row(
                             modifier = Modifier.fillMaxWidth(),
@@ -222,6 +227,10 @@ fun NutritionScreenContent(
                     contentDescription = "error image",
                 )
             }
+        }
+
+        NutritionScreenStates.NutritionStateSaved -> {
+            //TODO
         }
     }
 }

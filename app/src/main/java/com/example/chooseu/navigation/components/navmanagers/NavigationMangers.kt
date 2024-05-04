@@ -28,7 +28,7 @@ abstract class NavigationManger(
     var logout by mutableStateOf(false)
         private set
 
-    fun onBackPress(){
+    fun onBackPress() {
         externalScope.launch {
             _onBackPressState.emit(true)
             //used to reset state

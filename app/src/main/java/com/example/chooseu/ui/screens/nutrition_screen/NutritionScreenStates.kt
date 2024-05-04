@@ -14,4 +14,6 @@ sealed class NutritionScreenStates {
     ) : NutritionScreenStates()
 
     object Error : NutritionScreenStates()
+
+    object NutritionStateSaved : NutritionScreenStates()
 }

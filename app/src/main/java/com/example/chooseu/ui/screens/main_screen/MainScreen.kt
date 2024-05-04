@@ -18,6 +18,7 @@ import com.example.chooseu.navigation.navgraphs.MainScreenRoutes
 import com.example.chooseu.ui.theme.appColor
 import com.example.chooseu.ui.ui_components.bottomBar.ChooseUBottomBar
 import com.example.chooseu.di.VMAssistFactoryModule
+import com.example.chooseu.ui.ui_components.NavManagerStateObserver
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
@@ -47,11 +48,19 @@ fun MainScreen(
         )
     }
 
-    LaunchedEffect(
-        key1 = vm.getNavManager().navigationState,
-    ) {
-        vm.getNavManager().navigationState.collectLatest { navDirection ->
+    NavManagerStateObserver(
+        navigationState = vm.getNavManager().onBackPressState,
+        onNewStateEvent = { popBackStack ->
+            if (popBackStack) {
+                navController.popBackStack()
+            }
+        }
+    )
 
+
+    NavManagerStateObserver(
+        navigationState = vm.getNavManager().navigationState,
+        onNewStateEvent = { navDirection ->
             if (navDirection is BottomNavBarDestinations)
                 navController.popBackStack()
 
@@ -63,7 +72,7 @@ fun MainScreen(
                 }
             }
         }
-    }
+    )
 
     Scaffold(
         modifier = Modifier.background(
