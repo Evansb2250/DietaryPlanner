@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.chooseu.core.cache.FoodItemCache
 import com.example.chooseu.data.rest.api_service.dtos.nutritionInfo.NutritionConstants
 import com.example.chooseu.di.VMAssistFactoryModule
+import com.example.chooseu.core.MealType
 import com.example.chooseu.navigation.components.navmanagers.MainFlowNavManager
 import com.example.chooseu.repo.foodRepository.FoodRepository
 import com.example.chooseu.utils.AsyncResponse
@@ -23,8 +24,9 @@ data class SavedNutritionValue(
     val day: Long,
     val foodId: String,
     val foodName: String,
-    val foodServingUri: String,
-    val servingLabel: String,
+    val mealType: MealType,
+    val foodServingUri: String = NutritionConstants.GRAM_URI,
+    val servingLabel: String = NutritionConstants.GRAM_LABEL,
     val quantity: Double,
     val protein: Double,
     val carbs: Double,
@@ -80,20 +82,23 @@ class NutritionViewModel @AssistedInject constructor(
         navManager.onBackPress()
     }
 
-    fun add(nutritionView: NutritionScreenStates.NutritionView) {
+    fun add(nutritionView: NutritionScreenStates.NutritionView) = viewModelScope.launch {
         try {
-            SavedNutritionValue(
-                userId = userId!!,
-                day = day!!,
-                foodId = nutritionView.foodId,
-                foodName = nutritionView.foodLabel,
-                foodServingUri = getServingUri(nutritionView.selectedServing),
-                servingLabel = nutritionView.selectedServing,
-                quantity = nutritionView.nutritionDetails?.quantifier?.toDouble() ?: 0.0,
-                protein = nutritionView.getNutritionValueByLabel(NutritionConstants.PROTEIN),
-                carbs = nutritionView.getNutritionValueByLabel(NutritionConstants.TOTAL_CARBS),
-                totalCalories = nutritionView.getNutritionValueByLabel(NutritionConstants.CALORIES),
+            foodRepository.saveFoodDetails(
+                SavedNutritionValue(
+                    userId = userId!!,
+                    day = day!!,
+                    foodId = nutritionView.foodId,
+                    foodName = nutritionView.foodLabel,
+                    foodServingUri = getServingUri(nutritionView.selectedServing),
+                    servingLabel = nutritionView.selectedServing,
+                    quantity = nutritionView.getQuantityCount(),
+                    protein = nutritionView.getNutritionValueByLabel(NutritionConstants.PROTEIN),
+                    carbs = nutritionView.getNutritionValueByLabel(NutritionConstants.TOTAL_CARBS),
+                    totalCalories = nutritionView.getNutritionValueByLabel(NutritionConstants.CALORIES),
+                )
             )
+
         } catch (
             e: Exception
         ) {

@@ -15,6 +15,10 @@ sealed class NutritionScreenStates {
         fun getNutritionValueByLabel(nutritionLabel: String): Double{
            return  nutritionDetails?.nutritionStats?.firstOrNull{ it.label == nutritionLabel}?.quantity ?: 0.0
         }
+
+        fun getQuantityCount(): Double {
+            return nutritionDetails?.quantifier?.toDouble() ?: 0.0
+        }
     }
 
     object Error : NutritionScreenStates()

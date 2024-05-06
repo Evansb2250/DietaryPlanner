@@ -16,4 +16,7 @@ object NutritionConstants {
     const val VITAMIN_D = "Vitamin D"
     const val POTASSIUM = "Potassium"
     const val CALCIUM = "Calcium"
+
+    const val GRAM_URI ="http://www.edamam.com/ontologies/edamam.owl#Measure_gram"
+    const val GRAM_LABEL ="gram"
 }
