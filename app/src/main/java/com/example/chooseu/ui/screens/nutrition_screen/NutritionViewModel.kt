@@ -92,7 +92,7 @@ class NutritionViewModel @AssistedInject constructor(
         selectedServingSize: String = servingOptions.firstOrNull()?.label ?: ""
     ) {
         if (day == null || userId == null || foodId == null) {
-            _state.value = NutritionScreenStates.Error
+            _state.value = NutritionScreenStates.Error("missing critical information")
         } else {
             setLoadingState()
             viewModelScope.launch {

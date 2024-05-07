@@ -218,7 +218,7 @@ fun NutritionScreenContent(
             }
         }
 
-        NutritionScreenStates.Error -> {
+        is NutritionScreenStates.Error -> {
             AppColumnContainer {
                 Image(
                     painter = painterResource(
@@ -226,6 +226,16 @@ fun NutritionScreenContent(
                     ),
                     contentDescription = "error image",
                 )
+                if (state.showDialog.value) {
+                    ErrorDialog(
+                        title = "Error found",
+                        error = "Error Detected cannot retreive food details at this time",
+                        onDismiss = {
+                            state.showDialog.value = false
+                            onBackNavigation()
+                        },
+                    )
+                }
             }
         }
 

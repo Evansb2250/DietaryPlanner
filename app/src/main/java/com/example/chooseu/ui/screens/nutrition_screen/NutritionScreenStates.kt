@@ -1,5 +1,8 @@
 package com.example.chooseu.ui.screens.nutrition_screen
 
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+
 sealed class NutritionScreenStates {
     data class NutritionView(
         private val servingUris: List<String> = emptyList(),
@@ -11,9 +14,10 @@ sealed class NutritionScreenStates {
         val servings: List<String> = emptyList(),
         val selectedServing: String = "",
         val nutritionDetails: NutritionDetail? = null,
-    ) : NutritionScreenStates(){
-        fun getNutritionValueByLabel(nutritionLabel: String): Double{
-           return  nutritionDetails?.nutritionStats?.firstOrNull{ it.label == nutritionLabel}?.quantity ?: 0.0
+    ) : NutritionScreenStates() {
+        fun getNutritionValueByLabel(nutritionLabel: String): Double {
+            return nutritionDetails?.nutritionStats?.firstOrNull { it.label == nutritionLabel }?.quantity
+                ?: 0.0
         }
 
         fun getQuantityCount(): Double {
@@ -21,7 +25,11 @@ sealed class NutritionScreenStates {
         }
     }
 
-    object Error : NutritionScreenStates()
+    data class Error(
+        val errorMessage: String = ""
+    ) : NutritionScreenStates() {
+        val showDialog: MutableState<Boolean> = mutableStateOf(true)
+    }
 
     object NutritionStateSaved : NutritionScreenStates()
 }
