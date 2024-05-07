@@ -8,7 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.chooseu.core.cache.FoodItemCache
 import com.example.chooseu.data.rest.api_service.dtos.nutritionInfo.NutritionConstants
 import com.example.chooseu.di.VMAssistFactoryModule
-import com.example.chooseu.core.MealType
+import com.example.chooseu.core.SavedNutritionValue
 import com.example.chooseu.navigation.components.navmanagers.MainFlowNavManager
 import com.example.chooseu.repo.foodRepository.FoodRepository
 import com.example.chooseu.utils.AsyncResponse
@@ -18,21 +18,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-
-data class SavedNutritionValue(
-    val userId: String,
-    val day: Long,
-    val foodId: String,
-    val foodName: String,
-    val mealType: MealType,
-    val foodServingUri: String = NutritionConstants.GRAM_URI,
-    val servingLabel: String = NutritionConstants.GRAM_LABEL,
-    val quantity: Double,
-    val protein: Double,
-    val carbs: Double,
-    val totalFat: Double,
-    val totalCalories: Double,
-)
 
 @HiltViewModel(
     assistedFactory = VMAssistFactoryModule.NutritionViewModelFactory::class

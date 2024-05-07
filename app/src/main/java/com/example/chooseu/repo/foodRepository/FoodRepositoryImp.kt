@@ -1,13 +1,12 @@
 package com.example.chooseu.repo.foodRepository
 
-import NutritionInfo
 import com.example.chooseu.ui.screens.nutrition_screen.NutritionDetail
 import com.example.chooseu.common.Constants
 import com.example.chooseu.data.rest.api_service.NutritionBody
 import com.example.chooseu.data.rest.api_service.EdamamFoodApiService
 import com.example.chooseu.data.rest.api_service.Ingredient
 import com.example.chooseu.data.rest.api_service.dtos.foodItemDTO.FoodResponse
-import com.example.chooseu.ui.screens.nutrition_screen.SavedNutritionValue
+import com.example.chooseu.core.SavedNutritionValue
 import com.example.chooseu.utils.AsyncResponse
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
