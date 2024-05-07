@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.chooseu.core.cache.FoodItemCache
 import com.example.chooseu.ui.screens.food_search.states.FoodItemListActions
 import com.example.chooseu.ui.screens.food_search.states.FoodSearchStates
-import com.example.chooseu.data.rest.api_service.dtos.foodItemDTO.toUniqueFoodItems
+import com.example.chooseu.data.rest.api_service.dtos.nutrition_dto_extensions.toUniqueFoodItems
 import com.example.chooseu.di.VMAssistFactoryModule
 import com.example.chooseu.navigation.components.destinations.BottomNavBarDestinations
 import com.example.chooseu.navigation.components.destinations.GeneralDestinations
@@ -30,7 +30,6 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.serialization.SerializationException
-import javax.inject.Inject
 
 @HiltViewModel(
     assistedFactory = VMAssistFactoryModule.FoodSearchFactory::class

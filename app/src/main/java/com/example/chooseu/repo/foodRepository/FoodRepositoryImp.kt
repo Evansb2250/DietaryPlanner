@@ -11,7 +11,7 @@ import com.example.chooseu.utils.AsyncResponse
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import toNutritionDetail
+import com.example.chooseu.data.rest.api_service.dtos.nutrition_dto_extensions.toNutritionDetail
 
 
 class FoodRepositoryImp(

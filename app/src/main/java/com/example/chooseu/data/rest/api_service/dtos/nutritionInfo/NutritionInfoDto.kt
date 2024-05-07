@@ -1,9 +1,5 @@
-import com.example.chooseu.data.rest.api_service.dtos.nutritionInfo.NutritionConstants
-import com.example.chooseu.ui.screens.nutrition_screen.NutritionDetail
-import com.example.chooseu.utils.NumberUtils
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import java.text.DecimalFormat
 
 @Serializable
 data class NutritionInfo(
@@ -16,61 +12,6 @@ data class NutritionInfo(
     @SerialName("totalNutrients") val totalNutrients: TotalNutrientsDTO = TotalNutrientsDTO(),
     @SerialName("totalDaily") val totalDaily: TotalDailyDTO = TotalDailyDTO(),
     @SerialName("ingredients") val ingredients: List<IngredientDTO> = emptyList()
-)
-
-fun TotalNutrientsDTO.toNutritionDetail(
-    servingType: String,
-    quantity: String = "1.0",
-): NutritionDetail = NutritionDetail(
-    servingType = servingType,
-    quantifier = NumberUtils.updateStringToValidNumber(quantity),
-    nutritionValues = listOf(
-        this.enercKCAL.copy(
-            label = NutritionConstants.CALORIES ,
-        ),
-        this.fasat.copy(
-            label = NutritionConstants.SATURATED_FAT
-        ),
-        this.fatrn.copy(
-            label = NutritionConstants.TRANS_FAT,
-        ),
-        this.cholesterol.copy(
-            label = NutritionConstants.CHOLESTEROL,
-        ),
-        this.sodium.copy(
-            label = NutritionConstants.SODIUM,
-        ),
-        this.chocdfNet.copy(
-            label = NutritionConstants.TOTAL_CARBS,
-        ),
-        this.fiber.copy(
-            label = NutritionConstants.FIBER,
-        ),
-        this.sugar.copy(
-            label = NutritionConstants.SUGAR,
-        ),
-        this.addedSugar.copy(
-            label = NutritionConstants.ADDED_SUGAR,
-        ),
-        this.procnt.copy(
-            label = NutritionConstants.PROTEIN,
-        ),
-        this.vitaminC.copy(
-            label = NutritionConstants.VITAMIN_C,
-        ),
-        this.iron.copy(
-            label = NutritionConstants.IRON,
-        ),
-        this.vitaminD.copy(
-            label = NutritionConstants.VITAMIN_D,
-        ),
-        this.potassium.copy(
-            label = NutritionConstants.POTASSIUM,
-        ),
-        this.calcium.copy(
-            label = NutritionConstants.CALCIUM,
-        )
-    ),
 )
 
 
