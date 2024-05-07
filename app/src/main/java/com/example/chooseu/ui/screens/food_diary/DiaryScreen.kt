@@ -17,7 +17,7 @@ import com.example.chooseu.common.sidePadding
 import com.example.chooseu.ui.screens.food_diary.state.DiaryScreenStates
 import com.example.chooseu.core.toolbar_states.ToolBarState
 import com.example.chooseu.ui.theme.appColor
-import com.example.chooseu.ui.ui_components.mealItem.MealItem
+import com.example.chooseu.ui.ui_components.mealItem.MealColumn
 import com.example.chooseu.ui.ui_components.toolbar.ChooseUToolBar
 
 @Preview(
@@ -67,17 +67,17 @@ fun DiaryScreen(
                             .fillMaxSize()
                             .padding(sidePadding)
                     ) {
-                        MealItem(
+                        MealColumn(
                             dayOfMonth = state.date,
                             menuItem = state.breakfast,
                             onAddFood = viewModel::addFoodItem,
                         )
-                        MealItem(
+                        MealColumn(
                             dayOfMonth = state.date,
                             menuItem = state.lunch,
                             onAddFood = viewModel::addFoodItem,
                         )
-                        MealItem(
+                        MealColumn(
                             dayOfMonth = state.date,
                             menuItem = state.dinner,
                             onAddFood = viewModel::addFoodItem,

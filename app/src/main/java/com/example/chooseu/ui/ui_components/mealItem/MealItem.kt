@@ -24,7 +24,7 @@ import com.example.chooseu.ui.screens.food_diary.models.FoodDiaryItem
 import com.example.chooseu.ui.theme.appColor
 import com.example.chooseu.ui.theme.yellowMain
 
-fun LazyListScope.MealItem(
+fun LazyListScope.MealColumn(
     dayOfMonth: String,
     menuItem: FoodDiaryItem,
     color: Color = Color.White,
@@ -55,7 +55,7 @@ fun LazyListScope.MealItem(
         Divider()
     }
 
-    this.items(
+    items(
         items = menuItem.items,
         key = {
             it
