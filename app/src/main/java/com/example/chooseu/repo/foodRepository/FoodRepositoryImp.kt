@@ -6,7 +6,7 @@ import com.example.chooseu.data.rest.api_service.NutritionBody
 import com.example.chooseu.data.rest.api_service.EdamamFoodApiService
 import com.example.chooseu.data.rest.api_service.Ingredient
 import com.example.chooseu.data.rest.api_service.dtos.foodItemDTO.FoodResponse
-import com.example.chooseu.core.SavedNutritionValue
+import com.example.chooseu.core.UserMealEntry
 import com.example.chooseu.utils.AsyncResponse
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
@@ -49,7 +49,7 @@ class FoodRepositoryImp(
         }
     }
 
-    override suspend fun saveFoodDetails(foodDetails: SavedNutritionValue): AsyncResponse<String> {
+    override suspend fun saveFoodDetails(userMealEntry: UserMealEntry): AsyncResponse<String> {
         TODO("Not yet implemented")
     }
 
