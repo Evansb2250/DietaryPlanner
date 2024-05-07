@@ -28,6 +28,7 @@ class NutritionViewModel @AssistedInject constructor(
     @Assisted("food") private val foodId: String?,
     cache: FoodItemCache,
 ) : ViewModel() {
+
     private var _state: MutableStateFlow<NutritionScreenStates> = MutableStateFlow(
         NutritionScreenStates.NutritionView(
             servingUris = emptyList(),
@@ -40,11 +41,6 @@ class NutritionViewModel @AssistedInject constructor(
         )
     )
     val state = _state.asStateFlow()
-
-    init {
-
-    }
-
 
     private val foodLabel = cache.map[foodId]?.label ?: "Unknown"
 

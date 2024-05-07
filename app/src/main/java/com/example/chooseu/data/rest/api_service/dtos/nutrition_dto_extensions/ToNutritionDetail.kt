@@ -13,6 +13,9 @@ fun TotalNutrientsDTO.toNutritionDetail(
         this.enercKCAL.copy(
             label = NutritionConstants.CALORIES,
         ),
+        this.procnt.copy(
+            label = NutritionConstants.PROTEIN,
+        ),
         this.fapu.copy(
             label = NutritionConstants.POLY_FAT,
         ),
@@ -28,15 +31,6 @@ fun TotalNutrientsDTO.toNutritionDetail(
         this.fat.copy(
             label = NutritionConstants.TOTAL_LIPID_FATS,
         ),
-        this.cholesterol.copy(
-            label = NutritionConstants.CHOLESTEROL,
-        ),
-        this.sodium.copy(
-            label = NutritionConstants.SODIUM,
-        ),
-        this.chocdfNet.copy(
-            label = NutritionConstants.TOTAL_CARBS,
-        ),
         this.fiber.copy(
             label = NutritionConstants.FIBER,
         ),
@@ -46,8 +40,14 @@ fun TotalNutrientsDTO.toNutritionDetail(
         this.addedSugar.copy(
             label = NutritionConstants.ADDED_SUGAR,
         ),
-        this.procnt.copy(
-            label = NutritionConstants.PROTEIN,
+        this.chocdfNet.copy(
+            label = NutritionConstants.TOTAL_CARBS,
+        ),
+        this.cholesterol.copy(
+            label = NutritionConstants.CHOLESTEROL,
+        ),
+        this.sodium.copy(
+            label = NutritionConstants.SODIUM,
         ),
         this.vitaminC.copy(
             label = NutritionConstants.VITAMIN_C,

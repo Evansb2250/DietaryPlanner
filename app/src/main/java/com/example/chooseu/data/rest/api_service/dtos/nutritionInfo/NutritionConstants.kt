@@ -21,7 +21,7 @@ object NutritionConstants {
     const val TRANS_FAT = "Trans fat"
     const val CHOLESTEROL = "Cholesterol"
     const val SODIUM = "Sodium"
-    const val TOTAL_CARBS = "Total carbs"
+    const val TOTAL_CARBS = "   Total carbs"
     const val FIBER = "Fiber"
     const val SUGAR = "Sugar"
     const val ADDED_SUGAR = "Added Sugar"
