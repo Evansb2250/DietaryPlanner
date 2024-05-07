@@ -67,34 +67,8 @@ class FoodSearchViewModel @AssistedInject constructor(
         _state.update { FoodSearchStates.LoggingFoodItem() }
     }
 
-    fun updateFoodItemList(action: FoodItemListActions, foodId: String) {
-        _state.update { currentState ->
-            FoodSearchStates.LoggingFoodItem(
-                searchedText = currentState.searchedText,
-                foodItemsFound = mutableStateOf(updateFoodItemQuantity(action, foodId)),
-                userInput = currentState.userInput
-            )
-        }
-    }
+    fun updateFoodItemList(foodItem: FoodItem) {
 
-    private fun updateFoodItemQuantity(
-        action: FoodItemListActions,
-        foodId: String
-    ): List<FoodItem> {
-        return _state.value.foodItemsFound.value.map { foodItem ->
-            if (foodItem.foodId == foodId) {
-                when (action) {
-                    FoodItemListActions.INCREMENT -> {
-                        foodItem.quantity += 1
-                    }
-
-                    FoodItemListActions.DECREMENT -> {
-                        foodItem.quantity -= 1
-                    }
-                }
-            }
-            foodItem
-        }
     }
 
 

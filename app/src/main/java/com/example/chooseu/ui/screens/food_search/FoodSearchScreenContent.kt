@@ -31,6 +31,7 @@ import com.example.chooseu.common.sidePadding
 import com.example.chooseu.ui.screens.food_search.states.FoodItemListActions
 import com.example.chooseu.ui.screens.food_search.states.FoodSearchStates
 import com.example.chooseu.core.toolbar_states.ToolBarState
+import com.example.chooseu.ui.screens.nutrition_screen.FoodItem
 import com.example.chooseu.ui.screens.nutrition_screen.partitionFoodItemsRecommendations
 import com.example.chooseu.ui.ui_components.custom_column.AppColumnContainer
 import com.example.chooseu.ui.ui_components.dialog.ErrorDialog
@@ -45,7 +46,7 @@ fun FoodSearchScreenContent(
     searchFoodItem: (String) -> Unit = {},
     clearDialog: () -> Unit = {},
     viewNutrientDetails: (foodId: String) -> Unit = {},
-    addItem: (FoodItemListActions, foodID: String) -> Unit = { _, _ -> }
+    addItem: (foodItem: FoodItem) -> Unit = {}
 ) {
     Scaffold(
         topBar = {
@@ -119,7 +120,7 @@ fun FoodSearchScreenContent(
                             }
                         }
 
-
+                       //Items in the top 3 best matched
                         items(
                             items = bestMatched
                         ) { foodItem ->
@@ -146,6 +147,7 @@ fun FoodSearchScreenContent(
                             }
                         }
 
+                        //All other items
                         items(
                             items = leastMatched
                         ) { foodItem ->

@@ -32,7 +32,7 @@ import com.example.chooseu.ui.screens.nutrition_screen.FoodItem
 fun FoodCard(
     foodItem: FoodItem,
     viewNutrientDetails: (foodId: String) -> Unit = {},
-    addItem: (FoodItemListActions, foodID: String) -> Unit = { _, _ -> },
+    addItem: (foodItem: FoodItem) -> Unit = { },
 ) {
     val scrollState = rememberScrollState()
     Card(
@@ -91,34 +91,13 @@ fun FoodCard(
                         color = Color.Transparent,
                     )
                     .weight(1f),
-                onClick = { addItem(FoodItemListActions.INCREMENT, foodItem.foodId) },
+                onClick = { addItem(foodItem) },
             ) {
                 Image(
                     painterResource(id = R.drawable.add_icon),
                     contentDescription = null
                 )
             }
-
-            Log.d("MapManipulation", "label ${foodItem.label} number ${foodItem.quantity}   ")
-            if (foodItem.quantity > 0) {
-                Text(text = "${foodItem.quantity}")
-
-                IconButton(
-                    modifier = Modifier
-                        .background(
-                            shape = CircleShape,
-                            color = Color.Transparent,
-                        )
-                        .weight(1f),
-                    onClick = { addItem(FoodItemListActions.DECREMENT, foodItem.foodId) },
-                ) {
-                    Image(
-                        painterResource(id = R.drawable.minus_sign),
-                        contentDescription = null
-                    )
-                }
-            }
-
             Spacer(modifier = Modifier.size(5.dp))
         }
     }
