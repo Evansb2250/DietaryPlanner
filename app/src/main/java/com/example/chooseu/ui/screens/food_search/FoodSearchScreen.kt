@@ -4,16 +4,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.chooseu.core.MealType
 import com.example.chooseu.di.VMAssistFactoryModule
 
 @Composable
 fun FoodSearchScreen(
     userId: String,
-    title: String,
+    mealTypeString: String,
     dateLong: Long,
     vm: FoodSearchViewModel = hiltViewModel(
         creationCallback = { factory: VMAssistFactoryModule.FoodSearchFactory ->
-            factory.create(userId)
+            factory.create(
+                userId = userId,
+                mealType = MealType.buildMealType(mealTypeString)
+            )
         }
     )
 ) {
@@ -24,7 +28,7 @@ fun FoodSearchScreen(
     }
 
     FoodSearchScreenContent(
-        title = title,
+        title = mealTypeString,
         state = vm.state.collectAsStateWithLifecycle().value,
         navigateBackToFoodDiary = vm::navigateBackToFoodDiary,
         searchFoodItem = vm::updateSearchText,

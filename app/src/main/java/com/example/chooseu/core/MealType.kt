@@ -15,4 +15,17 @@ sealed class MealType(
     object Dinner : MealType(
         label = "Dinner",
     )
+
+    companion object {
+        fun buildMealType(
+            mealTypeString: String
+        ): MealType? {
+            return when (mealTypeString.lowercase()) {
+                Breakfast.label.lowercase() -> Breakfast
+                Lunch.label.lowercase() -> Lunch
+                Dinner.label.lowercase() -> Dinner
+                else -> null
+            }
+        }
+    }
 }

@@ -57,7 +57,7 @@ fun NavGraphBuilder.MainScreenRoutes(
     ) {
         val title = it.arguments?.getString(DiaryArgs.MEAL_TYPE.name) ?: "cant find"
         FoodSearchScreen(
-            title = title,
+            mealTypeString = title,
             dateLong = it.getLongDate() ?: return@composable,
             userId = it.getUserId(),
         )

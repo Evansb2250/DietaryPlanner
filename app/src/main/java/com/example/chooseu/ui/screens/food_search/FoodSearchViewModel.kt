@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.chooseu.core.MealType
 import com.example.chooseu.core.cache.FoodItemCache
 import com.example.chooseu.ui.screens.food_search.states.FoodItemListActions
 import com.example.chooseu.ui.screens.food_search.states.FoodSearchStates
@@ -39,6 +40,7 @@ class FoodSearchViewModel @AssistedInject constructor(
     private val navManager: MainFlowNavManager,
     private val foodItemCache: FoodItemCache,
     @Assisted private val userId: String,
+    @Assisted private val mealType: MealType?,
 ) : ViewModel() {
 
     private var date: Long = 0L
@@ -49,6 +51,11 @@ class FoodSearchViewModel @AssistedInject constructor(
         MutableStateFlow(FoodSearchStates.LoggingFoodItem())
     val state: StateFlow<FoodSearchStates.LoggingFoodItem> = _state.asStateFlow()
 
+    init {
+        if (mealType == null) {
+            _state.value
+        }
+    }
 
     fun navigateBackToFoodDiary() {
         navManager.navigate(
@@ -74,11 +81,18 @@ class FoodSearchViewModel @AssistedInject constructor(
 
     fun updateSearchText(foodName: String) {
         searchJob?.cancel() // Cancel previous job if it exists
-        searchJob = viewModelScope.launch {
-            _state.update {
-                it.copy(userInput = foodName)
+        if (mealType == null) {
+            setErrorState(
+                message = "Mealtype category missing",
+                errorOrigin = "on dependency injection"
+            )
+        } else {
+            searchJob = viewModelScope.launch {
+                _state.update {
+                    it.copy(userInput = foodName)
+                }
+                throttleNetworkCall()
             }
-            throttleNetworkCall()
         }
     }
 
@@ -104,7 +118,6 @@ class FoodSearchViewModel @AssistedInject constructor(
         try {
             val foodItem =
                 _state.value.foodItemsFound.value.firstOrNull { it.foodId == foodId } ?: return
-
             foodItemCache.map[foodId] = foodItem
 
             navManager.navigate(

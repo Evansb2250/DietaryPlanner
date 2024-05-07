@@ -1,5 +1,6 @@
 package com.example.chooseu.di
 
+import com.example.chooseu.core.MealType
 import com.example.chooseu.ui.screens.main_screen.BottomNavViewModel
 import com.example.chooseu.ui.screens.profile.ProfileViewModel
 import com.example.chooseu.ui.screens.calendar_access.CalendarSettingViewModel
@@ -34,6 +35,7 @@ class VMAssistFactoryModule {
     interface FoodSearchFactory {
         fun create(
             userId: String,
+            mealType: MealType?,
         ): FoodSearchViewModel
     }
 
