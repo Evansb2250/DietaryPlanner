@@ -46,6 +46,9 @@ data class Measure(
     @SerialName("weight") val weight: Double = 0.0
 )
 
+/***
+ * [toUniqueFoodItems] takes a list of FoodHintDTO and removes objects with the same FoodId
+ */
 fun List<FoodHintDTO>.toUniqueFoodItems(): List<FoodItem> {
     val uniqueFoodIds = this.map { it.food.foodId }.distinct()
     return uniqueFoodIds.mapNotNull { foodId ->
