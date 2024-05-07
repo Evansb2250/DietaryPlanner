@@ -6,9 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.chooseu.core.cache.FoodItemCache
-import com.example.chooseu.data.rest.api_service.dtos.nutritionInfo.NutritionConstants
 import com.example.chooseu.di.VMAssistFactoryModule
-import com.example.chooseu.core.SavedNutritionValue
 import com.example.chooseu.navigation.components.navmanagers.MainFlowNavManager
 import com.example.chooseu.repo.foodRepository.FoodRepository
 import com.example.chooseu.utils.AsyncResponse
@@ -30,23 +28,21 @@ class NutritionViewModel @AssistedInject constructor(
     @Assisted("food") private val foodId: String?,
     cache: FoodItemCache,
 ) : ViewModel() {
-    private lateinit var _state: MutableStateFlow<NutritionScreenStates>
-
+    private var _state: MutableStateFlow<NutritionScreenStates> = MutableStateFlow(
+        NutritionScreenStates.NutritionView(
+            servingUris = emptyList(),
+            foodId = "",
+            foodLabel = "",
+            isLoading = true,
+            servings = emptyList(),
+            selectedServing = "",
+            nutritionDetails = null
+        )
+    )
     val state = _state.asStateFlow()
 
     init {
-        _state.value = if (day != null && userId != null && foodId != null)
-            NutritionScreenStates.NutritionView(
-                servingUris = emptyList(),
-                foodId = "",
-                foodLabel = "",
-                isLoading = true,
-                servings = emptyList(),
-                selectedServing = "",
-                nutritionDetails = null
-            )
-        else
-            NutritionScreenStates.Error
+
     }
 
 
@@ -70,20 +66,20 @@ class NutritionViewModel @AssistedInject constructor(
 
     fun add(nutritionView: NutritionScreenStates.NutritionView) = viewModelScope.launch {
         try {
-            foodRepository.saveFoodDetails(
-                SavedNutritionValue(
-                    userId = userId!!,
-                    day = day!!,
-                    foodId = nutritionView.foodId,
-                    foodName = nutritionView.foodLabel,
-                    foodServingUri = getServingUri(nutritionView.selectedServing),
-                    servingLabel = nutritionView.selectedServing,
-                    quantity = nutritionView.getQuantityCount(),
-                    protein = nutritionView.getNutritionValueByLabel(NutritionConstants.PROTEIN),
-                    carbs = nutritionView.getNutritionValueByLabel(NutritionConstants.TOTAL_CARBS),
-                    totalCalories = nutritionView.getNutritionValueByLabel(NutritionConstants.CALORIES),
-                )
-            )
+//            foodRepository.saveFoodDetails(
+//                SavedNutritionValue(
+//                    userId = userId!!,
+//                    day = day!!,
+//                    foodId = nutritionView.foodId,
+//                    foodName = nutritionView.foodLabel,
+//                    foodServingUri = getServingUri(nutritionView.selectedServing),
+//                    servingLabel = nutritionView.selectedServing,
+//                    quantity = nutritionView.getQuantityCount(),
+//                    protein = nutritionView.getNutritionValueByLabel(NutritionConstants.PROTEIN),
+//                    carbs = nutritionView.getNutritionValueByLabel(NutritionConstants.TOTAL_CARBS),
+//                    totalCalories = nutritionView.getNutritionValueByLabel(NutritionConstants.CALORIES),
+//                )
+            //      )
 
         } catch (
             e: Exception
@@ -95,19 +91,22 @@ class NutritionViewModel @AssistedInject constructor(
     fun loadData(
         selectedServingSize: String = servingOptions.firstOrNull()?.label ?: ""
     ) {
-        setLoadingState()
-
-        viewModelScope.launch {
-            if (foodId != null) {
-                _state.value = foodRepository.getNutritionDetails(
-                    foodId = foodId,
-                    measureUri = getServingUri(selectedServingSize),
-                ).let { response ->
-                    handleNetworkRequest(
-                        foodId,
-                        selectedServingSize,
-                        response,
-                    )
+        if (day == null || userId == null || foodId == null) {
+            _state.value = NutritionScreenStates.Error
+        } else {
+            setLoadingState()
+            viewModelScope.launch {
+                if (foodId != null) {
+                    _state.value = foodRepository.getNutritionDetails(
+                        foodId = foodId,
+                        measureUri = getServingUri(selectedServingSize),
+                    ).let { response ->
+                        handleNetworkRequest(
+                            foodId,
+                            selectedServingSize,
+                            response,
+                        )
+                    }
                 }
             }
         }

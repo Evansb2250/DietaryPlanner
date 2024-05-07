@@ -138,7 +138,7 @@ class FoodSearchViewModel @AssistedInject constructor(
                 mapOf(
                     "foodId" to foodId,
                     "userId" to userId,
-                    "dateLong" to date.toString()
+                    "${DiaryArgs.LONG_DATE.name}" to date.toString()
                 )
             )
 

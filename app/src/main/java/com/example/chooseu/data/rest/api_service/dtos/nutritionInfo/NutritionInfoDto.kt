@@ -1,3 +1,5 @@
+package com.example.chooseu.data.rest.api_service.dtos.nutritionInfo
+
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

@@ -1,8 +1,18 @@
 package com.example.chooseu.data.rest.api_service.dtos.nutritionInfo
 
 object NutritionConstants {
+    /**
+     * Monounsaturated fat
+     */
+    const val MONOUNSATURATED_FAT = "Monounsaturated fat"
+
+    /**
+     * Polyunsaturated fat
+     *  @author Samuel Brandenburg
+     */
+    const val POLY_FAT: String = "Polyunsaturated fat"
     const val CALORIES = "Calories"
-    const val SATURATED_FAT ="Saturated fat"
+    const val SATURATED_FAT = "Saturated fat"
     const val TRANS_FAT = "Trans fat"
     const val CHOLESTEROL = "Cholesterol"
     const val SODIUM = "Sodium"
@@ -17,6 +27,6 @@ object NutritionConstants {
     const val POTASSIUM = "Potassium"
     const val CALCIUM = "Calcium"
 
-    const val GRAM_URI ="http://www.edamam.com/ontologies/edamam.owl#Measure_gram"
-    const val GRAM_LABEL ="gram"
+    const val GRAM_URI = "http://www.edamam.com/ontologies/edamam.owl#Measure_gram"
+    const val GRAM_LABEL = "gram"
 }

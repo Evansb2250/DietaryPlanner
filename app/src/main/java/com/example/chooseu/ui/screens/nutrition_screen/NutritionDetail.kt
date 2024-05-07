@@ -1,6 +1,6 @@
 package com.example.chooseu.ui.screens.nutrition_screen
 
-import NutrientDTO
+import com.example.chooseu.data.rest.api_service.dtos.nutritionInfo.NutrientDTO
 import com.example.chooseu.utils.NumberUtils
 import java.text.DecimalFormat
 

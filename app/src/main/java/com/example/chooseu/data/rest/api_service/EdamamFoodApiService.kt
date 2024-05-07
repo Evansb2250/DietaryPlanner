@@ -1,8 +1,8 @@
 package com.example.chooseu.data.rest.api_service
 
-import NutritionInfo
 import com.example.chooseu.common.Constants
 import com.example.chooseu.data.rest.api_service.dtos.foodItemDTO.FoodResponse
+import com.example.chooseu.data.rest.api_service.dtos.nutritionInfo.NutritionInfo
 import com.google.gson.annotations.SerializedName
 import kotlinx.serialization.Serializable
 import retrofit2.http.Body

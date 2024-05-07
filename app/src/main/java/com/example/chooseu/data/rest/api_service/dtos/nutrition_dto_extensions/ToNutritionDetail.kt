@@ -1,7 +1,7 @@
 package com.example.chooseu.data.rest.api_service.dtos.nutrition_dto_extensions
 
-import TotalNutrientsDTO
 import com.example.chooseu.ui.screens.nutrition_screen.NutritionDetail
+import com.example.chooseu.data.rest.api_service.dtos.nutritionInfo.*
 
 fun TotalNutrientsDTO.toNutritionDetail(
     servingType: String,
@@ -11,49 +11,55 @@ fun TotalNutrientsDTO.toNutritionDetail(
     quantifier = com.example.chooseu.utils.NumberUtils.updateStringToValidNumber(quantity),
     nutritionValues = listOf(
         this.enercKCAL.copy(
-            label = com.example.chooseu.data.rest.api_service.dtos.nutritionInfo.NutritionConstants.CALORIES,
+            label = NutritionConstants.CALORIES,
+        ),
+        this.fapu.copy(
+            label = NutritionConstants.POLY_FAT,
+        ),
+        this.fams.copy(
+            label = NutritionConstants.MONOUNSATURATED_FAT,
         ),
         this.fasat.copy(
-            label = com.example.chooseu.data.rest.api_service.dtos.nutritionInfo.NutritionConstants.SATURATED_FAT
+            label = NutritionConstants.SATURATED_FAT
         ),
         this.fatrn.copy(
-            label = com.example.chooseu.data.rest.api_service.dtos.nutritionInfo.NutritionConstants.TRANS_FAT,
+            label =NutritionConstants.TRANS_FAT,
         ),
         this.cholesterol.copy(
-            label = com.example.chooseu.data.rest.api_service.dtos.nutritionInfo.NutritionConstants.CHOLESTEROL,
+            label = NutritionConstants.CHOLESTEROL,
         ),
         this.sodium.copy(
-            label = com.example.chooseu.data.rest.api_service.dtos.nutritionInfo.NutritionConstants.SODIUM,
+            label = NutritionConstants.SODIUM,
         ),
         this.chocdfNet.copy(
-            label = com.example.chooseu.data.rest.api_service.dtos.nutritionInfo.NutritionConstants.TOTAL_CARBS,
+            label = NutritionConstants.TOTAL_CARBS,
         ),
         this.fiber.copy(
-            label = com.example.chooseu.data.rest.api_service.dtos.nutritionInfo.NutritionConstants.FIBER,
+            label = NutritionConstants.FIBER,
         ),
         this.sugar.copy(
-            label = com.example.chooseu.data.rest.api_service.dtos.nutritionInfo.NutritionConstants.SUGAR,
+            label = NutritionConstants.SUGAR,
         ),
         this.addedSugar.copy(
-            label = com.example.chooseu.data.rest.api_service.dtos.nutritionInfo.NutritionConstants.ADDED_SUGAR,
+            label = NutritionConstants.ADDED_SUGAR,
         ),
         this.procnt.copy(
-            label = com.example.chooseu.data.rest.api_service.dtos.nutritionInfo.NutritionConstants.PROTEIN,
+            label = NutritionConstants.PROTEIN,
         ),
         this.vitaminC.copy(
-            label = com.example.chooseu.data.rest.api_service.dtos.nutritionInfo.NutritionConstants.VITAMIN_C,
+            label = NutritionConstants.VITAMIN_C,
         ),
         this.iron.copy(
-            label = com.example.chooseu.data.rest.api_service.dtos.nutritionInfo.NutritionConstants.IRON,
+            label = NutritionConstants.IRON,
         ),
         this.vitaminD.copy(
-            label = com.example.chooseu.data.rest.api_service.dtos.nutritionInfo.NutritionConstants.VITAMIN_D,
+            label = NutritionConstants.VITAMIN_D,
         ),
         this.potassium.copy(
-            label = com.example.chooseu.data.rest.api_service.dtos.nutritionInfo.NutritionConstants.POTASSIUM,
+            label = NutritionConstants.POTASSIUM,
         ),
         this.calcium.copy(
-            label = com.example.chooseu.data.rest.api_service.dtos.nutritionInfo.NutritionConstants.CALCIUM,
+            label = NutritionConstants.CALCIUM,
         )
     ),
 )

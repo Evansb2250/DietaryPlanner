@@ -35,7 +35,7 @@ sealed class GeneralDestinations(
     )
 
     object Nutrition: GeneralDestinations(
-        destination = "NutritionScreen/{userId}/{foodId}/{dateLong}"
+        destination = "NutritionScreen/{userId}/{foodId}/{${DiaryArgs.LONG_DATE.name}}"
     )
 }
 
