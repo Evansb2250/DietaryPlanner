@@ -12,6 +12,11 @@ object NutritionConstants {
      */
     const val POLY_FAT: String = "Polyunsaturated fat"
     const val CALORIES = "Calories"
+
+    /**
+     * The acumulation of total fats provided by Edamam's Food API
+     */
+    const val TOTAL_LIPID_FATS = "   Total Lipid Fats"
     const val SATURATED_FAT = "Saturated fat"
     const val TRANS_FAT = "Trans fat"
     const val CHOLESTEROL = "Cholesterol"

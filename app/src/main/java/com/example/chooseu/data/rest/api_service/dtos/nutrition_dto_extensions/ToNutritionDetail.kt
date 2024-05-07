@@ -23,7 +23,10 @@ fun TotalNutrientsDTO.toNutritionDetail(
             label = NutritionConstants.SATURATED_FAT
         ),
         this.fatrn.copy(
-            label =NutritionConstants.TRANS_FAT,
+            label = NutritionConstants.TRANS_FAT,
+        ),
+        this.fat.copy(
+            label = NutritionConstants.TOTAL_LIPID_FATS,
         ),
         this.cholesterol.copy(
             label = NutritionConstants.CHOLESTEROL,
