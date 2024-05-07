@@ -13,6 +13,6 @@ data class SavedNutritionValue(
     val quantity: Double,
     val protein: Double,
     val carbs: Double,
-    val totalFat: Double,
+    val totalLipidFat: Double,
     val totalCalories: Double,
 )
