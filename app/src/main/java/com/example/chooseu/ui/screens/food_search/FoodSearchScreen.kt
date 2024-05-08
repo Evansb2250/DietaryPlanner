@@ -16,16 +16,12 @@ fun FoodSearchScreen(
         creationCallback = { factory: VMAssistFactoryModule.FoodSearchFactory ->
             factory.create(
                 userId = userId,
-                mealType = MealType.buildMealType(mealTypeString)
+                mealType = MealType.buildMealType(mealTypeString),
+                date = dateLong,
             )
         }
     )
 ) {
-    LaunchedEffect(
-        key1 = dateLong,
-    ) {
-        vm.setLongDate(dateLong)
-    }
 
     FoodSearchScreenContent(
         title = mealTypeString,

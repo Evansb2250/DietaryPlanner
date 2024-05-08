@@ -35,6 +35,7 @@ class VMAssistFactoryModule {
     interface FoodSearchFactory {
         fun create(
             userId: String,
+            date: Long,
             mealType: MealType?,
         ): FoodSearchViewModel
     }

@@ -2,7 +2,7 @@ package com.example.chooseu.repo.foodRepository
 
 import com.example.chooseu.ui.screens.nutrition_screen.NutritionDetail
 import com.example.chooseu.data.rest.api_service.dtos.foodItemDTO.FoodResponse
-import com.example.chooseu.core.UserMealEntry
+import com.example.chooseu.core.UserMealEntryRequest
 import com.example.chooseu.utils.AsyncResponse
 
 interface FoodRepository {
@@ -10,5 +10,5 @@ interface FoodRepository {
 
         suspend fun getNutritionDetails(foodId:String, measureUri: String) : AsyncResponse<NutritionDetail?>
 
-        suspend fun saveFoodDetails(foodDetails : UserMealEntry): AsyncResponse<String>
+        suspend fun saveFoodDetails(foodDetails : UserMealEntryRequest): AsyncResponse<String>
 }

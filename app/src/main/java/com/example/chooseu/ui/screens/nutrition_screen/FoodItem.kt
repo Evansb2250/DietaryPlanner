@@ -1,7 +1,10 @@
 package com.example.chooseu.ui.screens.nutrition_screen
 
+import com.example.chooseu.core.MealType
+import com.example.chooseu.core.UserMealEntryRequest
 import com.example.chooseu.data.rest.api_service.dtos.foodItemDTO.Measure
 import com.example.chooseu.data.rest.api_service.dtos.foodItemDTO.Nutrients
+import com.example.chooseu.data.rest.api_service.dtos.nutritionInfo.NutritionConstants
 
 data class FoodItem(
     var quantity: Int,
@@ -21,3 +24,27 @@ fun List<FoodItem>.partitionFoodItemsRecommendations(): Pair<List<FoodItem>, Lis
     val otherMatches = this.drop(3)
     return Pair(bestMatches, otherMatches)
 }
+
+
+fun FoodItem.toUserMealEntry(
+    userId: String,
+    date: Long,
+    mealType: MealType,
+    foodServingUri: String = NutritionConstants.GRAM_URI,
+    foodServingLabel: String = NutritionConstants.GRAM_LABEL,
+    quantity: Double,
+): UserMealEntryRequest =
+    UserMealEntryRequest(
+        userId = userId,
+        date = date,
+        foodId = this.foodId,
+        foodName = this.label,
+        mealType = mealType,
+        foodServingUri = foodServingUri,
+        servingLabel = foodServingLabel,
+        quantity = quantity,
+        protein = this.nutrients.protein * quantity,
+        carbs = this.nutrients.carbohydrates * quantity,
+        totalLipidFat = this.nutrients.fat * quantity,
+        totalCalories = this.nutrients.energy * quantity,
+        )

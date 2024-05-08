@@ -6,8 +6,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.chooseu.core.MealType
 import com.example.chooseu.core.cache.FoodItemCache
-import com.example.chooseu.ui.screens.food_search.states.FoodItemListActions
-import com.example.chooseu.ui.screens.food_search.states.FoodSearchStates
 import com.example.chooseu.data.rest.api_service.dtos.nutrition_dto_extensions.toUniqueFoodItems
 import com.example.chooseu.di.VMAssistFactoryModule
 import com.example.chooseu.navigation.components.destinations.BottomNavBarDestinations
@@ -15,7 +13,9 @@ import com.example.chooseu.navigation.components.destinations.GeneralDestination
 import com.example.chooseu.navigation.components.destinations.destinationArguments.DiaryArgs
 import com.example.chooseu.navigation.components.navmanagers.MainFlowNavManager
 import com.example.chooseu.repo.foodRepository.FoodRepository
+import com.example.chooseu.ui.screens.food_search.states.FoodSearchStates
 import com.example.chooseu.ui.screens.nutrition_screen.FoodItem
+import com.example.chooseu.ui.screens.nutrition_screen.toUserMealEntry
 import com.example.chooseu.utils.AsyncResponse
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
@@ -40,10 +40,9 @@ class FoodSearchViewModel @AssistedInject constructor(
     private val navManager: MainFlowNavManager,
     private val foodItemCache: FoodItemCache,
     @Assisted private val userId: String,
+    @Assisted private val date: Long,
     @Assisted private val mealType: MealType?,
 ) : ViewModel() {
-
-    private var date: Long = 0L
 
     private var searchJob: Job? = null
 
@@ -66,16 +65,21 @@ class FoodSearchViewModel @AssistedInject constructor(
         )
     }
 
-    fun setLongDate(date: Long) {
-        this.date = date
-    }
-
     fun reset() {
         _state.update { FoodSearchStates.LoggingFoodItem() }
     }
 
     fun updateFoodItemList(foodItem: FoodItem) {
-
+        viewModelScope.launch {
+            foodRepository.saveFoodDetails(
+                foodItem.toUserMealEntry(
+                    userId = userId,
+                    date = date,
+                    mealType = mealType!!,
+                    quantity = 1.0
+                )
+            )
+        }
     }
 
 
